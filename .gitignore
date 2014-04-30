@@ -3,10 +3,42 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-# Package Files #
-*.jar
-*.war
-*.ear
-
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+#OS
+.DS_Store
+
+#IDEs
+
+# IntelliJ specific files/directories
+.idea
+*.ipr
+*.iws
+*.iml
+atlassian-ide-plugin.xml
+
+#XMLEditor
+*.*xml~
+
+# Eclipse specific files/directories
+.classpath
+.project
+.factorypath
+.settings
+.externalToolBuilders
+bin/
+
+# NetBeans specific files/directories
+.nbattrs
+
+#build
+target/
+
+#custom scripts
+*.sh
+
+#test output
+test-output/
+transaction.log
+infinispan.log
