@@ -1,0 +1,70 @@
+<form name="hikeForm" class="form-horizontal" role="form" novalidate ng-submit="save()">
+
+  <!-- From -->
+  <div class="form-group" ng-class="{ 'has-error' : hikeForm.inputFrom.$invalid && !hikeForm.inputFrom.$pristine }">
+    <label for="inputFrom" class="col-sm-2 control-label">From</label>
+    <div class="col-sm-6">
+      <input type="text" class="form-control" name="inputFrom" id="inputFrom" placeholder="From" ng-model="hike.from" required>
+     </div>
+     <div class="col-sm-4">
+      <p ng-show="hikeForm.inputFrom.$invalid && !hikeForm.inputFrom.$pristine" class="help-block">Starting point is required</p>
+     </div>
+  </div>
+
+  <!-- To -->
+  <div class="form-group" ng-class="{ 'has-error' : hikeForm.inputTo.$invalid && !hikeForm.inputTo.$pristine }">
+    <label for="inputTo" class="col-sm-2 control-label">To</label>
+    <div class="col-sm-6">
+      <input type="text" class="form-control" name="inputTo" id="inputTo" placeholder="To" ng-model="hike.to" required>
+     </div>
+     <div class="col-sm-4">
+      <p ng-show="hikeForm.inputTo.$invalid && !hikeForm.inputTo.$pristine" class="help-block">End point is required</p>
+     </div>
+  </div>
+
+  <!-- Organizer -->
+  <div class="form-group">
+    <label for="inputOrganizer" class="col-sm-2 control-label">Organizer</label>
+    <div class="col-sm-3">
+      <select class="form-control" data-ng-model="hike.organizer.id" id="inputOrganizer" data-ng-options="p.id as p.name for p in persons">
+        <option value=""> - Select organizer - </option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Sections -->
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Sections</label>
+    <div class="col-md-6">
+      <div ng-repeat="section in hike.sections">
+        <div class="form-group row">
+          <div class="col-md-4">
+            <input class="form-control" id="inputKey" placeholder="From"
+              ng-model="section.from" type="text">
+          </div>
+          <div class="col-md-4">
+            <input class="form-control" id="inputValue" placeholder="To"
+              ng-model="section.to" type="text">
+          </div>
+          <div style="padding-top:6px">
+            <a href ng-click="hike.sections.splice($index, 1)">Remove</a>
+          </div>
+        </div>
+      </div>
+      <div style="padding-top:6px">
+        <a href ng-click="hike.sections.push({})">Add...</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="form-group">
+    <div class="col-md-offset-2 col-sm-1">
+      <button class="btn btn-primary" type="submit" ng-disabled="hikeForm.$invalid">Save</button>
+    </div>
+    <div class="col-sm-9">
+      <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+    </div>
+  </div>
+
+</form>
