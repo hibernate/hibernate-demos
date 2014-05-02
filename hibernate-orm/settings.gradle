@@ -1,0 +1,14 @@
+include 'Basic'
+include 'FetchStrategies'
+include 'Spatial'
+include 'ValueGeneration'
+include 'Caching'
+include 'Envers'
+include 'MultiTenancy'
+
+rootProject.children.each { project ->
+    project.buildFileName = "${project.name}.gradle"
+    assert project.projectDir.isDirectory()
+    assert project.buildFile.exists()
+    assert project.buildFile.isFile()
+}

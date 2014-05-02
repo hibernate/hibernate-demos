@@ -1,0 +1,18 @@
+repositories {
+    mavenCentral()
+    maven {
+        url "http://download.osgeo.org/webdav/geotools"
+    }
+    maven {
+        url "http://www.hibernatespatial.org/repository"
+    }
+    maven {
+        url "http://repo.opengeo.org"
+    }
+}
+
+dependencies {
+	compile( 'org.hibernate:hibernate-spatial:4.3-SNAPSHOT')
+	// GeoDB is an H2 extension
+	compile( 'org.opengeo:geodb:0.7')
+}

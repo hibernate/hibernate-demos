@@ -42,3 +42,5 @@ target/
 test-output/
 transaction.log
 infinispan.log
+
+.gradle

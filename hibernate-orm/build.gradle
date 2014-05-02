@@ -1,0 +1,50 @@
+ext {
+    gradleVersion = '1.9'
+    hibernateVersion = '4.3.1.Final'
+    javaLanguageLevel = '1.7'
+}
+
+subprojects {
+    apply plugin: 'eclipse'
+    apply plugin: 'java'
+    
+    group = 'org.hibernate.brmeyer.demo'
+    version = rootProject.hibernateVersion
+    
+    targetCompatibility = rootProject.javaLanguageLevel
+	sourceCompatibility = rootProject.javaLanguageLevel
+    
+    repositories {
+        mavenCentral()
+        mavenLocal()
+
+        maven {
+            name 'jboss-nexus'
+            url "http://repository.jboss.org/nexus/content/groups/public/"
+        }
+        maven {
+            name "jboss-snapshots"
+            url "http://snapshots.jboss.org/maven2/"
+        }
+    }
+    
+    dependencies {
+		compile( 'org.hibernate:hibernate-core:' + rootProject.hibernateVersion )
+		compile( 'org.hibernate:hibernate-entitymanager:' + rootProject.hibernateVersion )
+		runtime( 'com.h2database:h2:1.3.175' )
+	}
+
+	tasks.withType( JavaCompile.class ).all { task->
+		task.options.compilerArgs += [
+				"-nowarn",
+				"-proc:none",
+				"-encoding", "UTF-8",
+				"-source", rootProject.javaLanguageLevel,
+				"-target", rootProject.javaLanguageLevel
+		]
+	}
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = gradleVersion
+}
