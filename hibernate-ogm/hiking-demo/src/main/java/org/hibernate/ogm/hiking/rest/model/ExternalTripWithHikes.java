@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import org.hibernate.ogm.hiking.model.Hike;
 import org.hibernate.ogm.hiking.model.Person;
 import org.hibernate.ogm.hiking.model.Trip;
@@ -12,7 +14,9 @@ public class ExternalTripWithHikes {
 
 	private long id;
 	private String name;
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date startDate;
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date endDate;
 	private double price;
 	private Person organizer;
