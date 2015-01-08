@@ -95,6 +95,12 @@
             <version>2.2.4</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.3.2</version>
+            <scope>provided</scope>
+        </dependency>
 
         <!-- Test -->
         <dependency>
