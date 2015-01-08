@@ -24,6 +24,10 @@ angular
                 controller: 'OrdersCtrl',
                 templateUrl:'orders-list.html'
             })
+            .when('/trips/:tripId', {
+                controller: 'TripDetailCtrl',
+                templateUrl: 'trips-detail.html'
+            })
             .otherwise({
                 redirectTo:'/'
             });
@@ -48,6 +52,9 @@ angular
             },
             getTrips: function() {
                 return tripsResource.getList();
+            },
+            getTrip: function(trip) {
+                return Restangular.one('trips', trip ).get();
             },
             createHike: function(hike) {
                 return hikesResource.post(hike);
@@ -100,6 +107,18 @@ angular
             $location.path('/');
         };
     })
+
+   .controller('TripDetailCtrl', function($scope,  $location, $routeParams, PersistenceService) {
+       $scope.trip;
+
+       PersistenceService.getTrips().then(function (trips) {
+           $scope.trips = trips;
+       });
+
+       PersistenceService.getTrip($routeParams.tripId).then(function (trip) {
+           $scope.trip = trip;
+       });
+   })
 
     .controller('EditCtrl', function($scope,  $location, $routeParams, PersistenceService) {
         $scope.hike;
