@@ -13,7 +13,7 @@
             <th style="width:15%">From</th>
             <th style="width:15%">To</th>
             <th style="width:40%">Sections</th>
-            <th style="width:15%">Organizer</th>
+            <th style="width:15%">Recommended trip</th>
             <th style="width:15%">&nbsp;</th>
         </tr>
     </thead>
@@ -22,7 +22,7 @@
             <td>{{hike.from}}</td>
             <td>{{hike.to}}</td>
             <td><span ng-repeat="section in hike.sections">{{section.from}} - {{section.to}}{{$last ? '' : ', '}}</span></td>
-            <td>{{hike.organizer.name}}</td>
+            <td><a href="#/trips/{{hike.recommendedTrip.id}}">{{hike.recommendedTrip.name}}</a></td>
             <td><a href="#/edit/{{hike.id}}">Update</a> | <a href ng-click="remove(hike)">Remove</a></td>
         </tr>
     </tbody>

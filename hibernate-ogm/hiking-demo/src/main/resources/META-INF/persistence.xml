@@ -8,7 +8,7 @@
 		<provider>org.hibernate.ogm.jpa.HibernateOgmPersistence</provider>
 
 		<class>org.hibernate.ogm.hiking.model.Hike</class>
-		<class>org.hibernate.ogm.hiking.model.Person</class>
+		<class>org.hibernate.ogm.hiking.model.Trip</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 
 		<properties>
@@ -21,7 +21,7 @@
 		<provider>org.hibernate.ogm.jpa.HibernateOgmPersistence</provider>
 
 		<class>org.hibernate.ogm.hiking.model.Hike</class>
-		<class>org.hibernate.ogm.hiking.model.Person</class>
+		<class>org.hibernate.ogm.hiking.model.Trip</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 
 		<properties>

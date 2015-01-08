@@ -11,7 +11,10 @@ import javax.persistence.PersistenceContext;
 
 import org.hibernate.ogm.hiking.model.Hike;
 import org.hibernate.ogm.hiking.model.Person;
+import org.hibernate.ogm.hiking.model.Trip;
 import org.hibernate.ogm.hiking.repository.HikeRepository;
+import org.hibernate.ogm.hiking.repository.TripRepository;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.transaction.api.annotation.Transactional;
@@ -31,6 +34,9 @@ public class HikeRepositoryIT {
 	@Inject
 	private HikeRepository hikeRepository;
 
+	@Inject
+	private TripRepository tripRepository;
+
 	@PersistenceContext(unitName="hike-PU-JTA")
 	private EntityManager entityManager;
 
@@ -49,9 +55,12 @@ public class HikeRepositoryIT {
 	}
 
 	@Test
-	public void shouldPersistHikeWithOrganizer() {
-		Hike hike = hikeRepository.createHike( new Hike( "Land's End", "Bristol" ), new Person( "Bob" ) );
-		assertEquals( "Bob", hike.organizer.name );
+	public void shouldPersistHikeWithRecommendedTrip() {
+		Trip trip = new Trip();
+		trip.name = "test";
+		trip = tripRepository.createTrip( trip );
+		Hike hike = hikeRepository.createHike( new Hike( "Land's End", "Bristol" ), trip );
+		assertEquals( "test", hike.recommendedTrip.name );
 
 		entityManager.flush();
 
