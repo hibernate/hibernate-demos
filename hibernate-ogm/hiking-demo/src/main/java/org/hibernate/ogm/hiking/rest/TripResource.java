@@ -16,6 +16,7 @@ import org.hibernate.ogm.hiking.model.Person;
 import org.hibernate.ogm.hiking.model.Trip;
 import org.hibernate.ogm.hiking.repository.TripRepository;
 import org.hibernate.ogm.hiking.rest.model.ExternalTrip;
+import org.hibernate.ogm.hiking.rest.model.ExternalTripWithHikes;
 
 @Path("/trips")
 @Stateless
@@ -44,9 +45,9 @@ public class TripResource {
 	@GET
 	@Path("/{id}")
 	@Produces("application/json")
-	public ExternalTrip getTripById(@PathParam("id") long tripId) {
+	public ExternalTripWithHikes getTripById(@PathParam("id") long tripId) {
 		// full load
-		return new ExternalTrip( tripRepository.getTripById( tripId ), true );
+		return new ExternalTripWithHikes( tripRepository.getTripById( tripId ) );
 	}
 
 	@POST

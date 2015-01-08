@@ -57,25 +57,14 @@
 
   <!-- Hikes -->
   <div class="form-group">
-    <label class="col-sm-2 control-label">Sections</label>
+    <label class="col-sm-2 control-label">Available hikes</label>
     <div class="col-md-6">
-      <div ng-repeat="section in hike.sections">
+      <div ng-repeat="hike in trip.availableHikes">
         <div class="form-group row">
-          <div class="col-md-4">
-            <input class="form-control" id="inputKey" placeholder="From"
-              ng-model="section.from" type="text">
-          </div>
-          <div class="col-md-4">
-            <input class="form-control" id="inputValue" placeholder="To"
-              ng-model="section.to" type="text">
-          </div>
-          <div style="padding-top:6px">
-            <a href ng-click="hike.sections.splice($index, 1)">Remove</a>
+          <div class="col-md-8">
+            Hike from <a href="#/edit/{{hike.id}}">{{hike.from}} to {{hike.to}}</a>
           </div>
         </div>
-      </div>
-      <div style="padding-top:6px">
-        <a href ng-click="hike.sections.push({})">Add...</a>
       </div>
     </div>
   </div>
