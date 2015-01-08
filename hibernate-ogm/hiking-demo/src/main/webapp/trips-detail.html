@@ -1,0 +1,83 @@
+<form name="tripForm" class="form-horizontal" role="form" novalidate ng-submit="save()">
+
+  <!-- Name -->
+  <div class="form-group" ng-class="{ 'has-error' : tripForm.inputName.$invalid && !tripForm.inputName.$pristine }">
+
+    <div class="col-sm-6">
+      <input type="text" class="form-control" name="inputName" id="inputName" placeholder="Name" ng-model="trip.name" required>
+     </div>
+     <div class="col-sm-4">
+      <p ng-show="tripForm.inputName.$invalid && !tripForm.inputName.$pristine" class="help-block">Name is required</p>
+     </div>
+  </div>
+
+  <!-- StartDate -->
+  <div class="form-group" ng-class="{ 'has-error' : tripForm.inputStartDate.$invalid && !tripForm.inputStartDate.$pristine }">
+    <label for="inputStartDate" class="col-sm-2 control-label">StartDate</label>
+    <div class="col-sm-6">
+      <input type="text" class="form-control" name="inputStartDate" id="inputStartDate" placeholder="Start date" ng-model="trip.startDate" required>
+     </div>
+     <div class="col-sm-4">
+      <p ng-show="tripForm.inputStartDate.$invalid && !tripForm.inputStartDate.$pristine" class="help-block">Start date of the trip required</p>
+     </div>
+  </div>
+
+  <!-- EndDate -->
+  <div class="form-group" ng-class="{ 'has-error' : tripForm.inputEndDate.$invalid && !tripForm.inputEndDate.$pristine }">
+    <label for="inputEndDate" class="col-sm-2 control-label">EndDate</label>
+    <div class="col-sm-6">
+      <input type="text" class="form-control" name="inputEndDate" id="inputEndDate" placeholder="Start date" ng-model="trip.endDate" required>
+    </div>
+    <div class="col-sm-4">
+      <p ng-show="tripForm.inputEndDate.$invalid && !tripForm.inputEndDate.$pristine" class="help-block">End date of the trip required</p>
+    </div>
+  </div>
+
+  <!-- Price -->
+  <div class="form-group" ng-class="{ 'has-error' : tripForm.inputPrice.$invalid && !tripForm.inputPrice.$pristine }">
+    <label for="inputPrice" class="col-sm-2 control-label">Price</label>
+    <div class="col-sm-6">
+      <input type="text" class="form-control" name="inputPrice" id="inputPrice" placeholder="Start date" ng-model="trip.price" required>
+    </div>
+    <div class="col-sm-4">
+      <p ng-show="tripForm.inputPrice.$invalid && !tripForm.inputPrice.$pristine" class="help-block">Nothing is free you know</p>
+    </div>
+  </div>
+
+  <!-- Organizer -->
+  <div class="form-group" ng-class="{ 'has-error' : tripForm.inputOrganizer.$invalid && !tripForm.inputOrganizer.$pristine }">
+    <label for="inputOrganizer" class="col-sm-2 control-label">Organizer</label>
+    <div class="col-sm-6">
+      <input type="text" class="form-control" name="inputOrganizer" id="inputOrganizer" placeholder="Start date" ng-model="trip.organizer.name" required>
+    </div>
+    <div class="col-sm-4">
+      <p ng-show="tripForm.inputOrganizer.$invalid && !tripForm.inputOrganizer.$pristine" class="help-block">Nothing is free you know</p>
+    </div>
+  </div>
+
+  <!-- Hikes -->
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Sections</label>
+    <div class="col-md-6">
+      <div ng-repeat="section in hike.sections">
+        <div class="form-group row">
+          <div class="col-md-4">
+            <input class="form-control" id="inputKey" placeholder="From"
+              ng-model="section.from" type="text">
+          </div>
+          <div class="col-md-4">
+            <input class="form-control" id="inputValue" placeholder="To"
+              ng-model="section.to" type="text">
+          </div>
+          <div style="padding-top:6px">
+            <a href ng-click="hike.sections.splice($index, 1)">Remove</a>
+          </div>
+        </div>
+      </div>
+      <div style="padding-top:6px">
+        <a href ng-click="hike.sections.push({})">Add...</a>
+      </div>
+    </div>
+  </div>
+
+</form>
