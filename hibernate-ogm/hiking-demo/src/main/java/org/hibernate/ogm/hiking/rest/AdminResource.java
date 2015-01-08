@@ -72,7 +72,7 @@ public class AdminResource {
 
 
 		Trip briceCanyon = new Trip();
-		briceCanyon.name = "Corsica from north to south";
+		briceCanyon.name = "Brice canyon";
 		briceCanyon.price = 254.9;
 		briceCanyon.organizer = new Person( "Emmanuel" );
 		briceCanyon.startDate = dateFormat.parse( "2015-06-13" );
@@ -89,6 +89,14 @@ public class AdminResource {
 		riggsSpringTrail.sections.add( new Section( "The Promontory", "Yovimpa Pass" ) );
 		hikeEm.persist( fairyLandTrail );
 		hikeEm.persist( riggsSpringTrail );
+
+		Trip semiMarathon = new Trip();
+		semiMarathon.name = "Semi-Marathon Paris Versailles";
+		semiMarathon.startDate = dateFormat.parse( "2015-09-27" );
+		semiMarathon.endDate = dateFormat.parse( "2015-09-27" );
+		semiMarathon.organizer = new Person( "Association Paris Versailles" );
+		semiMarathon.price = 5;
+		hikeEm.persist( semiMarathon );
 	}
 
 	private void clearDatabase(EntityManager em) {
