@@ -20,6 +20,10 @@ angular
                 controller:'EditCtrl',
                 templateUrl:'detail.html'
             })
+            .when('/orders', {
+                controller: 'OrdersCtrl',
+                templateUrl:'orders-list.html'
+            })
             .otherwise({
                 redirectTo:'/'
             });
@@ -28,6 +32,7 @@ angular
     .factory('PersistenceService', ['Restangular', function(Restangular) {
         var hikesResource = Restangular.all('hikes');
         var personsResource = Restangular.all('persons');
+        var ordersResource = Restangular.all('orders');
 
         return {
             getHikes: function(searchTerm) {
@@ -52,6 +57,12 @@ angular
             },
             deleteHike: function(hike) {
                 return Restangular.one('hikes', hike.id).remove();
+            },
+            getOrders: function() {
+                return ordersResource.getList();
+            },
+            createOrder: function(order) {
+                return ordersResource.post();
             }
         }
     }])
@@ -110,6 +121,25 @@ angular
         $scope.cancel = function() {
             $location.path('/');
         };
+    })
+
+    .controller('OrdersCtrl', function($scope, $location, PersistenceService) {
+        $scope.getOrders = function() {
+            PersistenceService.getOrders().then(function (orders) {
+                $scope.orders = orders;
+            });
+        };
+        $scope.new = function() {
+            PersistenceService.createOrder().then(function (order) {
+                $location.path('/orders');
+            });
+        };
+        $scope.remove = function(hike) {
+            PersistenceService.deleteHike(hike).then(function (hike) {
+                $scope.getHikes();
+            });
+        };
+        $scope.getOrders();
     })
 
     .run(function($rootScope) {
