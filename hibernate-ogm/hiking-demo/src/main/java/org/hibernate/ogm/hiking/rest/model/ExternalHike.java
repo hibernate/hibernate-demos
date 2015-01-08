@@ -11,7 +11,7 @@ public class ExternalHike {
 	private long id;
 	private String from;
 	private String to;
-	private ExternalPerson organizer;
+	private ExternalTrip recommendedTrip;
 	private List<Section> sections = new ArrayList<>();
 
 	public ExternalHike() {
@@ -21,7 +21,7 @@ public class ExternalHike {
 		this.id = hike.id;
 		this.from = hike.start;
 		this.to = hike.destination;
-		this.organizer = hike.organizer != null ? new ExternalPerson( hike.organizer ) : null;
+		this.recommendedTrip = hike.recommendedTrip != null ? new ExternalTrip( hike.recommendedTrip ) : null;
 
 		for ( Section section : hike.sections ) {
 			if ( section != null ) {
@@ -54,12 +54,12 @@ public class ExternalHike {
 		this.to = to;
 	}
 
-	public ExternalPerson getOrganizer() {
-		return organizer;
+	public ExternalTrip getRecommendedTrip() {
+		return recommendedTrip;
 	}
 
-	public void setOrganizer(ExternalPerson organizer) {
-		this.organizer = organizer;
+	public void setRecommendedTrip(ExternalTrip recommendedTrip) {
+		this.recommendedTrip = recommendedTrip;
 	}
 
 	public List<Section> getSections() {
@@ -72,6 +72,6 @@ public class ExternalHike {
 
 	@Override
 	public String toString() {
-		return "ExternalHike [id=" + id + ", from=" + from + ", to=" + to + ", organizer=" + organizer + ", sections=" + sections + "]";
+		return "ExternalHike [id=" + id + ", from=" + from + ", to=" + to + ", recommendedTrip=" + recommendedTrip + ", sections=" + sections + "]";
 	}
 }

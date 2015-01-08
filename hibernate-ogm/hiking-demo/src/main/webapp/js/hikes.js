@@ -31,7 +31,7 @@ angular
 
     .factory('PersistenceService', ['Restangular', function(Restangular) {
         var hikesResource = Restangular.all('hikes');
-        var personsResource = Restangular.all('persons');
+        var tripsResource = Restangular.all('trips');
         var ordersResource = Restangular.all('orders');
 
         return {
@@ -46,8 +46,8 @@ angular
             getHike: function(hike) {
                 return Restangular.one('hikes', hike).get();
             },
-            getPersons: function() {
-                return personsResource.getList();
+            getTrips: function() {
+                return tripsResource.getList();
             },
             createHike: function(hike) {
                 return hikesResource.post(hike);
@@ -84,8 +84,8 @@ angular
     })
 
     .controller('DetailCtrl', function($scope,  $location, PersistenceService) {
-        PersistenceService.getPersons().then(function (persons) {
-            $scope.persons = persons;
+        PersistenceService.getTrips().then(function (trips) {
+            $scope.trips = trips;
         });
 
         $scope.hike = { sections: [] };
@@ -104,8 +104,8 @@ angular
     .controller('EditCtrl', function($scope,  $location, $routeParams, PersistenceService) {
         $scope.hike;
 
-        PersistenceService.getPersons().then(function (persons) {
-            $scope.persons = persons;
+        PersistenceService.getTrips().then(function (trips) {
+            $scope.trips = trips;
         });
 
         PersistenceService.getHike($routeParams.hikeId).then(function (hike) {

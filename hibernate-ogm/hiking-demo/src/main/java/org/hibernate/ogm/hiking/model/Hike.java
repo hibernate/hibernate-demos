@@ -26,7 +26,7 @@ public class Hike {
 	public String destination;
 
 	@ManyToOne
-	public Person organizer;
+	public Trip recommendedTrip;
 
 	@ElementCollection
 	@OrderColumn(name="order")
