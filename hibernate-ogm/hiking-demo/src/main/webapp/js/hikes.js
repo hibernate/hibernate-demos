@@ -69,7 +69,7 @@ angular
                 return ordersResource.getList();
             },
             createOrder: function(order) {
-                return ordersResource.post();
+                return ordersResource.post(order);
             }
         }
     }])
@@ -110,6 +110,7 @@ angular
 
    .controller('TripDetailCtrl', function($scope,  $location, $routeParams, PersistenceService) {
        $scope.trip;
+       $scope.order = { tripId: $routeParams.tripId, customer: {} };
 
        PersistenceService.getTrips().then(function (trips) {
            $scope.trips = trips;
@@ -118,6 +119,16 @@ angular
        PersistenceService.getTrip($routeParams.tripId).then(function (trip) {
            $scope.trip = trip;
        });
+
+       $scope.save = function() {
+           PersistenceService.createOrder($scope.order).then(function (order) {
+               $location.path('/orders');
+           });
+       };
+
+       $scope.cancel = function() {
+           $location.path('/');
+       };
    })
 
     .controller('EditCtrl', function($scope,  $location, $routeParams, PersistenceService) {
