@@ -70,3 +70,44 @@
   </div>
 
 </form>
+
+<hr/>
+
+<form name="orderForm" class="form-horizontal" role="form" novalidate ng-submit="save()">
+
+  <div>
+    <h2>Order this trip</h2>
+  </div>
+  <!-- Name -->
+  <div class="form-group" ng-class="{ 'has-error' : orderForm.inputName.$invalid && !orderForm.inputName.$pristine }">
+    <label for="inputName" class="col-sm-2 control-label">Your name</label>
+    <div class="col-sm-6">
+      <input type="text" class="form-control" name="inputName" id="inputName" placeholder="Firstname Lastname" ng-model="order.customer.name" required>
+    </div>
+    <div class="col-sm-4">
+      <p ng-show="orderForm.inputName.$invalid && !orderForm.inputName.$pristine" class="help-block">Your name is required</p>
+    </div>
+  </div>
+
+  <!-- Email -->
+  <div class="form-group" ng-class="{ 'has-error' : orderForm.inputEmail.$invalid && !orderForm.inputEmail.$pristine }">
+    <label for="inputEmail" class="col-sm-2 control-label">Email</label>
+    <div class="col-sm-6">
+      <input type="text" class="form-control" name="inputEmail" id="inputEmail" placeholder="Email" ng-model="order.customer.email" required>
+    </div>
+    <div class="col-sm-4">
+      <p ng-show="orderForm.inputEmail.$invalid && !orderForm.inputEmail.$pristine" class="help-block">Your email is required</p>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="form-group">
+    <div class="col-md-offset-2 col-sm-1">
+      <button class="btn btn-primary" type="submit" ng-disabled="orderForm.$invalid">Save</button>
+    </div>
+    <div class="col-sm-9">
+      <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+    </div>
+  </div>
+
+</form>

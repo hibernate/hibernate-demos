@@ -21,11 +21,8 @@ public class OrderRepository {
 	@Inject
 	private HikeRepository hikeResolitory;
 
-	public Order createOrder() {
-		Hike hike = hikeResolitory.getAllHikes().get( 0 );
-		Order order = new Order();
+	public Order createOrder(Order order) {
 		order.number = UUID.randomUUID().toString();
-		order.hikeId = hike.id;
 		entityManager.persist( order );
 		return order;
 	}
