@@ -1,5 +1,6 @@
 package org.hibernate.ogm.hiking.model.business;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,5 +17,7 @@ public class Order {
 	public Long id;
 
 	public String number;
-	public long hikeId;
+	public long tripId;
+	@Embedded
+	public Customer customer;
 }

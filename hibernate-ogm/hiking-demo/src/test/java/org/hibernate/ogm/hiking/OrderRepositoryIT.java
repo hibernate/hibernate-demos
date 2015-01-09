@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.hibernate.ogm.hiking.model.Hike;
+import org.hibernate.ogm.hiking.model.business.Customer;
 import org.hibernate.ogm.hiking.model.business.Order;
 import org.hibernate.ogm.hiking.repository.HikeRepository;
 import org.hibernate.ogm.hiking.repository.business.OrderRepository;
@@ -54,15 +55,20 @@ public class OrderRepositoryIT {
 
 	@Test
 	public void shouldPersistOrder() {
-		Order order = orderRepository.createOrder();
+		Order order = new Order();
+		order.customer = new Customer();
+		order.customer.email = "jesuischarlie@hibernate.org";
+		order.customer.name = "Charlie";
+		order = orderRepository.createOrder(order);
 		assertNotNull( order.number );
 		assertNotNull( order.id );
+		assertEquals( "Charlie", order.customer.name );
 
 		//entityManager.flush();
 
 		order = orderRepository.getOrderByNumber( order.number );
 
 		assertNotNull( order );
-		assertTrue( order.hikeId != 0 );
+		assertNotNull( order.customer );
 	}
 }
