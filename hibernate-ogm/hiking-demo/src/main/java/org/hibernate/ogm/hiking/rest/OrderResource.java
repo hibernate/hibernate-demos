@@ -26,10 +26,11 @@ public class OrderResource {
 	@Path("/")
 	@Consumes("application/json")
 	@Produces("application/json")
-	public long createOrder() {
-		Order order = orderRepository.createOrder();
-		return order.id;
+	public Order createOrder(Order order) {
+		order = orderRepository.createOrder(order);
+		return order;
 	}
+
 	@GET
 	@Path("/")
 	@Produces("application/json")
