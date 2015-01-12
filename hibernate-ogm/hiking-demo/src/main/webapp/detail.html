@@ -24,10 +24,10 @@
 
   <!-- Organizer -->
   <div class="form-group">
-    <label for="inputOrganizer" class="col-sm-2 control-label">Organizer</label>
+    <label for="inputRecommendedTrip" class="col-sm-2 control-label">Recommended trip</label>
     <div class="col-sm-3">
-      <select class="form-control" data-ng-model="hike.organizer.id" id="inputOrganizer" data-ng-options="p.id as p.name for p in persons">
-        <option value=""> - Select organizer - </option>
+      <select class="form-control" data-ng-model="hike.recommendedTrip.id" id="inputRecommendedTrip" data-ng-options="t.id as t.name for t in trips">
+        <option value=""> - Select recommendedTrip - </option>
       </select>
     </div>
   </div>

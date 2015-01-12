@@ -9,6 +9,8 @@ import javax.persistence.Persistence;
 import org.hibernate.ogm.hiking.model.Hike;
 import org.hibernate.ogm.hiking.model.Person;
 import org.hibernate.ogm.hiking.model.Section;
+import org.hibernate.ogm.hiking.model.Trip;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -72,21 +74,22 @@ public class HikeTest {
 		entityManager.getTransaction().begin();
 
 		Hike hike = new Hike( "San Francisco", "Oakland" );
-		Person bob = new Person( "Bob" );
+		Trip trip = new Trip();
+		trip.name = "Nappa Valley Unit Test";
 
-		hike.organizer = bob;
-		bob.organizedHikes.add( hike );
+		hike.recommendedTrip = trip;
+		trip.availableHikes.add( hike );
 
+		entityManager.persist( trip );
 		entityManager.persist( hike );
-		entityManager.persist( bob );
 
 		entityManager.getTransaction().commit();
 
 		entityManager.getTransaction().begin();
 		hike = entityManager.find( Hike.class, hike.id );
 
-		assertThat( hike.organizer ).isNotNull();
-		assertThat( hike.organizer.name ).isEqualTo( "Bob" );
+		assertThat( hike.recommendedTrip ).isNotNull();
+		assertThat( hike.recommendedTrip.name ).isEqualTo( "Nappa Valley Unit Test" );
 
 		entityManager.getTransaction().commit();
 	}

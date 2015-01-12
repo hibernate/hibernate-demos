@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 
 import org.hibernate.ogm.hiking.model.Hike;
 import org.hibernate.ogm.hiking.model.Person;
+import org.hibernate.ogm.hiking.model.Trip;
 
 @ApplicationScoped
 public class HikeRepository {
@@ -15,16 +16,13 @@ public class HikeRepository {
 	@PersistenceContext(unitName="hike-PU-JTA")
 	private EntityManager entityManager;
 
-	public Hike createHike(Hike hike, Person organizer) {
+	public Hike createHike(Hike hike, Trip recommendedTrip) {
 		entityManager.persist( hike );
 
-		if ( organizer != null ) {
-			if ( !entityManager.contains( organizer ) ) {
-				entityManager.persist( organizer );
-			}
-
-			hike.organizer = organizer;
-			organizer.organizedHikes.add( hike );
+		if ( recommendedTrip != null ) {
+			recommendedTrip = entityManager.merge( recommendedTrip );
+			hike.recommendedTrip = recommendedTrip;
+			recommendedTrip.availableHikes.add( hike );
 		}
 
 		return hike;
@@ -54,8 +52,8 @@ public class HikeRepository {
 		Hike hike = entityManager.find( Hike.class, hikeId );
 
 		if ( hike != null ) {
-			if ( hike.organizer != null ) {
-				hike.organizer.organizedHikes.remove( hike );
+			if ( hike.recommendedTrip != null ) {
+				hike.recommendedTrip.availableHikes.remove( hike );
 			}
 			entityManager.remove( hike );
 		}
