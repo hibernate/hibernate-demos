@@ -39,7 +39,7 @@ public class HikeResource {
 	@GET
 	@Path("/{id}")
 	@Produces("application/json")
-	public ExternalHike getHikeById(@PathParam("id") long hikeId) {
+	public ExternalHike getHikeById(@PathParam("id") String hikeId) {
 		return new ExternalHike( hikeRepository.getHikeById( hikeId ) );
 	}
 
@@ -103,7 +103,7 @@ public class HikeResource {
 
 	@DELETE
 	@Path("/{id}")
-	public void deleteHike(@PathParam("id") long id) {
+	public void deleteHike(@PathParam("id") String id) {
 		hikeRepository.deleteHike( id );
 	}
 }

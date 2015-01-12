@@ -27,7 +27,7 @@ public class HikeRepository {
 		return hike;
 	}
 
-	public Hike getHikeById(long hikeId) {
+	public Hike getHikeById(String hikeId) {
 		return entityManager.find( Hike.class, hikeId );
 	}
 
@@ -47,7 +47,7 @@ public class HikeRepository {
 		return hike;
 	}
 
-	public void deleteHike(long hikeId) {
+	public void deleteHike(String hikeId) {
 		Hike hike = entityManager.find( Hike.class, hikeId );
 
 		if ( hike != null ) {
