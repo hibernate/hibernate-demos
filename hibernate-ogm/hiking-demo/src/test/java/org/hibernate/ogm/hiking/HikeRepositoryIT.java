@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -66,5 +67,19 @@ public class HikeRepositoryIT {
 
 		hike = entityManager.find( Hike.class, hike.id );
 		assertNotNull( hike );
+	}
+
+	@Test
+	public void testNativeQueries() {
+		Trip trip = new Trip();
+		trip.name = "End of the world";
+		trip = tripRepository.createTrip( trip );
+		Hike hike = hikeRepository.createHike( new Hike( "North pole", "South pole" ), trip );
+
+		entityManager.flush();
+		entityManager.clear();
+
+		List<Hike> hikes = hikeRepository.getHikesByTripId( trip.id );
+		assertEquals( 1, hikes.size() );
 	}
 }
