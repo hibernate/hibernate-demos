@@ -7,7 +7,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.hibernate.ogm.hiking.model.Hike;
-import org.hibernate.ogm.hiking.model.Person;
 import org.hibernate.ogm.hiking.model.Trip;
 
 @ApplicationScoped
@@ -57,5 +56,10 @@ public class HikeRepository {
 			}
 			entityManager.remove( hike );
 		}
+	}
+
+	public List<Hike> getHikesByTripId(long tripId) {
+		String query = "{ recommendedTrip_id: { $in: [" + tripId + "] } }";
+		return entityManager.createNativeQuery( query, Hike.class ).getResultList();
 	}
 }
