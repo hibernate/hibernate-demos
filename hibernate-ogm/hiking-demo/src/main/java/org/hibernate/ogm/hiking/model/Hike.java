@@ -13,13 +13,16 @@ import javax.persistence.NamedNativeQuery;
 import javax.persistence.OrderColumn;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Type;
+
 @Entity
 @NamedNativeQuery( name = "hikesByTripId", query = "{ recommendedTrip_id: { $in: [ 27 ] } }", resultClass = Hike.class )
 public class Hike {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
-	public long id;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Type(type = "objectid")
+	public String id;
 
 	@NotNull
 	public String start;
