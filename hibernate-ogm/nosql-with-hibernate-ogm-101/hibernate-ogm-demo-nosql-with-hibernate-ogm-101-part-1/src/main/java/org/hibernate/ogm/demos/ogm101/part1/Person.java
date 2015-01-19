@@ -9,11 +9,13 @@ package org.hibernate.ogm.demos.ogm101.part1;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  * A person organizing hikes.
@@ -24,13 +26,14 @@ import javax.persistence.OneToMany;
 public class Person {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid2")
+	private String id;
 
 	private String firstName;
 	private String lastName;
 
-	@OneToMany(mappedBy="organizer")
+	@OneToMany(mappedBy = "organizer", cascade = CascadeType.PERSIST)
 	private Set<Hike> organizedHikes = new HashSet<>();
 
 	// constructors, getters and setters...
@@ -43,11 +46,11 @@ public class Person {
 		this.lastName = lastName;
 	}
 
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

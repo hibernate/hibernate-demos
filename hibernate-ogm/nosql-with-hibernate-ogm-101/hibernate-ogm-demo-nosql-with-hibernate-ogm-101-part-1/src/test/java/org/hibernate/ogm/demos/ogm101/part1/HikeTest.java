@@ -67,15 +67,14 @@ public class HikeTest {
 		isleOfWight.setOrganizer( bob );
 		bob.getOrganizedHikes().add( isleOfWight );
 
-		// persist everything
+		// persist organizer (will be cascaded to hikes)
 		entityManager.persist( bob );
-		entityManager.persist( cornwall );
-		entityManager.persist( isleOfWight );
 
 		entityManager.getTransaction().commit();
 
-		// make sure data is actually retrieved from the store and not Hibernate’s internal cache
-		entityManager.clear();
+		// get a new EM to make sure data is actually retrieved from the store and not Hibernate’s internal cache
+		entityManager.close();
+		entityManager = entityManagerFactory.createEntityManager();
 
 		// load it back
 		entityManager.getTransaction().begin();

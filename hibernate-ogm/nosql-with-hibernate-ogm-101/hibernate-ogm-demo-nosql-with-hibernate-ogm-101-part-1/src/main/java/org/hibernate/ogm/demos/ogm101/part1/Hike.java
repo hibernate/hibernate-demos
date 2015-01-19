@@ -15,10 +15,11 @@ import java.util.List;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OrderColumn;
+
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  * A hike.
@@ -29,8 +30,9 @@ import javax.persistence.OrderColumn;
 public class Hike {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid2")
+	private String id;
 
 	private String description;
 	private Date date;
@@ -55,11 +57,11 @@ public class Hike {
 		this.sections = sections != null ? new ArrayList<>( Arrays.<HikeSection>asList( sections ) ) : new ArrayList<HikeSection>();
 	}
 
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
