@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+	version="2.0">
+
+	<!-- Use this for Neo4j -->
+	<!--
+	<persistence-unit name="hikePu" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ogm.jpa.HibernateOgmPersistence</provider>
+
+		<properties>
+			<property name="hibernate.ogm.datastore.provider" value="neo4j_embedded" />
+			<property name="hibernate.ogm.datastore.database" value="HikeDB" />
+			<property name="hibernate.ogm.neo4j.database_path" value="target/test_data_dir" />
+		</properties>
+	</persistence-unit>
+	-->
+
+	<!-- Use this for MongoDB -->
+	<persistence-unit name="hikePu" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ogm.jpa.HibernateOgmPersistence</provider>
+
+		<properties>
+			<property name="hibernate.ogm.datastore.provider" value="mongodb" />
+			<property name="hibernate.ogm.datastore.database" value="HikeDB" />
+			<property name="hibernate.ogm.datastore.create_database" value="true" />
+		</properties>
+	</persistence-unit>
+</persistence>
