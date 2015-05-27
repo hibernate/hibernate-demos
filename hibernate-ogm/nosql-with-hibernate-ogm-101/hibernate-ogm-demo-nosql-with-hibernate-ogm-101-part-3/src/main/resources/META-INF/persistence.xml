@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+	version="1.0">
+
+	<persistence-unit name="hike-PU" transaction-type="JTA">
+		<provider>org.hibernate.ogm.jpa.HibernateOgmPersistence</provider>
+
+		<class>org.hibernate.ogm.demos.ogm101.part3.model.Person</class>
+		<class>org.hibernate.ogm.demos.ogm101.part3.model.Hike</class>
+
+		<properties>
+			<property name="hibernate.ogm.datastore.provider" value="INFINISPAN" />
+			<property name="hibernate.ogm.datastore.database" value="hike_db" />
+			<property name="hibernate.ogm.datastore.create_database" value="true" />
+		</properties>
+	</persistence-unit>
+</persistence>
