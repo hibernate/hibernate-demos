@@ -10,6 +10,7 @@ This repository contains demos used live during presentations; The following dem
  * _core/Caching_: entity second level cache (2LC) and query cache
  * _core/Envers_: historical/audited data
  * _core/Spatial_: geographical data
+ * _osgi_: tutorials demonstrating all possible ORM OSGi configurations
 * Hibernate OGM
  * _hiking-demo_: Demo project used for the talk "Hibernate OGM: Talking to NoSQL in Red Hat JBoss EAP" presented at Red Hat Summit 2014. It shows how to use MongoDB as data store in a Java EE application through JPA / Hibernate OGM.
 

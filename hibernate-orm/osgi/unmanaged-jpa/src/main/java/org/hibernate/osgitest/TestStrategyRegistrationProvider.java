@@ -20,17 +20,18 @@
  */
 package org.hibernate.osgitest;
 
-import java.util.Collections;
-
 import org.hibernate.boot.registry.selector.StrategyRegistration;
 import org.hibernate.boot.registry.selector.StrategyRegistrationProvider;
+
+import java.util.Collections;
 
 /**
  * @author Brett Meyer
  */
 public class TestStrategyRegistrationProvider implements StrategyRegistrationProvider {
 
-	public Iterable<StrategyRegistration> getStrategyRegistrations() {
+    @Override
+    public Iterable<StrategyRegistration> getStrategyRegistrations() {
 		System.out.println("StrategyRegistrationProvider#getStrategyRegistrations");
 		return Collections.EMPTY_LIST;
 	}

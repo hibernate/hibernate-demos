@@ -1,0 +1,18 @@
+# Hibernate ORM OSGi Tutorial: Managed JPA through Enterprise OSGi JPA
+
+This tutorial demonstrates the use of Enterprise OSGi JPA to create a "managed JPA" environment in your OSGi container.
+More specifically, this is based on Apache Karaf 3.0.4 and Apache Aries JPA.  See the Hibernate ORM User Guide's OSGi
+chapter for more information!
+
+## Running the Tutorial
+
+To run the tutorial, use the following commands in the Karaf console:
+
+- feature:repo-add file:/[PATH]/karaf.xml (Hibernate ORM's features file, obtained from a binary distro or JBoss Nexus)
+- feature:install hibernate-orm
+- feature:repo-add file:/[PATH]/hibernate-demos/hibernate-orm/osgi/managed-jpa/features.xml
+- feature:install hibernate-osgi-managed-jpa
+
+IMPORTANT: You'll also need to update the following path within this demo's features.xml:
+
+\<bundle\>blueprint:file:/[PATH]/datasource-h2.xml\</bundle\>
