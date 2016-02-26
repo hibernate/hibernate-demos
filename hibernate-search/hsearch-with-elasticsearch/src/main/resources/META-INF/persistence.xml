@@ -1,0 +1,34 @@
+<!-- 
+
+ Hibernate Search, full-text search for your domain model
+
+ License: GNU Lesser General Public License (LGPL), version 2.1 or later
+ See the lgpl.txt file in the root directory or <http://www.gnu.org/licenses/lgpl-2.1.html>.
+
+-->
+<persistence 
+  xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+  version="2.1">
+
+  <persistence-unit name="videoGamePu" transaction-type="RESOURCE_LOCAL">
+
+    <description>Persistence Unit of the Video Game Manager App</description>
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+    <properties>
+      <property name="hibernate.connection.url" value="jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1" />
+      <property name="hibernate.connection.username" value="sa" />
+
+      <property name="hibernate.show_sql" value="false" />
+      <property name="hibernate.hbm2ddl.auto" value="create-drop" />
+
+      <!-- Not needed if using localhost -->
+      <!-- <property name="hibernate.search.elasticsearch.host" value="http://127.0.0.1:9200" /> -->
+      <property name="hibernate.search.default.indexmanager" value="elasticsearch" />
+      <property name="hibernate.search.elasticsearch.index_management_strategy" value="CREATE" />
+    </properties>
+
+  </persistence-unit>
+</persistence>

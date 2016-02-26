@@ -1,0 +1,134 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.hibernate.search.demos</groupId>
+	<artifactId>hibernate-search-with-elasticsearch</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>Hibernate Search with Elasticsearch Backend</name>
+	<url>http://hibernate.org/search/</url>
+	<description>Demonstrates how to use the Elasticsearch backend for Hibernate Search</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+
+		<version.org.hibernate.search>5.6.0-SNAPSHOT</version.org.hibernate.search>
+		<version.org.hibernate.orm>5.0.8.Final</version.org.hibernate.orm>
+	</properties>
+
+	<dependencies>
+		<!-- Compile -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-search-orm</artifactId>
+			<version>${version.org.hibernate.search}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-search-backend-elasticsearch</artifactId>
+			<version>${version.org.hibernate.search}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${version.org.hibernate.orm}</version>
+		</dependency>
+
+		<!-- Test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.178</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.easytesting</groupId>
+			<artifactId>fest-assert</artifactId>
+			<version>1.4</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.19.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+						<configuration>
+							<redirectTestOutputToFile>true</redirectTestOutputToFile>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>unpack</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.elasticsearch.plugin</groupId>
+									<artifactId>delete-by-query</artifactId>
+									<version>2.0.0</version>
+									<type>zip</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}/_ES_PLUGINS_/delete-by-query</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.github.alexcojocaru</groupId>
+				<artifactId>elasticsearch-maven-plugin</artifactId>
+				<version>2.0</version>
+				<configuration>
+					<clusterName>hsearch-es-test-cluster</clusterName>
+					<tcpPort>9300</tcpPort>
+					<httpPort>9200</httpPort>
+					<pluginsPath>${project.build.directory}/_ES_PLUGINS_</pluginsPath>
+				</configuration>
+				<executions>
+					<execution>
+						<id>start-elasticsearch</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>start</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>stop-elasticsearch</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
