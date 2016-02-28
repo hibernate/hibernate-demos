@@ -70,6 +70,11 @@ public class VideoGame {
 		return title;
 	}
 
+	@Override
+	public String toString() {
+		return "VideoGame [id=" + id + ", title=" + title + "]";
+	}
+
 	public static class Builder {
 
 		private String title;

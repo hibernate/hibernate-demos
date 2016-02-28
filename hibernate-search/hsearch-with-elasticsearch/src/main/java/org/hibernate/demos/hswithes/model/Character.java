@@ -41,4 +41,9 @@ public class Character {
 		this.nickName = nickName;
 		this.specialPower = specialPower;
 	}
+
+	@Override
+	public String toString() {
+		return "Character [id=" + id + ", nickName=" + nickName + ", specialPower=" + specialPower + "]";
+	}
 }
