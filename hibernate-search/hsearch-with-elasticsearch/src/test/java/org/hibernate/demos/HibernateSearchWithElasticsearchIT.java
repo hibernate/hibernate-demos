@@ -9,6 +9,7 @@ package org.hibernate.demos;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -25,6 +26,7 @@ import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
+import org.hibernate.transform.BasicTransformerAdapter;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -238,6 +240,7 @@ public class HibernateSearchWithElasticsearchIT extends TestBase {
 			.setProjection( "title", "publisher.name", "release" );
 
 			Object[] projection = (Object[]) query.getSingleResult();
+
 			assertThat( projection[0] ).isEqualTo( "Tanaka's return" );
 			assertThat( projection[1] ).isEqualTo( "Samurai Games, Inc." );
 			assertThat( projection[2] ).isEqualTo( new GregorianCalendar( 2011, 2, 13 ).getTime() );
@@ -260,6 +263,41 @@ public class HibernateSearchWithElasticsearchIT extends TestBase {
 	}
 
 	@Test
+	public void projectionWithTransformer() {
+		EntityManager em = emf.createEntityManager();
+
+		inTransaction( em, tx -> {
+			FullTextEntityManager ftem = Search.getFullTextEntityManager( em );
+			QueryBuilder qb = ftem.getSearchFactory()
+					.buildQueryBuilder()
+					.forEntity( VideoGame.class )
+					.get();
+
+			FullTextQuery query = ftem.createFullTextQuery(
+					qb.keyword()
+					.onField( "tags" )
+					.matching( "round-based" )
+					.createQuery(),
+					VideoGame.class
+			)
+			.setProjection( "title", "publisher.name", "release" )
+			.setResultTransformer( new BasicTransformerAdapter() {
+				@Override
+				public VideoGameDto transformTuple(Object[] tuple, String[] aliases) {
+					return new VideoGameDto( (String) tuple[0], (String) tuple[1], (Date) tuple[2] );
+				}
+			} );
+
+			VideoGameDto projection = (VideoGameDto) query.getSingleResult();
+			assertThat( projection.getTitle() ).isEqualTo( "Tanaka's return" );
+			assertThat( projection.getPublisherName() ).isEqualTo( "Samurai Games, Inc." );
+			assertThat( projection.getRelease() ).isEqualTo( new GregorianCalendar( 2011, 2, 13 ).getTime() );
+		} );
+
+		em.close();
+	}
+
+	@Test
 	@Ignore
 	public void manualIndexing() {
 		EntityManager em = emf.createEntityManager();
@@ -276,5 +314,35 @@ public class HibernateSearchWithElasticsearchIT extends TestBase {
 	@AfterClass
 	public static void closeEmf() {
 		emf.close();
+	}
+
+	public static class VideoGameDto {
+
+		private String title;
+		private String publisherName;
+		private Date release;
+
+		public VideoGameDto(String title, String publisherName, Date release) {
+			this.title = title;
+			this.publisherName = publisherName;
+			this.release = release;
+		}
+
+		public String getTitle() {
+			return title;
+		}
+
+		public String getPublisherName() {
+			return publisherName;
+		}
+
+		public Date getRelease() {
+			return release;
+		}
+
+		@Override
+		public String toString() {
+			return "VideoGameDto [title=" + title + ", publisherName=" + publisherName + ", release=" + release + "]";
+		}
 	}
 }
