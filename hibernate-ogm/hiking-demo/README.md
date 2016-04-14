@@ -46,8 +46,8 @@ The project contains the required modules for Hibernate OGM in the _.openshift/c
 
     echo "-Dhibernate.ogm.datastore.host=$OPENSHIFT_MONGODB_DB_HOST \
         -Dhibernate.ogm.datastore.port=$OPENSHIFT_MONGODB_DB_PORT \
-        -Dhibernate.ogm.datastore.username=OPENSHIFT_MONGODB_DB_USERNAME \
-        -Dhibernate.ogm.datastore.password=OPENSHIFT_MONGODB_DB_PASSWORD \
+        -Dhibernate.ogm.datastore.username=$OPENSHIFT_MONGODB_DB_USERNAME \
+        -Dhibernate.ogm.datastore.password=$OPENSHIFT_MONGODB_DB_PASSWORD \
         -Dhibernate.ogm.datastore.database=ogm" \
         > .env/user_vars/JAVA_OPTS_EXT
 
