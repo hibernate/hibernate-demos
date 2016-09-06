@@ -27,7 +27,7 @@
       <!-- Not needed if using localhost -->
       <!-- <property name="hibernate.search.elasticsearch.host" value="http://127.0.0.1:9200" /> -->
       <property name="hibernate.search.default.indexmanager" value="elasticsearch" />
-      <property name="hibernate.search.elasticsearch.index_management_strategy" value="CREATE" />
+      <property name="hibernate.search.default.elasticsearch.index_schema_management_strategy" value="CREATE" />
     </properties>
 
   </persistence-unit>

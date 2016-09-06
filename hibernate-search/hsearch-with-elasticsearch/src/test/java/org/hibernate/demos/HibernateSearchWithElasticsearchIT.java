@@ -20,8 +20,8 @@ import javax.persistence.Persistence;
 import org.hibernate.demos.hswithes.model.Character;
 import org.hibernate.demos.hswithes.model.Publisher;
 import org.hibernate.demos.hswithes.model.VideoGame;
-import org.hibernate.search.backend.elasticsearch.ElasticsearchQueries;
-import org.hibernate.search.backend.elasticsearch.ProjectionConstants;
+import org.hibernate.search.elasticsearch.ElasticsearchProjectionConstants;
+import org.hibernate.search.elasticsearch.ElasticsearchQueries;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.jpa.Search;
@@ -252,7 +252,7 @@ public class HibernateSearchWithElasticsearchIT extends TestBase {
 					.createQuery(),
 					VideoGame.class
 			)
-			.setProjection( ProjectionConstants.SCORE, ProjectionConstants.SOURCE );
+			.setProjection( ElasticsearchProjectionConstants.SCORE, ElasticsearchProjectionConstants.SOURCE );
 
 			projection = (Object[]) query.getSingleResult();
 
@@ -318,9 +318,9 @@ public class HibernateSearchWithElasticsearchIT extends TestBase {
 
 	public static class VideoGameDto {
 
-		private String title;
-		private String publisherName;
-		private Date release;
+		private final String title;
+		private final String publisherName;
+		private final Date release;
 
 		public VideoGameDto(String title, String publisherName, Date release) {
 			this.title = title;

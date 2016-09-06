@@ -72,7 +72,7 @@ public class VideoGame {
 
 	@Override
 	public String toString() {
-		return "VideoGame [id=" + id + ", title=" + title + "]";
+		return "VideoGame [id=" + id + ", title=" + title + ", description=" + description + "]";
 	}
 
 	public static class Builder {
@@ -82,8 +82,8 @@ public class VideoGame {
 		private int rating;
 		private Date publishingDate;
 		private Publisher publisher;
-		private List<String> tags = new ArrayList<>();
-		private List<Character> characters = new ArrayList<>();
+		private final List<String> tags = new ArrayList<>();
+		private final List<Character> characters = new ArrayList<>();
 
 		public Builder withTitle(String title) {
 			this.title = title;
