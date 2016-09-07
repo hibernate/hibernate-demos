@@ -24,9 +24,11 @@
       <property name="hibernate.show_sql" value="false" />
       <property name="hibernate.hbm2ddl.auto" value="create-drop" />
 
-      <!-- Not needed if using localhost -->
-      <!-- <property name="hibernate.search.elasticsearch.host" value="http://127.0.0.1:9200" /> -->
       <property name="hibernate.search.default.indexmanager" value="elasticsearch" />
+
+      <!-- Not needed if using localhost -->
+      <!-- <property name="hibernate.search.default.elasticsearch.host" value="http://127.0.0.1:9200" /> -->
+
       <property name="hibernate.search.default.elasticsearch.index_schema_management_strategy" value="CREATE" />
     </properties>
 
