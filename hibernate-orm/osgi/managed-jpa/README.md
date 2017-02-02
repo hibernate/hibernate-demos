@@ -8,7 +8,7 @@ chapter for more information!
 
 To run the tutorial, use the following commands in the Karaf console:
 
-- feature:repo-add file:/[PATH]/karaf.xml (Hibernate ORM's features file, obtained from a binary distro or JBoss Nexus)
+- feature:repo-add mvn:org.hibernate/hibernate-osgi/[VERSION]/xml/karaf
 - feature:install hibernate-orm
 - feature:repo-add file:/[PATH]/hibernate-demos/hibernate-orm/osgi/managed-jpa/features.xml
 - feature:install hibernate-osgi-managed-jpa
