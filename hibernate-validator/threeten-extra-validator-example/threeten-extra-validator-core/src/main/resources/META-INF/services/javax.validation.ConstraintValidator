@@ -1,0 +1,5 @@
+#providing a list of new validators for @Past and @Future
+com.acme.validation.validators.FutureYearQuarterValidator
+com.acme.validation.validators.FutureYearWeekValidator
+com.acme.validation.validators.PastYearQuarterValidator
+com.acme.validation.validators.PastYearWeekValidator
