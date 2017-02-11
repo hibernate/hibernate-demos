@@ -34,10 +34,17 @@ import org.hibernate.brmeyer.demo.entity.Tool;
 import org.hibernate.brmeyer.demo.entity.User;
 
 /**
+ * The Class BasicJpaDemo.
+ *
  * @author Brett Meyer
  */
 public class BasicJpaDemo {
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		try {
 			Tool tool = new Tool();
@@ -72,6 +79,12 @@ public class BasicJpaDemo {
 		System.exit(0);
 	}
 	
+	/**
+	 * Insert user.
+	 *
+	 * @param user the user
+	 * @throws Exception the exception
+	 */
 	private static void insertUser(User user) throws Exception {
 		EntityManager entityManager = openEntityManager();
 		entityManager.getTransaction().begin();
@@ -79,6 +92,12 @@ public class BasicJpaDemo {
 		entityManager.getTransaction().commit();
 	}
 	
+	/**
+	 * Insert tool.
+	 *
+	 * @param tool the tool
+	 * @throws SQLException the SQL exception
+	 */
 	private static void insertTool(Tool tool) throws SQLException {
 		EntityManager entityManager = openEntityManager();
 		entityManager.getTransaction().begin();
@@ -86,6 +105,12 @@ public class BasicJpaDemo {
 		entityManager.getTransaction().commit();
 	}
 	
+	/**
+	 * Insert skill.
+	 *
+	 * @param skill the skill
+	 * @throws SQLException the SQL exception
+	 */
 	private static void insertSkill(Skill skill) throws SQLException {
 		EntityManager entityManager = openEntityManager();
 		entityManager.getTransaction().begin();
@@ -93,6 +118,13 @@ public class BasicJpaDemo {
 		entityManager.getTransaction().commit();
 	}
 	
+	/**
+	 * Gets the user.
+	 *
+	 * @param id the id
+	 * @return the user
+	 * @throws SQLException the SQL exception
+	 */
 	private static User getUser(int id) throws SQLException {
 		EntityManager entityManager = openEntityManager();
 		
@@ -117,7 +149,14 @@ public class BasicJpaDemo {
 		return user;
 	}
 	
+	/** The entity manager factory. */
 	private static EntityManagerFactory entityManagerFactory = null;
+	
+	/**
+	 * Open entity manager.
+	 *
+	 * @return the entity manager
+	 */
 	private static EntityManager openEntityManager() {
 		if (entityManagerFactory == null) {
 			entityManagerFactory = Persistence.createEntityManagerFactory( "Demo" );
