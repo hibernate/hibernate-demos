@@ -34,10 +34,17 @@ import org.hibernate.brmeyer.demo.entity.Tool;
 import org.hibernate.brmeyer.demo.entity.User;
 
 /**
+ * The Class BasicJdbcDemo.
+ *
  * @author Brett Meyer
  */
 public class BasicJdbcDemo {
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		try {
 			initDb();
@@ -74,6 +81,12 @@ public class BasicJdbcDemo {
 		System.exit(0);
 	}
 	
+	/**
+	 * Insert user.
+	 *
+	 * @param user the user
+	 * @throws SQLException the SQL exception
+	 */
 	private static void insertUser(User user) throws SQLException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -115,6 +128,12 @@ public class BasicJdbcDemo {
 		}
 	}
 	
+	/**
+	 * Insert tool.
+	 *
+	 * @param tool the tool
+	 * @throws SQLException the SQL exception
+	 */
 	private static void insertTool(Tool tool) throws SQLException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -138,6 +157,12 @@ public class BasicJdbcDemo {
 		}
 	}
 	
+	/**
+	 * Insert skill.
+	 *
+	 * @param skill the skill
+	 * @throws SQLException the SQL exception
+	 */
 	private static void insertSkill(Skill skill) throws SQLException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -161,6 +186,13 @@ public class BasicJdbcDemo {
 		}
 	}
 	
+	/**
+	 * Gets the user.
+	 *
+	 * @param id the id
+	 * @return the user
+	 * @throws SQLException the SQL exception
+	 */
 	private static User getUser(int id) throws SQLException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -227,6 +259,13 @@ public class BasicJdbcDemo {
 		}
 	}
 	
+	/**
+	 * Connection.
+	 *
+	 * @return the connection
+	 * @throws SQLException the SQL exception
+	 * @throws ClassNotFoundException the class not found exception
+	 */
 	private static Connection connection() throws SQLException, ClassNotFoundException {
 		Properties connectionProps = new Properties();
 	    connectionProps.put("user", "sa");
@@ -239,6 +278,11 @@ public class BasicJdbcDemo {
 	    return conn;
 	}
 	
+	/**
+	 * Inits the db.
+	 *
+	 * @throws SQLException the SQL exception
+	 */
 	private static void initDb() throws SQLException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
