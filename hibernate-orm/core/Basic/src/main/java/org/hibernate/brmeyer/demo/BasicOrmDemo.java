@@ -37,13 +37,19 @@ import org.hibernate.brmeyer.demo.entity.Skill;
 import org.hibernate.brmeyer.demo.entity.Tool;
 import org.hibernate.brmeyer.demo.entity.User;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.criterion.Restrictions;
 
 /**
+ * The Class BasicOrmDemo.
+ *
  * @author Brett Meyer
  */
 public class BasicOrmDemo {
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		try {
 			Tool tool = new Tool();
@@ -78,6 +84,12 @@ public class BasicOrmDemo {
 		System.exit(0);
 	}
 	
+	/**
+	 * Insert user.
+	 *
+	 * @param user the user
+	 * @throws Exception the exception
+	 */
 	private static void insertUser(User user) throws Exception {
 		Session session = openSession();
 		session.getTransaction().begin();
@@ -85,6 +97,12 @@ public class BasicOrmDemo {
 		session.getTransaction().commit();
 	}
 	
+	/**
+	 * Insert tool.
+	 *
+	 * @param tool the tool
+	 * @throws SQLException the SQL exception
+	 */
 	private static void insertTool(Tool tool) throws SQLException {
 		Session session = openSession();
 		session.getTransaction().begin();
@@ -92,6 +110,12 @@ public class BasicOrmDemo {
 		session.getTransaction().commit();
 	}
 	
+	/**
+	 * Insert skill.
+	 *
+	 * @param skill the skill
+	 * @throws SQLException the SQL exception
+	 */
 	private static void insertSkill(Skill skill) throws SQLException {
 		Session session = openSession();
 		session.getTransaction().begin();
@@ -99,6 +123,13 @@ public class BasicOrmDemo {
 		session.getTransaction().commit();
 	}
 	
+	/**
+	 * Gets the user.
+	 *
+	 * @param id the id
+	 * @return the user
+	 * @throws SQLException the SQL exception
+	 */
 	private static User getUser(int id) throws SQLException {
 		Session session = openSession();
 		
@@ -120,7 +151,14 @@ public class BasicOrmDemo {
 		return user;
 	}
 	
+	/** The session factory. */
 	private static SessionFactory sessionFactory = null;
+	
+	/**
+	 * Open session.
+	 *
+	 * @return the session
+	 */
 	private static Session openSession() {
 		if (sessionFactory == null) {
 			final Configuration configuration = new Configuration();
