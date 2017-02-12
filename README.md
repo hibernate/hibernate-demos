@@ -13,6 +13,12 @@ This repository contains demos used live during presentations; The following dem
  * _osgi_: tutorials demonstrating all possible ORM OSGi configurations
 * Hibernate OGM
  * _hiking-demo_: Demo project used for the talk "Hibernate OGM: Talking to NoSQL in Red Hat JBoss EAP" presented at Red Hat Summit 2014. It shows how to use MongoDB as data store in a Java EE application through JPA / Hibernate OGM.
+* Hibernate Search
+ * _hsearch-with-elasticsearch_: Shows how to use the Elasticsearch backend new in Hibernate Search 5.6.
+   Used for the talk "From Hibernate to Elasticsearch in no Time" at JavaZone 2016.
+* Java 9
+ * multi-release-jar-demo: Shows how to build multi-release JARs with Java 9.
+   Accompanies the blog post http://in.relation.to/2017/02/13/building-multi-release-jars-with-maven/
 
 ## License
 
