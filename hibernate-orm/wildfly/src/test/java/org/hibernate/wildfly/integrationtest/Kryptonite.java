@@ -10,13 +10,17 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 /**
+ * The Class Kryptonite.
+ *
  * @author Gunnar Morling
  */
 @Entity
 public class Kryptonite {
 
+	/** The id. */
 	@Id
 	public long id;
 
+	/** The description. */
 	public String description;
 }
