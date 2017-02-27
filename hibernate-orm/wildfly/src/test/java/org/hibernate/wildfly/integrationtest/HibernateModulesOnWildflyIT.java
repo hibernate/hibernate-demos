@@ -35,6 +35,11 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class HibernateModulesOnWildflyIT {
 
+	/**
+	 * Creates the deployment.
+	 *
+	 * @return the web archive
+	 */
 	@Deployment
 	public static WebArchive createDeployment() {
 		return ShrinkWrap.create( WebArchive.class )
@@ -43,9 +48,13 @@ public class HibernateModulesOnWildflyIT {
 				.addAsResource( "META-INF/persistence.xml" );
 	}
 
+	/** The entity manager. */
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	/**
+	 * Should use hibernate orm 52.
+	 */
 	@Test
 	@Transactional(value=TransactionMode.ROLLBACK)
 	public void shouldUseHibernateOrm52() {
