@@ -48,7 +48,7 @@ public class OrderRepositoryIT {
 			.addAsResource( "META-INF/persistence.xml" )
 			.addAsWebInfResource( new File( WEBAPP_SRC + "WEB-INF/beans.xml" ) )
 			.addAsResource( new StringAsset(
-					"Dependencies: org.hibernate:ogm services, org.hibernate.ogm.mongodb services" ),
+					"Dependencies: org.hibernate.ogm:main services, org.hibernate.ogm.mongodb:main services" ),
 					"META-INF/MANIFEST.MF"
 			);
 	}
