@@ -49,7 +49,7 @@ public class AdminResource {
 	@Path("/populate")
 	public void populate() throws Exception {
 		clearDatabase(businessEm);
-		clearDatabase(hikeEm);
+		clearHikeAndTrips(hikeEm);
 
 		Trip corsica = new Trip();
 		corsica.name = "Corsica from north to south";
@@ -97,6 +97,19 @@ public class AdminResource {
 		semiMarathon.organizer = new Person( "Association Paris Versailles" );
 		semiMarathon.price = 5;
 		hikeEm.persist( semiMarathon );
+	}
+
+	private void clearHikeAndTrips(EntityManager em) {
+		List<?> all = em.createQuery( "from Hike" ).getResultList();
+		for ( Hike object : (List<Hike>) all ) {
+			object.recommendedTrip = null;
+			em.remove( object );
+		}
+
+		all = em.createQuery( "from Trip" ).getResultList();
+		for ( Object object : all ) {
+			em.remove( object );
+		}
 	}
 
 	private void clearDatabase(EntityManager em) {
