@@ -14,6 +14,8 @@
 		<properties>
 			<property name="hibernate.ogm.datastore.provider" value="mongodb" />
 			<property name="hibernate.ogm.datastore.database" value="HikeDB" />
+			<property name="hibernate.ogm.datastore.create_database" value="true" />
+			<property name="jboss.as.jpa.providerModule" value="org.hibernate:5.1"/>
 		</properties>
 	</persistence-unit>
 
@@ -27,6 +29,8 @@
 		<properties>
 			<property name="hibernate.ogm.datastore.provider" value="mongodb" />
 			<property name="hibernate.ogm.datastore.database" value="HikeDB" />
+			<property name="hibernate.ogm.datastore.create_database" value="true" />
+			<property name="jboss.as.jpa.providerModule" value="org.hibernate:5.1"/>
 		</properties>
 	</persistence-unit>
 
@@ -37,6 +41,7 @@
 		
 		<properties>
 			<property name="hibernate.hbm2ddl.auto" value="create"/>
+			<property name="jboss.as.jpa.providerModule" value="org.hibernate:5.1"/>
 		</properties>
 
 	</persistence-unit>
