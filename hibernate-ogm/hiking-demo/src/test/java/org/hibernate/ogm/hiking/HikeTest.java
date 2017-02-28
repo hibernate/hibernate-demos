@@ -57,9 +57,9 @@ public class HikeTest {
 		hike.sections.add( new Section( "Pendeen", "Perranporth" ) );
 		entityManager.persist( hike );
 
-		entityManager.getTransaction().commit();
+		entityManager.flush();
+		entityManager.clear();
 
-		entityManager.getTransaction().begin();
 		hike = entityManager.find( Hike.class, hike.id );
 
 		assertThat( hike.sections ).hasSize( 2 );
@@ -83,9 +83,9 @@ public class HikeTest {
 		entityManager.persist( trip );
 		entityManager.persist( hike );
 
-		entityManager.getTransaction().commit();
+		entityManager.flush();
+		entityManager.clear();
 
-		entityManager.getTransaction().begin();
 		hike = entityManager.find( Hike.class, hike.id );
 
 		assertThat( hike.recommendedTrip ).isNotNull();
