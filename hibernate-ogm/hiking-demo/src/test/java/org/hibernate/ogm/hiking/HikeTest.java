@@ -1,9 +1,12 @@
 package org.hibernate.ogm.hiking;
 
+import java.util.List;
+
 import static org.fest.assertions.Assertions.assertThat;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
 import org.hibernate.ogm.hiking.model.Hike;
@@ -106,5 +109,41 @@ public class HikeTest {
 
 		entityManager.getTransaction().commit();
 
+	}
+
+	@Test
+	public void testClearDatabase() {
+		EntityTransaction transaction = entityManager.getTransaction();
+		transaction.begin();
+
+		Hike hike = new Hike( "San Francisco", "Oakland" );
+		Trip trip = new Trip();
+		trip.name = "Nappa Valley Unit Test";
+
+		hike.recommendedTrip = trip;
+		trip.availableHikes.add( hike );
+
+		entityManager.persist( trip );
+		entityManager.persist( hike );
+
+		transaction.commit();
+
+		entityManager.clear();
+
+		transaction = entityManager.getTransaction();
+		transaction.begin();
+
+		List<?> all = entityManager.createQuery( "from Hike" ).getResultList();
+		for ( Hike object : (List<Hike>) all ) {
+			object.recommendedTrip = null;
+			entityManager.remove( object );
+		}
+
+		all = entityManager.createQuery( "from Trip" ).getResultList();
+		for ( Object object : all ) {
+			entityManager.remove( object );
+		}
+
+		transaction.commit();
 	}
 }
