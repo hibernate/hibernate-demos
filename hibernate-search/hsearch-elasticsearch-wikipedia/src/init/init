@@ -1,0 +1,52 @@
+#!/bin/bash -e
+
+function log() {
+	echo 1>&2 "$@"
+}
+
+function abort() {
+	log "$@"
+	log "Aborting."
+	exit 1
+}
+
+function guess_remote_dump_url() {
+	local REMOTE_DUMP_DIR_URL="https://dumps.wikimedia.org/enwiki/latest/"
+	local REMOTE_DUMP_REGEX="href=\"(enwiki-latest-pages-meta-current1.xml[^\"]+.bz2)\""
+	echo -n $REMOTE_DUMP_DIR_URL
+	curl -s $REMOTE_DUMP_DIR_URL | grep -E "$REMOTE_DUMP_REGEX" \
+		| sed -r "s/.*$REMOTE_DUMP_REGEX.*/\\1/" \
+		|| abort "Could not guess the URL to get the remote dump from."
+}
+
+LOCAL_DUMP_FILE=$1
+
+which xsltproc 1>/dev/null 2>&1 || abort "Command 'xsltproc' isn't in the \$PATH; please install the command or add it to the \$PATH."
+
+if [ -z "$LOCAL_DUMP_FILE" ]
+then
+	log "No argument given; will try to retrieve the dump file automatically."
+	LOCAL_DUMP_DIR="/tmp/hsearch_es_wikipedia"
+	LOCAL_DUMP_FILE="$LOCAL_DUMP_DIR/enwiki-latest-pages-meta-current1.xml"
+
+	if [ -e $LOCAL_DUMP_FILE ]
+	then
+		log "Found cached file from previous initialization at '$LOCAL_DUMP_FILE'; using this cached file."
+	else
+		REMOTE_DUMP_URL=$(guess_remote_dump_url)
+		LOCAL_COMPRESSED_DUMP_FILE="$LOCAL_DUMP_FILE.bz2"
+		mkdir -p "$LOCAL_DUMP_DIR"
+		log "Attempting to retrieve the dump file from '$REMOTE_DUMP_URL'..."
+		curl --progress -o "$LOCAL_COMPRESSED_DUMP_FILE" "$REMOTE_DUMP_URL"
+		log "... done. Uncompressing..."
+		bunzip2 "$LOCAL_COMPRESSED_DUMP_FILE"
+		log "... done."
+	fi
+else
+	[ -f "$LOCAL_DUMP_FILE" ] || abort "Usage: ./init.sh <mediawiki XML dump>"
+fi
+
+DIR=$(readlink -f "$0" | xargs dirname)
+
+xsltproc "$DIR/sql_populate.xslt" $LOCAL_DUMP_FILE | psql -U hibernate_demo -h localhost -W hsearch_es_wikipedia
+

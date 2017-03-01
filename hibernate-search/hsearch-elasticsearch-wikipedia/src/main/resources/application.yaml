@@ -1,0 +1,23 @@
+# Spring Boot configuration
+# See https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# for a list of available properties
+
+spring.datasource:
+  type: com.zaxxer.hikari.HikariDataSource
+  url: jdbc:postgresql://localhost:5432/hsearch_es_wikipedia
+  username: hibernate_demo
+  password: hibernate_demo
+  hikari:
+    maximumPoolSize: 30
+
+spring.jpa.properties:
+  hibernate:
+    dialect: org.hibernate.dialect.PostgreSQL95Dialect
+
+spring.jackson:
+  serialization:
+    INDENT_OUTPUT: true
+  default-property-inclusion: NON_NULL
+
+logging.level:
+  org.hibernate.SQL: DEBUG

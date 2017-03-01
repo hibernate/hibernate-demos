@@ -1,4 +1,4 @@
-package org.hibernate.search.demos;
+package org.hibernate.search.demos.wikipedia;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

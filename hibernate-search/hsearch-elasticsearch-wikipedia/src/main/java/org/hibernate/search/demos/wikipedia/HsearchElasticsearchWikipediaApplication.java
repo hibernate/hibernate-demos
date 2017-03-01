@@ -1,4 +1,4 @@
-package org.hibernate.search.demos;
+package org.hibernate.search.demos.wikipedia;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
