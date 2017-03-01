@@ -16,6 +16,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
 
         <org.hibernate.ogm.version>5.1.0.CR1</org.hibernate.ogm.version>
+        <org.hibernate.validator.version>6.0.0.Alpha1</org.hibernate.validator.version>
         <!-- used to find the wildfly module dist -->
         <org.hibernate.orm.version>5.1.2.Final</org.hibernate.orm.version>
         <org.hibernate.search.version>5.6.0.Final</org.hibernate.search.version>
@@ -24,6 +25,7 @@
         <org.jboss.wildfly-arquillian.version>8.2.1.Final</org.jboss.wildfly-arquillian.version>
         <org.jboss.wildfly.version>10.1.0.Final</org.jboss.wildfly.version>
         <org.hibernate.ogm.wildfly.classifier>wildfly-10-dist</org.hibernate.ogm.wildfly.classifier>
+        <wildfly-maven-plugin.version>1.1.0.Alpha11</wildfly-maven-plugin.version>
 
         <jboss.home>${project.build.directory}/wildfly-${org.jboss.wildfly.version}</jboss.home>
     </properties>
@@ -93,7 +95,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>5.4.0.Final</version>
+            <version>${org.hibernate.validator.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -184,7 +186,7 @@
                 <plugin>
                     <groupId>org.wildfly.plugins</groupId>
                     <artifactId>wildfly-maven-plugin</artifactId>
-                    <version>1.0.1.Final</version>
+                    <version>${wildfly-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.jboss.as.plugins</groupId>
@@ -293,7 +295,64 @@
                                     </artifactItems>
                                 </configuration>
                             </execution>
+                            <execution>
+                                <id>copy-bv-patch</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.hibernate.validator</groupId>
+                                            <artifactId>hibernate-validator-modules</artifactId>
+                                            <version>${org.hibernate.validator.version}</version>
+                                            <classifier>wildfly-${org.jboss.wildfly.version}-patch</classifier>
+                                            <type>zip</type>
+                                            <outputDirectory>${project.build.directory}</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.wildfly.plugins</groupId>
+                        <artifactId>wildfly-maven-plugin</artifactId>
+                        <executions>
+                            <!-- Currently the WF Maven plug-in cannot apply offline commands, although patch itself wouldn't require a running
+                            server; see https://issues.jboss.org/projects/WFMP/issues/WFMP-11 -->
+                            <execution>
+                                <id>start-wildfly-for-patching</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>apply-patch-file</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>execute-commands</goal>
+                                </goals>
+                                <configuration>
+                                    <fail-on-error>false</fail-on-error>
+                                    <commands>
+                                        <command>patch apply --path ${project.build.directory}/hibernate-validator-modules-${org.hibernate.validator.version}-wildfly-${org.jboss.wildfly.version}-patch.zip</command>
+                                    </commands>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>shutdown-wildfly-for-patching</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>shutdown</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <jbossHome>${jboss.home}</jbossHome>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
