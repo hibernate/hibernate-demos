@@ -15,6 +15,7 @@ import org.hibernate.ogm.hiking.model.Person;
 import org.hibernate.ogm.hiking.model.Trip;
 import org.hibernate.ogm.hiking.repository.HikeRepository;
 import org.hibernate.ogm.hiking.repository.TripRepository;
+import org.hibernate.validator.internal.util.Version;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -81,5 +82,11 @@ public class HikeRepositoryIT {
 
 		List<Hike> hikes = hikeRepository.getHikesByTripId( trip.id );
 		assertEquals( 1, hikes.size() );
+	}
+
+	@Test
+	public void testValidation() {
+		assertEquals( "6.0.0.Alpha1", Version.getVersionString() );
+
 	}
 }
