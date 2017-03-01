@@ -16,7 +16,6 @@ public class HikeRepository {
 	private EntityManager entityManager;
 
 	public Hike createHike(Hike hike, Trip recommendedTrip) {
-		entityManager.persist( hike );
 
 		if ( recommendedTrip != null ) {
 			recommendedTrip = entityManager.merge( recommendedTrip );
@@ -24,6 +23,7 @@ public class HikeRepository {
 			recommendedTrip.availableHikes.add( hike );
 		}
 
+		entityManager.persist( hike );
 		return hike;
 	}
 
