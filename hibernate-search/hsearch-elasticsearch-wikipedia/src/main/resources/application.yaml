@@ -17,10 +17,13 @@ spring.jpa.properties:
   hibernate:
     dialect: org.hibernate.dialect.PostgreSQL95Dialect
   hibernate.search:
-    lucene_version: LUCENE_5_5_4
     default:
-      directory_provider: filesystem
-      indexBase: ${app.data.path}/lucene/
+      indexmanager: elasticsearch
+      elasticsearch:
+        index_schema_management_strategy: create
+        refresh_after_write: true
+        required_index_status: yellow
+        discovery.enabled: true
 
 spring.jackson:
   serialization:

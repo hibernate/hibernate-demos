@@ -61,6 +61,13 @@ Initialize the database using the provided script:
 
 The script will ask for a password: just use `hibernate_demo`.
 
+## Elasticsearch
+
+Ensure you have an Elasticsearch 5 instance running and accessible from <http://localhost:9200/>.
+
+You can download Elasticsearch from here: <https://www.elastic.co/downloads/elasticsearch>.
+Unzip the downloaded file, and just run `bin/elasticsearch` to start an instance on <http://localhost:9200>.
+
 # Running the project
 
 You must have [Maven (`mvn`)](https://maven.apache.org/) in your path, version 3.2 or later.
@@ -97,4 +104,13 @@ Finally, you can retrieve a page with:
 ```
 curl http://localhost:8080/page/<page ID>/
 ```
+
+## Other implementations
+
+Alternative implementations of the search are demonstrated in previous commit.
+
+See the git history and check out the relevant commit to see those implementations in action:
+
+ * Naïve SQL implementation with `ILIKE`
+ * Embedded Lucene implementation 
 
