@@ -9,7 +9,7 @@ addons:
       - oracle-java8-installer
 env:
   global:
-    - PROJECTS=$( find . -name pom.xml -print -or -path '*/target/*' -prune | sort | xargs -n 1 dirname )
+    - PROJECTS=$( find hibernate-search -name pom.xml -print -or -path '*/target/*' -prune | sort | xargs -n 1 dirname )
 cache:
   directories:
     - $HOME/.m2
