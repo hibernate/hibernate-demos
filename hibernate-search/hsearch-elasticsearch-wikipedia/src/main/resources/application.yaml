@@ -2,6 +2,9 @@
 # See https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # for a list of available properties
 
+app:
+  data.path: /home/${user}/tmp/hsearch-elasticsearch-wikipedia
+
 spring.datasource:
   type: com.zaxxer.hikari.HikariDataSource
   url: jdbc:postgresql://localhost:5432/hsearch_es_wikipedia
@@ -13,6 +16,11 @@ spring.datasource:
 spring.jpa.properties:
   hibernate:
     dialect: org.hibernate.dialect.PostgreSQL95Dialect
+  hibernate.search:
+    lucene_version: LUCENE_5_5_4
+    default:
+      directory_provider: filesystem
+      indexBase: ${app.data.path}/lucene/
 
 spring.jackson:
   serialization:
@@ -21,3 +29,5 @@ spring.jackson:
 
 logging.level:
   org.hibernate.SQL: DEBUG
+  org.hibernate.search.batchindexing: INFO
+  org.hibernate.search.fulltext_query: DEBUG
