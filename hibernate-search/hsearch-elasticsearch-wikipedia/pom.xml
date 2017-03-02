@@ -65,6 +65,11 @@
 			<artifactId>hibernate-search-orm</artifactId>
 			<version>${hibernate.search.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-search-elasticsearch</artifactId>
+			<version>${hibernate.search.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
