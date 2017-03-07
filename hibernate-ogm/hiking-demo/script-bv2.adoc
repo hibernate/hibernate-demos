@@ -1,0 +1,133 @@
+= Bean Validation 2 demo script
+Emmanuel Bernard
+2017-03-07
+:hardbreaks:
+
+== Installation
+
+* run `mvn clean install`
+* copy `./target/wildfly-*` in `./wildfly-*` (for manual run)
+
+Start a MongoDB database standalone or via docker `./mongo.sh start`
+
+To deploy on the standalone Wildfly:
+
+* `./wildfly-*/bin/standalone.sh`
+* `mvn wildfly:deploy -DskipTests=true`
+
+=== Undoing the demo
+
+Remove from `Customer`: `@Email`
+Remove from `Order`: `@OrderNumber`
+Remove from `@OrderNumber`: `@Repeatable`, `@Constraint`, `isValid`
+Remove from `OrderResource`: `@Valid`
+Remove from `BeanValidationIT`: `validate` call and assertion
+
+== Script
+
+=== Start _0:00_
+
+=== What is BV (demo) _2:25_
+
+==== Pre-requisites
+
+Start Mongo
+Start Wildfly and deploy app
+http://localhost:8080/hibernate-ogm-hiking-demo-1.0-SNAPSHOT/hiking-manager/admin/populate/[Populate data]
+
+==== Intro
+
+http://localhost:8080/hibernate-ogm-hiking-demo-1.0-SNAPSHOT/hikes.html[Show UI]
+
+==== Default constraints _3:35_
+
+Go to `Hike` and show `@NotNull`
+Go to `Customer` and add `@Email`, show that `Order` has `@Valid`
+
+==== Custom constraints _4:55_
+
+Go to `Order` and add `@OrderNumber`
+Complete implementation:
+
+* show annotation and repeatable
+* add `@Constraint`
+* implement `ConstraintValidator`
+
+[source,java]
+----
+@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
+@Retention(RUNTIME)
+@Repeatable(OrderNumber.List.class)
+@Constraint( validatedBy = OrderNumber.OrderNumberValidator.class )
+public @interface OrderNumber {
+  String message() default "Invalid order number, should be a UUID 8-4-4-4-12";
+  Class<?>[] groups() default {};
+  Class<? extends Payload>[] payload() default {};
+
+  @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
+  @Retention(RUNTIME)
+  @interface List {
+    OrderNumber[] value();
+
+  }
+
+  class OrderNumberValidator implements ConstraintValidator<OrderNumber, String> {
+
+
+    @Override
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+      if ( value == null ) return true;
+      if ( value.length() != 8+1+4+1+4+1+4+1+12 ) return false;
+      if (value.charAt( 8 ) != '-' || value.charAt( 8+1+4 ) != '-') return false;
+      return true;
+    }
+  }
+}
+----
+
+==== Explicit API call _10:20_
+
+*Stop Wildfly*
+Go to `BeanValidationIT`
+Add call to `validator.validate`
+Show `ConstraintViolation`
+Call unit test
+
+==== Method call _14:00_
+
+Start Wildfly standalone
+Call script without `@Valid` on method to show it passes
+Add `@Valid` to `OrderResource.createOrder(order)` parameter
+Redeploy app `mvn wildfly:deploy -DskipTests=true`
+Go to `./src/demo`
+Run `./callOrderCreation.sh`
+
+=== BV 2.0 _17:10_
+
+=== Repeatable annotation _17:36_
+
+Demo it in code
+
+=== Validate collections _18:25_
+
+==== Cascading collection _19:53_
+
+=== Optional _21:55_
+
+=== Custom container _23:25_
+
+TODO redo with demo adding Guava
+
+=== Java time _26:05_
+
+=== Other Java 8 _27:50_
+
+=== Current status _30:00_
+
+=== Everything is open _30:38_
+
+=== HV specifics
+
+=== Q&A _33:22
+
+=== End _33:50_
