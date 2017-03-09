@@ -7,6 +7,12 @@ Based on the following http://redhat.slides.com/ebernard/bean-validation-2?token
 
 == Installation
 
+[NOTE]
+====
+All bash scripts are in `./src/script`.
+They must be run from their hosting directory.
+====
+
 * run `mvn clean install`
 * copy `./target/wildfly-*` in `./wildfly-*` (for manual run)
 
