@@ -17,8 +17,8 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 
-		<version.org.hibernate.search>5.6.0.Beta2</version.org.hibernate.search>
-		<version.org.hibernate.orm>5.0.10.Final</version.org.hibernate.orm>
+		<version.org.hibernate.search>5.6.1.Final</version.org.hibernate.search>
+		<version.org.hibernate.orm>5.1.5.Final</version.org.hibernate.orm>
 	</properties>
 
 	<dependencies>
