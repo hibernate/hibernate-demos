@@ -29,12 +29,22 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.spi.SessionImplementor;
 
+
 /**
+ * The Class MultiTenancyDemo.
+ *
  * @author Brett Meyer
  */
 public class MultiTenancyDemo {
+	
+	/** The session factory. */
 	private static SessionFactory sessionFactory;
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		final Configuration configuration = new Configuration();
 		configuration.addAnnotatedClass( Project.class );
@@ -53,6 +63,11 @@ public class MultiTenancyDemo {
 		System.exit(0);
 	}
 	
+	/**
+	 * Creates the table.
+	 *
+	 * @param tenantId the tenant id
+	 */
 	private static void createTable(String tenantId) {
 		// Multi-tenancy does not currently support schema export, so manually create it here.
 		try {
@@ -68,6 +83,11 @@ public class MultiTenancyDemo {
 		}
 	}
 	
+	/**
+	 * Insert project.
+	 *
+	 * @param tenantId the tenant id
+	 */
 	private static void insertProject(String tenantId) {
 		final Session s = openSession( tenantId );
 		s.getTransaction().begin();
@@ -78,6 +98,11 @@ public class MultiTenancyDemo {
 		s.close();
 	}
 	
+	/**
+	 * Prints the projects.
+	 *
+	 * @param tenantId the tenant id
+	 */
 	private static void printProjects(String tenantId) {
 		final Session s = openSession( tenantId );
 		s.getTransaction().begin();
@@ -87,6 +112,12 @@ public class MultiTenancyDemo {
 		s.close();
 	}
 	
+	/**
+	 * Open session.
+	 *
+	 * @param tenantId the tenant id
+	 * @return the session
+	 */
 	private static Session openSession(String tenantId) {
 		return sessionFactory.withOptions()
 				.tenantIdentifier( tenantId ).openSession();

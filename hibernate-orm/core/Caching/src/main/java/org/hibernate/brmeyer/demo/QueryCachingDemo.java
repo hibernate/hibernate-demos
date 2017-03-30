@@ -28,10 +28,18 @@ import org.hibernate.brmeyer.demo.entity.Project;
 
 
 /**
+ * The Class QueryCachingDemo.
+ *
  * @author Brett Meyer
  */
 public class QueryCachingDemo extends AbstractCachingDemo {
 	
+	/**
+	 * Gets the project.
+	 *
+	 * @param id the id
+	 * @return the project
+	 */
 	public Project getProject(long id) {
 		final Session s = openSession();
 		s.getTransaction().begin();
@@ -43,6 +51,11 @@ public class QueryCachingDemo extends AbstractCachingDemo {
 		return project;
 	}
 	
+	/**
+	 * Gets the projects.
+	 *
+	 * @return the projects
+	 */
 	public List<Project> getProjects() {
 		final Session s = openSession();
 		s.getTransaction().begin();
@@ -53,6 +66,12 @@ public class QueryCachingDemo extends AbstractCachingDemo {
 		return projects;
 	}
 	
+	/**
+	 * Update project.
+	 *
+	 * @param id the id
+	 * @param name the name
+	 */
 	public void updateProject(long id, String name) {
 		final Session s = openSession();
 		s.getTransaction().begin();
@@ -62,16 +81,27 @@ public class QueryCachingDemo extends AbstractCachingDemo {
 		s.getTransaction().commit();
 	}
 	
+	/**
+	 * Evict.
+	 */
 	public void evict() {
 		sessionFactory.getCache().evictDefaultQueryRegion();
 	}
 	
+	/**
+	 * Prints the stats.
+	 */
 	public void printStats() {
 		System.out.println("query cache put count: " + sessionFactory.getStatistics().getQueryCachePutCount());
 		System.out.println("query cache hit count: " + sessionFactory.getStatistics().getQueryCacheHitCount());
 		System.out.println("query cache miss count: " + sessionFactory.getStatistics().getQueryCacheMissCount());
 	}
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		final QueryCachingDemo demo = new QueryCachingDemo();
 		final long projectId = demo.persistData();

@@ -31,15 +31,25 @@ import org.hibernate.brmeyer.demo.entity.lazy.Tool;
 import org.hibernate.brmeyer.demo.entity.lazy.User;
 
 /**
+ * The Class AbstractLazyDemo.
+ *
  * @author Brett Meyer
  */
 public abstract class AbstractLazyDemo extends AbstractDemo {
 	
+	/**
+	 * Instantiates a new abstract lazy demo.
+	 */
 	protected AbstractLazyDemo() {
 		super( Comment.class, Community.class, Donation.class, Skill.class, Tool.class,
 				Project.class, ServiceEvent.class, User.class);
 	}
 	
+	/**
+	 * Persist data.
+	 *
+	 * @return the int
+	 */
 	protected int persistData() {
 		final User user1 = new User();
 		final User user2 = new User();

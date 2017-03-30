@@ -31,10 +31,15 @@ import org.hibernate.brmeyer.demo.entity.eager.Tool;
 import org.hibernate.brmeyer.demo.entity.eager.User;
 
 /**
+ * The Class Eager.
+ *
  * @author Brett Meyer
  */
 public class Eager extends AbstractDemo {
 	
+	/**
+	 * Instantiates a new eager.
+	 */
 	public Eager() {
 		super( Comment.class, Community.class, Donation.class, Skill.class, Tool.class,
 				Project.class, ServiceEvent.class, User.class);
@@ -43,6 +48,9 @@ public class Eager extends AbstractDemo {
 	/**
 	 * Demonstrates a typical, over-simplified, over-scoped DAO method.  If EAGER associations exist, this can
 	 * result in an exponentially deep fetch tree and ridiculous amount of selects.
+	 *
+	 * @param id the id
+	 * @return the user
 	 */
 	public boolean getUser(int id) {
 		final Session session = openSession();
@@ -53,6 +61,11 @@ public class Eager extends AbstractDemo {
 		return user != null;
 	}
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main (String[] args) {
 		final Eager demo = new Eager();
 		int userId = demo.persistData();
@@ -61,6 +74,11 @@ public class Eager extends AbstractDemo {
 		System.exit(0);
 	}
 	
+	/**
+	 * Persist data.
+	 *
+	 * @return the int
+	 */
 	public int persistData() {
 		final User user1 = new User();
 		final User user2 = new User();
