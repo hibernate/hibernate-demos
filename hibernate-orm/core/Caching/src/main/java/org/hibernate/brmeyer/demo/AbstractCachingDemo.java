@@ -29,12 +29,18 @@ import org.hibernate.brmeyer.demo.entity.User;
 import org.hibernate.cfg.Configuration;
 
 /**
+ * The Class AbstractCachingDemo.
+ *
  * @author Brett Meyer
  */
 public class AbstractCachingDemo {
 	
+	/** The session factory. */
 	protected final SessionFactory sessionFactory;
 	
+	/**
+	 * Instantiates a new abstract caching demo.
+	 */
 	protected AbstractCachingDemo() {
 		final Configuration configuration = new Configuration();
 		configuration.addAnnotatedClass( Project.class );
@@ -44,10 +50,20 @@ public class AbstractCachingDemo {
 				new StandardServiceRegistryBuilder().build() );
 	}
 	
+	/**
+	 * Open session.
+	 *
+	 * @return the session
+	 */
 	protected Session openSession() {
 		return sessionFactory.openSession();
 	}
 	
+	/**
+	 * Persist data.
+	 *
+	 * @return the long
+	 */
 	public long persistData() {
 		final Project project = new Project();
 		project.setName( "Foo Project" );

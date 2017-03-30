@@ -24,30 +24,49 @@ import org.hibernate.tuple.AnnotationValueGeneration;
 import org.hibernate.tuple.GenerationTiming;
 import org.hibernate.tuple.ValueGenerator;
 
+
 /**
+ * The Class ModifiedByValueGeneration.
+ *
  * @author Brett Meyer
  */
 public class ModifiedByValueGeneration implements AnnotationValueGeneration<ModifiedBy> {
 	
+	/** The generator. */
 	private final ModifiedByValueGenerator generator = new ModifiedByValueGenerator();
 
+	/* (non-Javadoc)
+	 * @see org.hibernate.tuple.AnnotationValueGeneration#initialize(java.lang.annotation.Annotation, java.lang.Class)
+	 */
 	@Override
 	public void initialize(ModifiedBy annotation, Class<?> propertyType) {
 	}
 
+	/* (non-Javadoc)
+	 * @see org.hibernate.tuple.ValueGeneration#getGenerationTiming()
+	 */
 	public GenerationTiming getGenerationTiming() {
 		return GenerationTiming.ALWAYS;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.hibernate.tuple.ValueGeneration#getValueGenerator()
+	 */
 	public ValueGenerator<?> getValueGenerator() {
 		return generator;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.hibernate.tuple.ValueGeneration#referenceColumnInSql()
+	 */
 	public boolean referenceColumnInSql() {
 		// not used -- needed only for in-DB generation
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.hibernate.tuple.ValueGeneration#getDatabaseGeneratedReferencedColumnValue()
+	 */
 	public String getDatabaseGeneratedReferencedColumnValue() {
 		// not used -- needed only for in-DB generation
 		return null;

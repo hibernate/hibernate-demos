@@ -26,6 +26,8 @@ import java.lang.annotation.RetentionPolicy;
 import org.hibernate.annotations.ValueGenerationType;
 
 /**
+ * The Interface ModifiedBy.
+ *
  * @author Brett Meyer
  */
 @ValueGenerationType(generatedBy = ModifiedByValueGeneration.class)

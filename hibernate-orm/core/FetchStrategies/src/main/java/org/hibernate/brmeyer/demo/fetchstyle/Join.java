@@ -28,11 +28,19 @@ import org.hibernate.Session;
 import org.hibernate.brmeyer.demo.AbstractLazyDemo;
 import org.hibernate.brmeyer.demo.entity.lazy.User;
 
+
 /**
+ * The Class Join.
+ *
  * @author Brett Meyer
  */
 public class Join extends AbstractLazyDemo {
 
+	/**
+	 * Gets the users.
+	 *
+	 * @return the users
+	 */
 	@SuppressWarnings("unchecked")
 	public List<User> getUsers() {
 		final Session session = openSession();
@@ -50,6 +58,11 @@ public class Join extends AbstractLazyDemo {
 		return users;
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		final Join demo = new Join();
 		demo.persistData();

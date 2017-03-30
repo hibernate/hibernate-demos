@@ -24,6 +24,8 @@ import org.hibernate.Session;
 import org.hibernate.brmeyer.demo.entity.lazy.User;
 
 /**
+ * The Class SimpleLazy.
+ *
  * @author Brett Meyer
  */
 public class SimpleLazy extends AbstractLazyDemo {
@@ -31,6 +33,9 @@ public class SimpleLazy extends AbstractLazyDemo {
 	/**
 	 * Similar to {@link Eager}, demonstrating a typical, over-simplified, over-scoped DAO method.  However, for
 	 * demo-purposes, all collections are LAZY (as they usually should be), resulting in a single select.
+	 *
+	 * @param id the id
+	 * @return the user
 	 */
 	public boolean getUser(int id) {
 		final Session session = openSession();
@@ -48,6 +53,11 @@ public class SimpleLazy extends AbstractLazyDemo {
 		return user != null;
 	}
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main (String[] args) {
 		final SimpleLazy demo = new SimpleLazy();
 		int userId = demo.persistData();
