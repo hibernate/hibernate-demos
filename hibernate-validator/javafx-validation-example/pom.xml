@@ -14,6 +14,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <contributors>
+        <contributor>
+            <name>Hendrik Ebbers</name>
+            <url>http://www.guigarage.com/about/</url>
+        </contributor>
+    </contributors>
+
     <dependencies>
         <dependency>
             <groupId>org.hibernate.validator</groupId>
