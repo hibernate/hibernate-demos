@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ License: Apache License, Version 2.0
+ See the LICENSE file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+  -->
+<arquillian
+    xmlns="http://jboss.org/schema/arquillian"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://jboss.org/schema/arquillian http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+
+    <!-- Uncomment in order to inspect deployments -->
+    <!--
+    <engine>
+        <property name="deploymentExportPath">${basedir}/target/</property>
+    </engine>
+    -->
+
+    <container qualifier="wildfly" default="true">
+        <protocol type="jmx-wildfly">
+            <property name="executionType">REMOTE</property>
+        </protocol>
+        <configuration>
+            <property name="jbossHome">${basedir}/target/wildfly-${wildfly.version}</property>
+        </configuration>
+    </container>
+</arquillian>

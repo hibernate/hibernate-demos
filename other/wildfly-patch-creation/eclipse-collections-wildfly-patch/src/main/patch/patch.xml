@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+ License: Apache License, Version 2.0
+ See the LICENSE file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+  -->
+<patch-config xmlns="urn:jboss:patch-config:1.0">
+    <name>wildfly-${wildfly.version}-eclipse-collections-${eclipse.collections.version}</name>
+    <description>This patch adds Eclipse Collections ${eclipse.collections.version} to a WildFly ${wildfly.version} installation</description>
+    <element patch-id="layer-base-wildfly-${wildfly.version}-eclipse-collections-${eclipse.collections.version}">
+        <one-off name="base" />
+        <description>This patch adds Eclipse Collections ${eclipse.collections.version} to a WildFly ${wildfly.version} installation</description>
+        <specified-content>
+            <modules>
+                <added name="org.eclipse.collections.api" />
+                <added name="org.eclipse.collections" />
+            </modules>
+        </specified-content>
+    </element>
+    <specified-content/>
+</patch-config>
