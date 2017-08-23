@@ -1,0 +1,41 @@
+Index: hibernate-ogm/playsport-demo/pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- hibernate-ogm/playsport-demo/pom.xml	(revision ff30979fa8625bc07f35f4997c4184b66319938d)
++++ hibernate-ogm/playsport-demo/pom.xml	(revision )
+@@ -34,12 +34,12 @@
+     <maven.compiler.source>1.8</maven.compiler.source>
+ 
+     <!-- with Hibernate OGM versions -->
+-    <version.hibernate.ogm>5.2.0-SNAPSHOT</version.hibernate.ogm>
++    <version.hibernate.ogm>5.1.0.Final</version.hibernate.ogm>
+ 
+     <!-- This properties must be the same of hibernate-ogm-bom -->
+-    <version.hibernate.orm>5.1.9.Final</version.hibernate.orm>
+-    <version.hibernate.search>5.6.2.Final</version.hibernate.search>
+-    <version.infinispan>8.2.6.Final</version.infinispan>
++    <version.hibernate.orm>5.1.4.Final</version.hibernate.orm>
++    <version.hibernate.search>5.6.1.Final</version.hibernate.search>
++    <version.infinispan>8.2.5.Final</version.infinispan>
+     <version.wildfly>10.1.0.Final</version.wildfly>
+ 
+     <hibernateWildflyClassifier>wildfly-10-dist</hibernateWildflyClassifier>
+\ No newline at end of file
+Index: hibernate-ogm/playsport-demo/src/main/resources/META-INF/persistence.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- hibernate-ogm/playsport-demo/src/main/resources/META-INF/persistence.xml	(revision ff30979fa8625bc07f35f4997c4184b66319938d)
++++ hibernate-ogm/playsport-demo/src/main/resources/META-INF/persistence.xml	(revision )
+@@ -24,7 +24,7 @@
+       <!-- point to static module on layer hibernate-orm-5.1 -->
+       <property name="jboss.as.jpa.providerModule" value="org.hibernate:5.1"/>
+       <!-- point to static module on layer hibernate-search-5.6.2.Final-orm51 -->
+-      <property name="wildfly.jpa.hibernate.search.module" value="org.hibernate.search.orm:5.6.2.Final-orm51" />
++      <property name="wildfly.jpa.hibernate.search.module" value="org.hibernate.search.orm:5.6.1.Final-orm51" />
+ 
+       <!-- infinispan remote / hot rod config -->
+       <property name="hibernate.ogm.datastore.provider" value="infinispan_remote" />
