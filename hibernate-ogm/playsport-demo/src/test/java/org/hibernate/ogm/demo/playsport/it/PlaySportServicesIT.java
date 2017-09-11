@@ -1,22 +1,3 @@
-/*
- * Copyright 2017 Red Hat, Inc. and/or its affiliates.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
-
-/**
- * @author Fabio Massimo Ercoli (C) 2017 Red Hat Inc.
- */
 package org.hibernate.ogm.demo.playsport.it;
 
 import java.io.File;
@@ -28,16 +9,15 @@ import javax.inject.Inject;
 
 import org.hibernate.ogm.demo.playsport.core.entity.Address;
 import org.hibernate.ogm.demo.playsport.core.entity.Athlete;
+import org.hibernate.ogm.demo.playsport.core.entity.Club;
 import org.hibernate.ogm.demo.playsport.core.entity.ClubEmployee;
 import org.hibernate.ogm.demo.playsport.core.repo.AthleteRepo;
-import org.hibernate.ogm.demo.playsport.core.repo.ClubRepo;
-import org.hibernate.ogm.demo.playsport.core.entity.Club;
 import org.hibernate.ogm.demo.playsport.core.repo.ClubEmployeeRepo;
+import org.hibernate.ogm.demo.playsport.core.repo.ClubRepo;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,6 +25,27 @@ import org.slf4j.Logger;
 
 import static org.junit.Assert.*;
 
+/**
+ * This integration test verifies the behavior of project repositories.
+ * Test subjects are:
+ * <ul>
+ *     <li>club repository {@link ClubRepo}</li>
+ *     <li>athlete repository {@link AthleteRepo}</li>
+ *     <li>club employee repository {@link ClubEmployeeRepo}</li>
+ * </ul>
+ * <p>
+ * At the beginning of the test relative caches
+ * <ul>
+ *     <li>club cache {@link Club}</li>
+ *     <li>athlete cache {@link Athlete}</li>
+ *     <li>club employee cache {@link ClubEmployee}</li>
+ * </ul>
+ * are empty.
+ * <p>
+ * Test methods will be executed in sequence, using {@link InSequence} Arquillian annotation.
+ *
+ * @author Fabio Massimo Ercoli (C) 2017 Red Hat Inc.
+ */
 @RunWith(Arquillian.class)
 public class PlaySportServicesIT {
 
@@ -56,6 +57,13 @@ public class PlaySportServicesIT {
     public static final String ATH_3_CODE = "333111333";
     public static final String ATH_4_CODE = "111222333";
 
+    /**
+     * Define the deployment used for test.
+     * Only core packages are required for enabling repositories injection:
+     * <code>org.hibernate.ogm.demo.playsport.core.+</code>
+     *
+     * @return shrinkwrap WebArchive used for test.
+     */
     @Deployment
     public static WebArchive create() {
         return ShrinkWrap
@@ -63,7 +71,6 @@ public class PlaySportServicesIT {
             .addPackages(true, "org.hibernate.ogm.demo.playsport.core")
             .addAsResource("META-INF/persistence.xml")
             .addAsResource("hotrodclient.properties")
-            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
             .addAsWebInfResource(new File("src/main/webapp/WEB-INF/jboss-deployment-structure.xml"));
     }
 
@@ -79,6 +86,20 @@ public class PlaySportServicesIT {
     @Inject
     private ClubEmployeeRepo employeeRepo;
 
+    /**
+     * This step inserts three sport clubs: Roma, Milan and Juve.
+     * <p>
+     * It tests also:
+     * <ul>
+     *     <li>Generation of ID</li>
+     *     <li>Find by ID</li>
+     *     <li>Find by Name. Using Hibernate Search fullText EntityManager</li>
+     *     <li>Find by Code. Using Hibernate Search fullText EntityManager</li>
+     *     <li>Find All</li>
+     * </ul>
+     *
+     * @throws Exception
+     */
     @Test
     @InSequence(1)
     public void insertClubs() throws Exception {
@@ -111,6 +132,18 @@ public class PlaySportServicesIT {
 
     }
 
+    /**
+     * This step inserts three athletes: Fabio Massimo, Stefano and Giovanni.
+     * <p>
+     * It tests also:
+     * <ul>
+     *     <li>Generation of ID</li>
+     *     <li>Find by ID</li>
+     *     <li>Find by findByUispCode. Using Hibernate Search fullText EntityManager</li>
+     *     <li>Find All</li>
+     * </ul>
+     * @throws Exception
+     */
     @Test
     @InSequence(2)
     public void insertAthletes() throws Exception {
@@ -159,7 +192,7 @@ public class PlaySportServicesIT {
         cal.set(1977, Calendar.MARCH, 10);
         athlete.setBirthDate(cal);
 
-        log.info("BirthDate long value is {}", cal.getTimeInMillis());
+        log.debug("BirthDate long value is {}", cal.getTimeInMillis());
 
         address = new Address();
         address.setState("Italy");
@@ -182,7 +215,7 @@ public class PlaySportServicesIT {
         cal.set(1981, Calendar.MARCH, 24);
         athlete.setBirthDate(cal);
 
-        log.info("BirthDate long value is {}", cal.getTimeInMillis());
+        log.debug("BirthDate long value is {}", cal.getTimeInMillis());
 
         address = new Address();
         address.setState("Italy");
@@ -199,6 +232,12 @@ public class PlaySportServicesIT {
 
     }
 
+    /**
+     * This step associate athletes to clubs and verify the associations,
+     * using {@link ClubRepo}::getClubByIdWithAthletes method.
+     *
+     * @throws Exception
+     */
     @Test
     @InSequence(3)
     public void associateClubToAthletes() throws Exception {
@@ -226,12 +265,45 @@ public class PlaySportServicesIT {
         Club milan = milanClubList.get(0);
         Club juve = juveClubList.get(0);
 
+        // when I associate athletes to clubs
         athleteRepo.addAthleteToClub(fabio, roma);
         athleteRepo.addAthleteToClub(stefano, milan);
         athleteRepo.addAthleteToClub(giovanni, juve);
 
+        // then I expect that clubs now contain the relative athletes
+        roma = clubRepo.getClubByIdWithAthletes(roma.getId());
+
+        assertEquals(1, roma.getAthletes().size());
+        assertEquals(fabio.getId(), roma.getAthletes().get(0).getId());
+
+        milan = clubRepo.getClubByIdWithAthletes(milan.getId());
+
+        assertEquals(1, milan.getAthletes().size());
+        assertEquals(stefano.getId(), milan.getAthletes().get(0).getId());
+
+        juve = clubRepo.getClubByIdWithAthletes(juve.getId());
+
+        assertEquals(1, juve.getAthletes().size());
+        assertEquals(giovanni.getId(), juve.getAthletes().get(0).getId());
+
+        // and then I expect that athletes has clubs
+        fabio = athleteRepo.findByUispCode(ATH_1_CODE).get(0);
+        stefano = athleteRepo.findByUispCode(ATH_2_CODE).get(0);
+        giovanni = athleteRepo.findByUispCode(ATH_3_CODE).get(0);
+
+        assertEquals(CLUB_1_CODE, fabio.getClub().getCode());
+        assertEquals(CLUB_2_CODE, stefano.getClub().getCode());
+        assertEquals(CLUB_3_CODE, giovanni.getClub().getCode());
+
     }
 
+    /**
+     * This step creates a club employee and associates the employee to a club.
+     * The method {@link ClubEmployeeRepo}::createEmployee allows to create a new employee
+     * and associate it directly (in the same transaction) with an existing club.
+     *
+     * @throws Exception
+     */
     @Test
     @InSequence(4)
     public void createClubEmployee() throws Exception {
@@ -247,7 +319,7 @@ public class PlaySportServicesIT {
         cal.set(1979, Calendar.NOVEMBER, 21);
         clubEmployee.setBirthDate(cal);
 
-        log.info("BirthDate long value is {}", cal.getTimeInMillis());
+        log.debug("BirthDate long value is {}", cal.getTimeInMillis());
 
         Address address = new Address();
         address.setState("Italy");
@@ -261,8 +333,19 @@ public class PlaySportServicesIT {
 
         employeeRepo.createEmployee(clubEmployee, clubList.get(0));
 
+        List<ClubEmployee> employees = employeeRepo.findAll();
+        assertEquals(1, employees.size());
+        assertNotNull(employees.get(0).getId());
+
     }
 
+    /**
+     * This step creates a fourth athlete.
+     * The method {@link AthleteRepo}::createEmployee allows to create a new athlete
+     * and associate it directly (in the same transaction) with an existing club.
+     *
+     * @throws Exception
+     */
     @Test
     @InSequence(5)
     public void createAthleteWithClub() throws Exception {
@@ -291,31 +374,26 @@ public class PlaySportServicesIT {
         List<Club> clubList = clubRepo.findByCode(CLUB_1_CODE);
         assertEquals(1, clubList.size());
 
-        athlete = athleteRepo.createAthlete(athlete, clubList.get(0));
+        athleteRepo.createAthlete(athlete, clubList.get(0));
 
         String id = (athlete.getId());
         assertNotNull(id);
 
+        athlete = athleteRepo.findByUispCode(ATH_4_CODE).get(0);
+        assertEquals(CLUB_1_CODE, athlete.getClub().getCode());
+
     }
 
+    /**
+     * This step verifies the behaviour of {@link AthleteRepo}::remove method.
+     * <p>
+     * Given 4 athletes and 3 clubs.
+     * When remove 2 athletes and 1 club.
+     * Then we have 2 athletes and 1 club.
+     *
+     */
     @Test
     @InSequence(6)
-    public void verifyMatchClubAthletes() {
-
-        Athlete fabio = athleteRepo.findByUispCode(ATH_1_CODE).get(0);
-        Athlete stefano = athleteRepo.findByUispCode(ATH_2_CODE).get(0);
-        Athlete giovanni = athleteRepo.findByUispCode(ATH_3_CODE).get(0);
-        Athlete lorenzo = athleteRepo.findByUispCode(ATH_4_CODE).get(0);
-
-        assertEquals(CLUB_1_CODE, fabio.getClub().getCode());
-        assertEquals(CLUB_2_CODE, stefano.getClub().getCode());
-        assertEquals(CLUB_3_CODE, giovanni.getClub().getCode());
-        assertEquals(CLUB_1_CODE, lorenzo.getClub().getCode());
-
-    }
-
-    @Test
-    @InSequence(7)
     public void testRemoveAthlete() {
 
         List<Athlete> allAthletes = athleteRepo.findAll();

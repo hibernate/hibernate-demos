@@ -34,10 +34,10 @@
     <maven.compiler.source>1.8</maven.compiler.source>
 
     <!-- with Hibernate OGM versions -->
-    <version.hibernate.ogm>5.2.0-SNAPSHOT</version.hibernate.ogm>
+    <version.hibernate.ogm>5.2.0.Alpha1</version.hibernate.ogm>
 
     <!-- This properties must be the same of hibernate-ogm-bom -->
-    <version.hibernate.orm>5.1.9.Final</version.hibernate.orm>
+    <version.hibernate.orm>5.1.10.Final</version.hibernate.orm>
     <version.hibernate.search>5.6.2.Final</version.hibernate.search>
     <version.infinispan>8.2.6.Final</version.infinispan>
     <version.wildfly>10.1.0.Final</version.wildfly>
@@ -124,6 +124,12 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
       <scope>provided</scope>
     </dependency>
 
