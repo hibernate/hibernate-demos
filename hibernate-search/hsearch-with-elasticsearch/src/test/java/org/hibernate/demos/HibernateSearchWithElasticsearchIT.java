@@ -313,7 +313,9 @@ public class HibernateSearchWithElasticsearchIT extends TestBase {
 
 	@AfterClass
 	public static void closeEmf() {
-		emf.close();
+		if ( emf != null ) {
+			emf.close();
+		}
 	}
 
 	public static class VideoGameDto {
