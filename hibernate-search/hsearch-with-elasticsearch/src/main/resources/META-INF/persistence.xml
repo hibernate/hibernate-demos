@@ -30,6 +30,9 @@
       <!-- <property name="hibernate.search.default.elasticsearch.host" value="http://127.0.0.1:9200" /> -->
 
       <property name="hibernate.search.default.elasticsearch.index_schema_management_strategy" value="CREATE" />
+
+      <!-- Allow start even on a Yellow status of the Elasticsearch cluster. This is common on single-node dev environments -->
+      <property name="hibernate.search.default.elasticsearch.required_index_status" value="yellow" />
     </properties>
 
   </persistence-unit>
