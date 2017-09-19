@@ -33,6 +33,9 @@
 
       <!-- Allow start even on a Yellow status of the Elasticsearch cluster. This is common on single-node dev environments -->
       <property name="hibernate.search.default.elasticsearch.required_index_status" value="yellow" />
+
+      <!-- Ensuring that Elasticsearch always returns up to date results makes testing much easier -->
+      <property name="hibernate.search.default.elasticsearch.refresh_after_write" value="true" />
     </properties>
 
   </persistence-unit>
