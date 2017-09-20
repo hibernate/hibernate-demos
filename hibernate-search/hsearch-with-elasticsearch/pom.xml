@@ -91,14 +91,8 @@
 					<clusterName>HibernateSearchDemoCluster</clusterName>
 					<tcpPort>9300</tcpPort>
 					<httpPort>9200</httpPort>
+					<version>${test.elasticsearch.host.version}</version>
 				</configuration>
-				<dependencies>
-					<dependency>
-							<groupId>org.elasticsearch</groupId>
-							<artifactId>elasticsearch</artifactId>
-							<version>${test.elasticsearch.host.version}</version>
-					</dependency>
-				</dependencies>
 				<executions>
 					<execution>
 						<id>start-elasticsearch</id>
