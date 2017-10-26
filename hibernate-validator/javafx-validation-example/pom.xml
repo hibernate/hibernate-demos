@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.hibernate.demos</groupId>
-    <artifactId>javafx-validation-exsample</artifactId>
+    <artifactId>validation-javafx</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -19,13 +19,17 @@
             <name>Hendrik Ebbers</name>
             <url>http://www.guigarage.com/about/</url>
         </contributor>
+        <contributor>
+            <name>Gunnar Morling</name>
+            <url>http://in.relation.to/gunnar-morling/</url>
+        </contributor>
     </contributors>
 
     <dependencies>
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>6.0.0.Beta1</version>
+            <version>6.0.4.Final</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish</groupId>

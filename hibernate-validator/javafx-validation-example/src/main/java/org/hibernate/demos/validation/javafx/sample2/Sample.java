@@ -1,4 +1,4 @@
-package com.canoo.validation.sample4;
+package org.hibernate.demos.validation.javafx.sample2;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

@@ -6,4 +6,4 @@
  *
  * @author Hendrik Ebbers
  */
-package com.canoo.validation;
+package org.hibernate.demos.validation.javafx;

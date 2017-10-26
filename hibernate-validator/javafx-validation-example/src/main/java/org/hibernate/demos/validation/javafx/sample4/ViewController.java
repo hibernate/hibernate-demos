@@ -1,4 +1,4 @@
-package com.canoo.validation.sample4;
+package org.hibernate.demos.validation.javafx.sample4;
 
 import java.net.URL;
 import java.util.ResourceBundle;

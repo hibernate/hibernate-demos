@@ -1,4 +1,4 @@
-package com.canoo.validation.sample1;
+package org.hibernate.demos.validation.javafx.sample1;
 
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
