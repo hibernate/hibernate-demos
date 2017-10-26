@@ -1,17 +1,23 @@
 package com.canoo.validation.sample4;
 
-import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
  * @author Hendrik Ebbers
  */
+@SuppressWarnings("restriction")
 public class Model {
 
     @NotEmpty
@@ -19,8 +25,8 @@ public class Model {
 
     private final Property<@Min(50) Integer> count = new SimpleObjectProperty<>();
 
-    @Size(min=1, max=4)
-    private final ListProperty<@Size(min=2, max=32) String> tags = new SimpleListProperty<>(FXCollections.observableArrayList());
+    @Size(min=1, max=4, message="1 to 4 tags required")
+    private final ListProperty<@Size(min=2, max=32, message="Invalid tag length") String> tags = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     public String getName() {
         return name.get();
