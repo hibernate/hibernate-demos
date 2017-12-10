@@ -86,11 +86,8 @@ public class AddIndexPlugin implements Plugin {
     }
 
     private ByteArrayOutputStream writeToOutputStream(Indexer indexer) {
-        ByteArrayOutputStream outStream = null;
-
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         Index index = indexer.complete();
-
-        outStream = new ByteArrayOutputStream();
         IndexWriter writer = new IndexWriter( outStream );
 
         try {
@@ -112,7 +109,7 @@ public class AddIndexPlugin implements Plugin {
     }
 
     private boolean addToIndex(ResourcePoolEntry entry) {
-        if ( !entry.path().endsWith("class") ) {
+        if ( !entry.path().endsWith( "class" ) ) {
             return false;
         }
 

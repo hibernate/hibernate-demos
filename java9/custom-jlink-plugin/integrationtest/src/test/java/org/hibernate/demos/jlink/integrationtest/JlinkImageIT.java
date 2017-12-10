@@ -66,7 +66,7 @@ public class JlinkImageIT {
 
                         // arguments passed on to JLink
                         "--module-path", System.getProperty( "java.home" ) + "/jmods/:" + modulesDir,
-                        "--add-modules", "java.base,com.example.b",
+                        "--add-modules", "com.example.b",
                         "--output", jlinkImageDir,
                         "--add-index=com.example.b:for-modules=com.example.a"
 //                        "--list-plugins"

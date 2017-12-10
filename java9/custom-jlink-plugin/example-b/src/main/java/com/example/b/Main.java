@@ -19,19 +19,18 @@ import org.jboss.jandex.IndexReader;
  */
 public class Main {
 
-    public static void main(String[] args) {
-        try (InputStream input =  Main.class.getResourceAsStream( "/META-INF/jandex.idx" ) ) {
+    public static void main(String[] args) throws Exception {
+        try (InputStream input = Main.class.getResourceAsStream( "/META-INF/jandex.idx" ) ) {
             IndexReader reader = new IndexReader( input );
             Index index = reader.read();
 
-            List<AnnotationInstance> entityInstances = index.getAnnotations( DotName.createSimple( "com.example.a.Entity" ) );
+            List<AnnotationInstance> entityInstances = index.getAnnotations(
+                    DotName.createSimple( "com.example.a.Entity" )
+            );
 
             for (AnnotationInstance annotationInstance : entityInstances) {
                 System.out.println( annotationInstance.target().asClass().name() );
             }
-        }
-        catch(Exception e) {
-            throw new RuntimeException( e );
         }
     }
 }
