@@ -64,19 +64,19 @@ public class AddIndexPlugin implements Plugin {
         Indexer indexer = new Indexer();
 
         in.transformAndCopy(
-                e -> {
-                    if ( addToIndex( e ) ) {
-                        try {
-                            indexer.index( e.content() );
-                        }
-                        catch(Exception ex) {
-                            throw new RuntimeException( ex );
-                        }
+            e -> {
+                if ( addToIndex( e ) ) {
+                    try {
+                        indexer.index( e.content() );
                     }
+                    catch(Exception ex) {
+                        throw new RuntimeException( ex );
+                    }
+                }
 
-                    return e;
-                },
-                out
+                return e;
+            },
+            out
         );
 
         ByteArrayOutputStream index = writeToOutputStream( indexer );
