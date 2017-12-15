@@ -57,12 +57,12 @@ public class JlinkImageIT {
 
     private void runJLinkWithAddIndexPlugin() throws Exception {
         Process process = new ProcessBuilder()
-                .command( System.getProperty( "java.home" ) + "/bin/java",
-                        "-Xdebug",
-                        "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000",
-                        "-javaagent:" + agentPath,
-                        "--module-path", modulesDir,
-                        "--module", "org.hibernate.demos.jlink",
+                .command( System.getProperty( "java.home" ) + "/bin/jlink",
+                        "-J-Xdebug",
+                        "-J-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000",
+                        "-J-javaagent:" + agentPath,
+                        "-J--module-path=" + modulesDir,
+                        "-J--add-modules=org.hibernate.demos.jlink",
 
                         // arguments passed on to JLink
                         "--module-path", System.getProperty( "java.home" ) + "/jmods/:" + modulesDir,
