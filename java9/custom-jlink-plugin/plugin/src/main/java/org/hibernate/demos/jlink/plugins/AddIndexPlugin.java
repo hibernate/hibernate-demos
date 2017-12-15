@@ -17,6 +17,7 @@ import jdk.tools.jlink.plugin.Plugin;
 import jdk.tools.jlink.plugin.ResourcePool;
 import jdk.tools.jlink.plugin.ResourcePoolBuilder;
 import jdk.tools.jlink.plugin.ResourcePoolEntry;
+import jdk.tools.jlink.plugin.ResourcePoolModule;
 
 /**
  * A plug-in for jlink which adds a Jandex index to the image.
@@ -63,26 +64,34 @@ public class AddIndexPlugin implements Plugin {
     public ResourcePool transform(ResourcePool in, ResourcePoolBuilder out) {
         Indexer indexer = new Indexer();
 
-        in.transformAndCopy(
-            e -> {
-                if ( addToIndex( e ) ) {
-                    try {
-                        indexer.index( e.content() );
-                    }
-                    catch(Exception ex) {
-                        throw new RuntimeException( ex );
-                    }
-                }
+        for (String moduleName : modules) {
+            ResourcePoolModule module = in.moduleView()
+                .findModule( moduleName )
+                .orElseThrow( () -> new RuntimeException("Module " + moduleName + "wasn't found" ) );
 
-                return e;
-            },
+            module.entries()
+                .filter( this::shouldAddToIndex )
+                .forEach( e -> addToIndex( indexer, e ) );
+        }
+
+        ByteArrayOutputStream index = writeToOutputStream( indexer );
+        out.add( ResourcePoolEntry.create( "/" + targetModule + "/META-INF/jandex.idx", index.toByteArray() ) );
+
+        in.transformAndCopy(
+            e -> e,
             out
         );
 
-        ByteArrayOutputStream index = writeToOutputStream( indexer );
-
-        out.add( ResourcePoolEntry.create( "/" + targetModule + "/META-INF/jandex.idx", index.toByteArray() ) );
         return out.build();
+    }
+
+    private void addToIndex(Indexer indexer, ResourcePoolEntry entry) {
+        try {
+            indexer.index( entry.content() );
+        }
+        catch(Exception ex) {
+            throw new RuntimeException( ex );
+        }
     }
 
     private ByteArrayOutputStream writeToOutputStream(Indexer indexer) {
@@ -108,17 +117,7 @@ public class AddIndexPlugin implements Plugin {
         return outStream;
     }
 
-    private boolean addToIndex(ResourcePoolEntry entry) {
-        if ( !entry.path().endsWith( "class" ) ) {
-            return false;
-        }
-
-        for ( String moduleToIndex : modules ) {
-            if ( entry.path().startsWith( "/" + moduleToIndex ) ) {
-                return true;
-            }
-        }
-
-        return false;
+    private boolean shouldAddToIndex(ResourcePoolEntry entry) {
+        return entry.path().endsWith( "class" );
     }
 }
