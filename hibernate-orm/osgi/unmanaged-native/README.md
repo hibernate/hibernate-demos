@@ -14,3 +14,7 @@ To run the tutorial, use the following commands in the Karaf console:
 - feature:install hibernate-orm
 - feature:repo-add file:/[PATH]/hibernate-demos/hibernate-orm/osgi/unmanaged-native/features.xml
 - feature:install hibernate-osgi-unmanaged-native
+
+Note that this project is not deployed in Hibernate's Nexus group, so it must be built and installed to your local
+repo.  Then take a look at Karaf's etc/org.ops4j.pax.url.mvn.cfg local Maven settings, in order for it to find the
+artifacts in the local repo.
