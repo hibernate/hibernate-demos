@@ -13,54 +13,54 @@ import org.hibernate.search.annotations.Indexed;
 @Indexed
 public class Athlete extends Person {
 
-    public static final String CODE_REGEX = "\\d{9}";
+	public static final String CODE_REGEX = "\\d{9}";
 
-    @Column(unique = true, nullable = false)
-    @Pattern(regexp = "\\d{9}")
-    @Field(analyze= Analyze.NO)
-    private String uispCode;
+	@Column(unique = true, nullable = false)
+	@Pattern(regexp = "\\d{9}")
+	@Field(analyze = Analyze.NO)
+	private String uispCode;
 
-    @ManyToOne
-    private Club club;
+	@ManyToOne
+	private Club club;
 
-    public String getUispCode() {
-        return uispCode;
-    }
+	public String getUispCode() {
+		return uispCode;
+	}
 
-    public void setUispCode(String uispCode) {
-        this.uispCode = uispCode;
-    }
+	public void setUispCode(String uispCode) {
+		this.uispCode = uispCode;
+	}
 
-    public Club getClub() {
-        return club;
-    }
+	public Club getClub() {
+		return club;
+	}
 
-    public void setClub(Club club) {
-        this.club = club;
-    }
+	public void setClub(Club club) {
+		this.club = club;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
+	@Override
+	public boolean equals(Object o) {
+		if ( this == o ) {
+			return true;
+		}
+		if ( o == null || getClass() != o.getClass() ) {
+			return false;
+		}
+		if ( !super.equals( o ) ) {
+			return false;
+		}
 
-        Athlete athlete = (Athlete) o;
+		Athlete athlete = (Athlete) o;
 
-        return uispCode != null ? uispCode.equals(athlete.uispCode) : athlete.uispCode == null;
-    }
+		return uispCode != null ? uispCode.equals( athlete.uispCode ) : athlete.uispCode == null;
+	}
 
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (uispCode != null ? uispCode.hashCode() : 0);
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		int result = super.hashCode();
+		result = 31 * result + ( uispCode != null ? uispCode.hashCode() : 0 );
+		return result;
+	}
 
 }

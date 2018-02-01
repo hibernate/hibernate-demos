@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
@@ -44,6 +46,7 @@ public class Club {
     private List<Athlete> athletes = new ArrayList<>();
 
     @OneToMany(mappedBy = "company")
+    @Cascade( CascadeType.PERSIST )
     private List<ClubEmployee> employees = new ArrayList<>();
 
     public Club() {

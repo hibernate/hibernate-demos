@@ -1,6 +1,7 @@
 package org.hibernate.ogm.demo.playsport.it;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
@@ -427,6 +428,40 @@ public class PlaySportServicesIT {
 
         assertEquals(2, allAthletes.size());
         assertEquals(2, allClubs.size());
+
+    }
+
+    @Test
+    @InSequence(7)
+    public void testCreateClubWithNewEmployees() {
+
+        ClubEmployee clubEmployee = new ClubEmployee();
+        clubEmployee.setName("Diego");
+        clubEmployee.setSurname("Diodati");
+        clubEmployee.setTaxCode("J31d39JD1");
+        clubEmployee.setEmail("xx.ciao@gmail.com");
+        clubEmployee.setHometown("Rome");
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(1980, Calendar.SEPTEMBER, 18);
+        clubEmployee.setBirthDate(cal);
+
+        Address address = new Address();
+        address.setState("Italy");
+        address.setCity("Rome");
+        address.setStreet("via leone 4");
+        address.setZip("01911");
+        clubEmployee.setAddress(address);
+
+        ArrayList<ClubEmployee> clubEmployees = new ArrayList<>();
+        clubEmployees.add( clubEmployee );
+
+        Club club = new Club( "New Team", "CODE123", "TAX123", "VAT123" );
+
+        clubEmployee.setCompany( club );
+        club.setEmployees(clubEmployees);
+
+        clubRepo.add( club );
 
     }
 

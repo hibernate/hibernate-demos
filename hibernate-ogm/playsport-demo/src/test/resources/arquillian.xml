@@ -16,6 +16,7 @@
       <configuration>
         <property name="jbossHome">${jboss.home}</property>
         <property name="javaVmArguments">-XX:MaxPermSize=512m -Djava.net.preferIPv4Stack=true -XX:+IgnoreUnrecognizedVMOptions</property>
+        <property name="serverConfig">standalone-with-hib-log.xml</property>
       </configuration>
     </container>
     <container qualifier="infinispan">
