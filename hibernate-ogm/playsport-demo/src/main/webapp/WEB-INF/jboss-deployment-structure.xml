@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.2">
+    <deployment>
+        <dependencies>
+          <module name="org.hibernate.ogm" services="export" />
+          <module name="org.hibernate.ogm.infinispan-remote" services="export" />
+        </dependencies>
+    </deployment>
+</jboss-deployment-structure>
