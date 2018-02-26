@@ -23,8 +23,11 @@ This repository contains demos used live during presentations or in blog posts; 
     - _time-duration-validator-example_: Custom constraint and validator, retrieved via the service loader.
       Accompanies the blog post http://in.relation.to/2017/03/02/adding-custom-constraint-definitions-via-the-java-service-loader/
     - _updating-hv-in-wildfly_: How to upgrade WildFly 10 to the latest version of Hibernate Validator.
-       Accompanies the blog post http://in.relation.to/2017/04/04/testing-bean-validation-2-0-on-wildfly-10/
+      Accompanies the blog post http://in.relation.to/2017/04/04/testing-bean-validation-2-0-on-wildfly-10/
     - _javafx-validation-example_: Shows usage of Bean Validation 2 with JavaFX
+    - _custom-value-extractors_: Shows how to put constraints to custom containers such as Guava's `Multimap`.
+      Accompanies the blog post http://in.relation.to/2018/02/26/putting-bean-validation-constraints-to-multimaps/
+
 * Java 9
     - multi-release-jar-demo: Shows how to build multi-release JARs with Java 9.
       Accompanies the blog post http://in.relation.to/2017/02/13/building-multi-release-jars-with-maven/
