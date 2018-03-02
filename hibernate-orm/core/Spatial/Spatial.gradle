@@ -7,7 +7,7 @@ repositories {
         url "http://www.hibernatespatial.org/repository"
     }
     maven {
-        url "http://repo.opengeo.org"
+        url "http://repo.boundlessgeo.com/main"
     }
 }
 
