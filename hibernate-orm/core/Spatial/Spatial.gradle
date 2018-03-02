@@ -14,5 +14,5 @@ repositories {
 dependencies {
 	compile( 'org.hibernate:hibernate-spatial:4.3-SNAPSHOT')
 	// GeoDB is an H2 extension
-	compile( 'org.opengeo:geodb:0.7')
+	compile( 'org.opengeo:geodb:0.8')
 }
