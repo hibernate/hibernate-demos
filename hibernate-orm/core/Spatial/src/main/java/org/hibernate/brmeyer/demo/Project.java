@@ -24,8 +24,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import org.hibernate.annotations.Type;
-
 import com.vividsolutions.jts.geom.Point;
 
 /**
@@ -36,8 +34,7 @@ public class Project {
 	@Id
 	@GeneratedValue
 	private long id;
-	
-	@Type(type="org.hibernate.spatial.GeometryType")
+
     private Point location;
 	
 	private String name;

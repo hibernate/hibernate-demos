@@ -12,7 +12,10 @@ repositories {
 }
 
 dependencies {
-	compile( 'org.hibernate:hibernate-spatial:4.3-SNAPSHOT')
-	// GeoDB is an H2 extension
-	compile( 'org.opengeo:geodb:0.8')
+    compile( 'org.hibernate:hibernate-spatial:' + rootProject.hibernateVersion )
+    compile( 'org.geolatte:geolatte-geom:1.3.0' )
+    // GeoDB is an H2 extension
+    compile( 'org.opengeo:geodb:0.8')
+    // Needed by GeoDB
+    compile( 'net.sourceforge.hatbox:hatbox:1.0.b7' )
 }
