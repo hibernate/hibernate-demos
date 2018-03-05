@@ -3,29 +3,28 @@
     <persistence-unit name="Demo">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-		<!-- Define the classes -->
-		<class>org.hibernate.brmeyer.demo.entity.User</class>
-		<class>org.hibernate.brmeyer.demo.entity.Tool</class>
-		<class>org.hibernate.brmeyer.demo.entity.Skill</class>
-		<class>org.hibernate.brmeyer.demo.entity.Community</class>
-		<class>org.hibernate.brmeyer.demo.entity.Donation</class>
-		<class>org.hibernate.brmeyer.demo.entity.Comment</class>
-		<class>org.hibernate.brmeyer.demo.entity.ServiceEvent</class>
-		<class>org.hibernate.brmeyer.demo.entity.Project</class>
+        <!-- Define the classes -->
+        <class>org.hibernate.brmeyer.demo.entity.User</class>
+        <class>org.hibernate.brmeyer.demo.entity.Tool</class>
+        <class>org.hibernate.brmeyer.demo.entity.Skill</class>
+        <class>org.hibernate.brmeyer.demo.entity.Community</class>
+        <class>org.hibernate.brmeyer.demo.entity.Donation</class>
+        <class>org.hibernate.brmeyer.demo.entity.Comment</class>
+        <class>org.hibernate.brmeyer.demo.entity.ServiceEvent</class>
+        <class>org.hibernate.brmeyer.demo.entity.Project</class>
 
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
-			<property name="hibernate.connection.driver_class" value="org.h2.Driver"/>
-			<property name="hibernate.connection.url" value="jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1;MVCC=TRUE"/>
-			<property name="hibernate.connection.username" value="sa"/>
-			
-			<property name="hibernate.connection.pool_size" value="5"/>
-			
-			<property name="hibernate.show_sql" value="true"/>
-			<property name="hibernate.format_sql" value="true"/>
-			
-			<property name="hibernate.hbm2ddl.auto" value="create-drop"/>
-            
+            <property name="hibernate.connection.driver_class" value="org.h2.Driver"/>
+            <property name="hibernate.connection.url" value="jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1;MVCC=TRUE"/>
+            <property name="hibernate.connection.username" value="sa"/>
+
+            <property name="hibernate.connection.pool_size" value="5"/>
+
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
         </properties>
     </persistence-unit>
 </persistence>

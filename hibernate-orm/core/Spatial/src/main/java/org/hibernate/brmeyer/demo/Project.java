@@ -35,8 +35,8 @@ public class Project {
 	@GeneratedValue
 	private long id;
 
-    private Point location;
-	
+	private Point location;
+
 	private String name;
 
 	public long getId() {
@@ -46,19 +46,19 @@ public class Project {
 	public void setId(long id) {
 		this.id = id;
 	}
-	
+
 	public Point getLocation() {
 		return location;
 	}
-	
+
 	public void setLocation(Point location) {
 		this.location = location;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
