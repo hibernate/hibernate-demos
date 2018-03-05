@@ -71,7 +71,7 @@ public class BasicJpaDemo {
 			
 			insertUser( user );
 			
-			user = getUser(1);
+			user = getUser( user.getId() );
 			System.out.println( user.toString() );
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -2,7 +2,17 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
     <persistence-unit name="Demo">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <!-- Hibernate scanning discovers all entities. -->
+
+		<!-- Define the classes -->
+		<class>org.hibernate.brmeyer.demo.entity.User</class>
+		<class>org.hibernate.brmeyer.demo.entity.Tool</class>
+		<class>org.hibernate.brmeyer.demo.entity.Skill</class>
+		<class>org.hibernate.brmeyer.demo.entity.Community</class>
+		<class>org.hibernate.brmeyer.demo.entity.Donation</class>
+		<class>org.hibernate.brmeyer.demo.entity.Comment</class>
+		<class>org.hibernate.brmeyer.demo.entity.ServiceEvent</class>
+		<class>org.hibernate.brmeyer.demo.entity.Project</class>
+
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
 			<property name="hibernate.connection.driver_class" value="org.h2.Driver"/>
