@@ -16,6 +16,8 @@ hs_err_pid*
 *.ipr
 *.iws
 *.iml
+build/
+out/
 atlassian-ide-plugin.xml
 
 #XMLEditor
