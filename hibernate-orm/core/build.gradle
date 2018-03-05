@@ -1,7 +1,7 @@
 ext {
-    gradleVersion = '1.9'
-    hibernateVersion = '4.3.1.Final'
-    javaLanguageLevel = '1.7'
+    gradleVersion = '4.4'
+    hibernateVersion = '5.2.13.Final'
+    javaLanguageLevel = '1.8'
 }
 
 subprojects {
@@ -47,4 +47,5 @@ subprojects {
 
 task wrapper(type: Wrapper) {
     gradleVersion = gradleVersion
+    distributionType = 'BIN'
 }
