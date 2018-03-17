@@ -1,14 +1,12 @@
 package fieldreader.spec.bootstrap;
 
-import java.lang.invoke.MethodHandles.Lookup;
-
 import fieldreader.spec.FieldValueReader;
 
 public interface BootstrapDelegate {
 
-    FieldValueReader getFieldValueReader(LookupProvider lookupProvider);
+    FieldValueReader getFieldValueReader(PackageOpener opener);
 
-    public interface LookupProvider {
-        Lookup getPrivateLookup(Object o);
+    public interface PackageOpener {
+        void openPackageIfNeeded(Module targetModule, String targetPackage, Module specImplModule);
     }
 }
