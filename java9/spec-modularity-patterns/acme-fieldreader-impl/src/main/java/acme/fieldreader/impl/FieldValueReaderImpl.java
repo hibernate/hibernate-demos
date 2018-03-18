@@ -10,7 +10,7 @@ public class FieldValueReaderImpl implements FieldValueReader {
 
     private final ClassValue<Lookup> lookups;
 
-    public FieldValueReaderImpl(PackageOpener moduleOpener) {
+    public FieldValueReaderImpl(PackageOpener packageOpener) {
         this.lookups = new ClassValue<Lookup>() {
 
             @Override
@@ -19,7 +19,7 @@ public class FieldValueReaderImpl implements FieldValueReader {
                     getClass().getModule().addReads( type.getModule() );
                 }
 
-                moduleOpener.openPackageIfNeeded(
+                packageOpener.openPackageIfNeeded(
                         type.getModule(), type.getPackageName(), FieldValueReaderImpl.class.getModule()
                 );
 
