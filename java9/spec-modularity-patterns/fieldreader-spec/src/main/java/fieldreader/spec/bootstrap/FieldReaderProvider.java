@@ -2,9 +2,12 @@ package fieldreader.spec.bootstrap;
 
 import fieldreader.spec.FieldValueReader;
 
-public interface BootstrapDelegate {
+/**
+ * Contract between the field reader API bootstrap mechanism and spec implementations.
+ */
+public interface FieldReaderProvider {
 
-    FieldValueReader getFieldValueReader(PackageOpener opener);
+    FieldValueReader provideFieldValueReader(PackageOpener opener);
 
     public interface PackageOpener {
         void openPackageIfNeeded(Module targetModule, String targetPackage, Module specImplModule);

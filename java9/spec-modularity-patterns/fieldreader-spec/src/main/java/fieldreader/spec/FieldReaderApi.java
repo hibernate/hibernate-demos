@@ -2,22 +2,22 @@ package fieldreader.spec;
 
 import java.util.ServiceLoader;
 
-import fieldreader.spec.bootstrap.BootstrapDelegate;
-import fieldreader.spec.bootstrap.BootstrapDelegate.PackageOpener;
+import fieldreader.spec.bootstrap.FieldReaderProvider;
+import fieldreader.spec.bootstrap.FieldReaderProvider.PackageOpener;
 
 public class FieldReaderApi {
 
     private static final PackageOpener PACKAGE_OPENER = new PackageOpenerImpl();
 
     public static FieldValueReader getFieldValueReader() {
-        ServiceLoader<BootstrapDelegate> loader = ServiceLoader.load( BootstrapDelegate.class );
+        ServiceLoader<FieldReaderProvider> loader = ServiceLoader.load( FieldReaderProvider.class );
 
         return loader.findFirst()
-                .orElseThrow( () -> new IllegalStateException( "No provider of " + BootstrapDelegate.class.getName() + " available" ) )
-                .getFieldValueReader( PACKAGE_OPENER );
+                .orElseThrow( () -> new IllegalStateException( "No provider of " + FieldReaderProvider.class.getName() + " available" ) )
+                .provideFieldValueReader( PACKAGE_OPENER );
     }
 
-    private static class PackageOpenerImpl implements BootstrapDelegate.PackageOpener {
+    private static class PackageOpenerImpl implements FieldReaderProvider.PackageOpener {
 
         @Override
         public void openPackageIfNeeded(Module targetModule, String targetPackage, Module specImplModule) {

@@ -4,7 +4,7 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
 
 import fieldreader.spec.FieldValueReader;
-import fieldreader.spec.bootstrap.BootstrapDelegate.PackageOpener;
+import fieldreader.spec.bootstrap.FieldReaderProvider.PackageOpener;
 
 public class FieldValueReaderImpl implements FieldValueReader {
 
