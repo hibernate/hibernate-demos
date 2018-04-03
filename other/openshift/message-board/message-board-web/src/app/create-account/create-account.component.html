@@ -1,0 +1,11 @@
+<div class="container">
+  <div class="card">
+    <div class="card-body">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username" [(ngModel)]="user.userName" />
+      </div>
+      <button [disabled]="isDisabled()" class="btn btn-danger" (click)="createAccount()">Public</button>
+    </div>
+  </div>
+</div>
