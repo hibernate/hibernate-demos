@@ -1,0 +1,20 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-lg-2">
+			<div class="float-right">
+				<a *ngFor="let user of users"
+					routerLink="/message/{{user.userName}}" (click)="onSelect(user)"
+					[class.text-danger]="user.userName === userName"
+					[class.text-info]="user.userName != userName">
+          <div>
+            <span class="badge" [class.badge-danger]="user.userName === userName" [class.badge-info]="user.userName != userName">{{ user.id }}</span>
+            {{ user.userName }}
+          </div>
+				</a>
+			</div>
+		</div>
+		<div *ngIf="userName" class="col-lg-10">
+			<app-board-detail [userName]="userName"></app-board-detail>
+		</div>
+	</div>
+</div>

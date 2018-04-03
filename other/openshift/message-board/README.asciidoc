@@ -1,0 +1,60 @@
+# Hibernate Demo: Message Board
+Data MicroService Demo.
+
+Made with Hibernate ORM, Hibernate OGM and Infinispan for OpenShift Container Platform. 
+
+## Install demo
+----
+cd script
+
+oc login -u [YOUR-USER-NAME]
+oc new-project [YOUR-PROJECT-NAME]
+
+sh ./install-all.sh
+----
+
+## Update Account MicroService
+----
+cd script
+sh ./binary-build-account.sh
+----
+
+## Update Message MicroService
+----
+cd script
+sh ./binary-build-message.sh
+----
+
+## Test
+
+### Web [FORM]
+
+[YOUR-USER-NAME] is your OCP username like **developer**
+[YOUR-PROJECT-NAME] is your OCP project like **message-board**
+[YOUR-IP] is a generate IP by OCP like **192.168.42.120**
+
+----
+http://web-message-board.[YOUR-IP].nip.io
+----
+
+click on __andrea__ or __fabio__
+
+### Message MicroService [REST]
+#### with proxy
+----
+http://web-message-board.[YOUR-IP].nip.io/message-service/messages?username=andrea
+----
+#### without proxy
+----
+http://message-service-message-board.[YOUR-IP].nip.io/message-service/messages?username=andrea
+----
+
+### Account MicroService [REST]
+#### with proxy
+----
+http://web-message-board.[YOUR-IP].nip.io/account-service/user
+----
+#### without proxy
+----
+http://account-service-message-board.[YOUR-IP].nip.io/account-service/user
+----

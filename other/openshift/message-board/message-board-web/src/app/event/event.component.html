@@ -1,0 +1,18 @@
+<div *ngIf="eventService.events">
+
+  <div class="card">
+    <div class="card-header">Events</div>
+    <div class="card-body">
+
+      <ul class="list-group list-group-flush">
+        <li *ngFor='let event of eventService.events; index as i' class="list-group-item">
+          <button type="button" class="close" aria-label="Close" (click)="eventService.clear(i)">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          {{event}}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+</div>

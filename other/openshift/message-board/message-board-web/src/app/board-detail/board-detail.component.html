@@ -1,0 +1,14 @@
+<div class="container-fluid">
+
+  <app-post-message></app-post-message>
+
+  <div *ngFor="let message of messages" class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+        <p class="card-text">{{ message.body }}</p>
+        <a *ngFor="let tag of message.tags" href="#" class="card-link text-info">{{ tag }}</a>
+        <button class="btn btn-outline-danger btn-sm" (click)="delete(message.id)">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>

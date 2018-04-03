@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<persistence version="2.1"
+             xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+    <persistence-unit name="primary" transaction-type="JTA">
+        <provider>org.hibernate.ogm.jpa.HibernateOgmPersistence</provider>
+        <properties>
+            <property name="jboss.as.jpa.providerModule" value="org.hibernate:5.2"/>
+
+            <property name="hibernate.ogm.datastore.provider" value="infinispan_remote" />
+            <property name="hibernate.ogm.infinispan_remote.configuration_resource_name" value="hotrodclient.properties" />
+            <property name="hibernate.ogm.datastore.create_database" value="true" />
+        </properties>
+    </persistence-unit>
+</persistence>

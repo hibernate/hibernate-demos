@@ -1,0 +1,467 @@
+{
+  "apiVersion": "v1",
+  "kind": "Template",
+  "labels": {
+    "template": "infinispan-persistent"
+  },
+  "metadata": {
+    "annotations": {
+      "description": "Infinispan 9 (Persistent)",
+      "iconClass": "icon-infinispan",
+      "tags": "java,database,datagrid,jboss",
+      "openshift.io/display-name": "Infinispan 9 (Persistent)",
+      "openshift.io/documentation-url": "http://infinispan.org/documentation/",
+      "openshift.io/long-description": "This template provides a standalone Infinispan server (a high performance, scalable, key/value data grid solution) with persistence enabled. In order to provide custom configuration, please update the $ApplicationName-configuration ConfigMap and restart a Pod.",
+      "openshift.io/provider-display-name": "Red Hat, Inc.",
+      "openshift.io/support-url": "http://infinispan.org"
+    },
+    "name": "infinispan-persistent"
+  },
+  "objects": [
+    {
+      "kind": "ServiceAccount",
+      "apiVersion": "v1",
+      "metadata": {
+      "name": "${APPLICATION_NAME}"
+      }
+    },
+    {
+      "kind": "RoleBinding",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "${APPLICATION_NAME}-view"
+      },
+      "userNames": [
+        "system:serviceaccount:${NAMESPACE}:${APPLICATION_NAME}"
+      ],
+      "groupNames": null,
+      "subjects": [
+        {
+          "kind": "ServiceAccount",
+          "name": "${APPLICATION_NAME}"
+        }
+      ],
+      "roleRef": {
+        "name": "view"
+      }
+    },
+    {
+      "kind": "Secret",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "${APPLICATION_NAME}",
+        "annotations": {
+          "template.openshift.io/expose-infinispan.client.hotrod.auth_username": "{.data['application-user']}",
+          "template.openshift.io/expose-infinispan.client.hotrod.auth_password": "{.data['application-password']}"
+        }
+      },
+      "stringData" : {
+        "application-user": "${APPLICATION_USER}",
+        "application-password": "${APPLICATION_PASSWORD}",
+        "management-user": "${MANAGEMENT_USER}",
+        "management-password": "${MANAGEMENT_PASSWORD}"
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "annotations": {
+          "description": "Headless service for StatefulSets"
+        },
+        "labels": {
+          "application": "${APPLICATION_NAME}"
+        },
+        "name": "${APPLICATION_NAME}-headless"
+      },
+      "spec": {
+        "ports": [
+          {
+            "name": "http",
+            "port": 8080,
+            "targetPort": 8080
+          },
+          {
+            "name": "hotrod",
+            "port": 11222,
+            "targetPort": 11222
+          }
+        ],
+        "selector": {
+          "application": "${APPLICATION_NAME}"
+        },
+        "clusterIP": "None"
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "annotations": {
+          "description": "The web server's HTTP port."
+        },
+        "labels": {
+          "application": "${APPLICATION_NAME}"
+        },
+        "name": "${APPLICATION_NAME}-http"
+      },
+      "spec": {
+        "ports": [
+          {
+            "port": 8080,
+            "targetPort": 8080
+          }
+        ],
+        "selector": {
+          "deploymentConfig": "${APPLICATION_NAME}"
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "annotations": {
+          "description": "The management console."
+        },
+        "labels": {
+          "application": "${APPLICATION_NAME}"
+        },
+        "name": "${APPLICATION_NAME}-management"
+      },
+      "spec": {
+        "ports": [
+          {
+            "port": 9990,
+            "targetPort": 9990
+          }
+        ],
+        "selector": {
+          "deploymentConfig": "${APPLICATION_NAME}"
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "annotations": {
+          "description": "Hot Rod's port.",
+          "template.openshift.io/expose-infinispan.client.hotrod.server_list": "{.spec.clusterIP}:{.spec.ports[0].port}"
+        },
+        "labels": {
+          "application": "${APPLICATION_NAME}"
+        },
+        "name": "${APPLICATION_NAME}-hotrod"
+      },
+      "spec": {
+        "ports": [
+          {
+            "port": 11222,
+            "targetPort": 11222
+          }
+        ],
+        "selector": {
+          "deploymentConfig": "${APPLICATION_NAME}"
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "id": "${APPLICATION_NAME}-management",
+      "kind": "Route",
+      "metadata": {
+        "annotations": {
+          "description": "Route for the management console."
+        },
+        "labels": {
+          "application": "${APPLICATION_NAME}"
+        },
+        "name": "${APPLICATION_NAME}-management"
+      },
+      "spec": {
+        "to": {
+          "kind": "Service",
+          "name": "${APPLICATION_NAME}-management"
+        }
+      }
+    },
+    {
+      "kind": "ConfigMap",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "${APPLICATION_NAME}-configuration",
+        "labels": {
+          "application": "${APPLICATION_NAME}"
+        }
+      },
+      "data": {
+        "cloud-persistent.xml": "\u003c?xml version=\"1.0\" ?\u003e\n\n\u003cserver xmlns=\"urn:jboss:domain:4.2\"\u003e\n    \u003cextensions\u003e\n        \u003cextension module=\"org.infinispan.extension\"/\u003e\n        \u003cextension module=\"org.infinispan.server.endpoint\"/\u003e\n        \u003cextension module=\"org.jboss.as.connector\"/\u003e\n        \u003cextension module=\"org.jboss.as.deployment-scanner\"/\u003e\n        \u003cextension module=\"org.jboss.as.jdr\"/\u003e\n        \u003cextension module=\"org.jboss.as.jmx\"/\u003e\n        \u003cextension module=\"org.jboss.as.logging\"/\u003e\n        \u003cextension module=\"org.jboss.as.naming\"/\u003e\n        \u003cextension module=\"org.jboss.as.remoting\"/\u003e\n        \u003cextension module=\"org.jboss.as.security\"/\u003e\n        \u003cextension module=\"org.jboss.as.transactions\"/\u003e\n        \u003cextension module=\"org.jgroups.extension\"/\u003e\n        \u003cextension module=\"org.wildfly.extension.io\"/\u003e\n    \u003c/extensions\u003e\n    \u003cmanagement\u003e\n        \u003csecurity-realms\u003e\n            \u003csecurity-realm name=\"ManagementRealm\"\u003e\n                \u003cauthentication\u003e\n                    \u003clocal default-user=\"$local\" skip-group-loading=\"true\"/\u003e\n                    \u003cproperties path=\"mgmt-users.properties\" relative-to=\"jboss.server.config.dir\"/\u003e\n                \u003c/authentication\u003e\n                \u003cauthorization map-groups-to-roles=\"false\"\u003e\n                    \u003cproperties path=\"mgmt-groups.properties\" relative-to=\"jboss.server.config.dir\"/\u003e\n                \u003c/authorization\u003e\n            \u003c/security-realm\u003e\n            \u003csecurity-realm name=\"ApplicationRealm\"\u003e\n                \u003cauthentication\u003e\n                    \u003clocal default-user=\"$local\" allowed-users=\"*\" skip-group-loading=\"true\"/\u003e\n                    \u003cproperties path=\"application-users.properties\" relative-to=\"jboss.server.config.dir\"/\u003e\n                \u003c/authentication\u003e\n                \u003cauthorization\u003e\n                    \u003cproperties path=\"application-roles.properties\" relative-to=\"jboss.server.config.dir\"/\u003e\n                \u003c/authorization\u003e\n            \u003c/security-realm\u003e\n        \u003c/security-realms\u003e\n        \u003caudit-log\u003e\n            \u003cformatters\u003e\n                \u003cjson-formatter name=\"json-formatter\"/\u003e\n            \u003c/formatters\u003e\n            \u003chandlers\u003e\n                \u003cfile-handler name=\"file\" formatter=\"json-formatter\" relative-to=\"jboss.server.data.dir\" path=\"audit-log.log\"/\u003e\n            \u003c/handlers\u003e\n            \u003clogger log-boot=\"true\" log-read-only=\"false\" enabled=\"false\"\u003e\n                \u003chandlers\u003e\n                    \u003chandler name=\"file\"/\u003e\n                \u003c/handlers\u003e\n            \u003c/logger\u003e\n        \u003c/audit-log\u003e\n        \u003cmanagement-interfaces\u003e\n            \u003chttp-interface security-realm=\"ManagementRealm\" http-upgrade-enabled=\"true\"\u003e\n                \u003csocket-binding http=\"management-http\"/\u003e\n            \u003c/http-interface\u003e\n        \u003c/management-interfaces\u003e\n        \u003caccess-control provider=\"simple\"\u003e\n            \u003crole-mapping\u003e\n                \u003crole name=\"SuperUser\"\u003e\n                    \u003cinclude\u003e\n                        \u003cuser name=\"$local\"/\u003e\n                    \u003c/include\u003e\n                \u003c/role\u003e\n            \u003c/role-mapping\u003e\n        \u003c/access-control\u003e\n    \u003c/management\u003e\n    \u003cprofile\u003e\n        \u003csubsystem xmlns=\"urn:jboss:domain:logging:3.0\"\u003e\n            \u003cconsole-handler name=\"CONSOLE\"\u003e\n                \u003clevel name=\"INFO\"/\u003e\n                \u003cformatter\u003e\n                    \u003cnamed-formatter name=\"COLOR-PATTERN\"/\u003e\n                \u003c/formatter\u003e\n            \u003c/console-handler\u003e\n            \u003cperiodic-rotating-file-handler name=\"FILE\" autoflush=\"true\"\u003e\n                \u003cformatter\u003e\n                    \u003cnamed-formatter name=\"PATTERN\"/\u003e\n                \u003c/formatter\u003e\n                \u003cfile relative-to=\"jboss.server.log.dir\" path=\"server.log\"/\u003e\n                \u003csuffix value=\".yyyy-MM-dd\"/\u003e\n                \u003cappend value=\"true\"/\u003e\n            \u003c/periodic-rotating-file-handler\u003e\n            \u003csize-rotating-file-handler name=\"HR-ACCESS-FILE\" autoflush=\"true\"\u003e\n                \u003cformatter\u003e\n                    \u003cpattern-formatter pattern=\"(%t) %s%e%n\"/\u003e\n                \u003c/formatter\u003e\n                \u003cfile relative-to=\"jboss.server.log.dir\" path=\"hotrod-access.log\"/\u003e\n                \u003cappend value=\"true\"/\u003e\n                \u003crotate-size value=\"10M\"/\u003e\n                \u003cmax-backup-index value=\"10\"/\u003e\n            \u003c/size-rotating-file-handler\u003e\n            \u003csize-rotating-file-handler name=\"REST-ACCESS-FILE\" autoflush=\"true\"\u003e\n                \u003cformatter\u003e\n                    \u003cpattern-formatter pattern=\"(%t) %s%e%n\"/\u003e\n                \u003c/formatter\u003e\n                \u003cfile relative-to=\"jboss.server.log.dir\" path=\"rest-access.log\"/\u003e\n                \u003cappend value=\"true\"/\u003e\n                \u003crotate-size value=\"10M\"/\u003e\n                \u003cmax-backup-index value=\"10\"/\u003e\n            \u003c/size-rotating-file-handler\u003e\n            \u003clogger category=\"com.arjuna\"\u003e\n                \u003clevel name=\"WARN\"/\u003e\n            \u003c/logger\u003e\n            \u003clogger category=\"org.jboss.as.config\"\u003e\n                \u003clevel name=\"DEBUG\"/\u003e\n            \u003c/logger\u003e\n            \u003clogger category=\"sun.rmi\"\u003e\n                \u003clevel name=\"WARN\"/\u003e\n            \u003c/logger\u003e\n            \u003clogger category=\"org.infinispan.server.hotrod.logging.HotRodAccessLoggingHandler\"\u003e\n                \u003c!-- Set to TRACE to enable access logging for hot rod or use DMR --\u003e\n                \u003clevel name=\"INFO\"/\u003e\n                \u003chandlers\u003e\n                    \u003chandler name=\"HR-ACCESS-FILE\"/\u003e\n                \u003c/handlers\u003e\n            \u003c/logger\u003e\n            \u003clogger category=\"org.infinispan.rest.logging.RestAccessLoggingHandler\"\u003e\n                \u003c!-- Set to TRACE to enable access logging for rest or use DMR --\u003e\n                \u003clevel name=\"INFO\"/\u003e\n                \u003chandlers\u003e\n                    \u003chandler name=\"REST-ACCESS-FILE\"/\u003e\n                \u003c/handlers\u003e\n            \u003c/logger\u003e\n            \u003croot-logger\u003e\n                \u003clevel name=\"INFO\"/\u003e\n                \u003chandlers\u003e\n                    \u003chandler name=\"CONSOLE\"/\u003e\n                    \u003chandler name=\"FILE\"/\u003e\n                \u003c/handlers\u003e\n            \u003c/root-logger\u003e\n            \u003cformatter name=\"PATTERN\"\u003e\n                \u003cpattern-formatter pattern=\"%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c] (%t) %s%e%n\"/\u003e\n            \u003c/formatter\u003e\n            \u003cformatter name=\"COLOR-PATTERN\"\u003e\n                \u003cpattern-formatter pattern=\"%K{level}%d{HH:mm:ss,SSS} %-5p [%c] (%t) %s%e%n\"/\u003e\n            \u003c/formatter\u003e\n        \u003c/subsystem\u003e\n        \u003csubsystem xmlns=\"urn:jboss:domain:deployment-scanner:2.0\"\u003e\n            \u003cdeployment-scanner path=\"deployments\" relative-to=\"jboss.server.base.dir\" scan-interval=\"5000\" runtime-failure-causes-rollback=\"${jboss.deployment.scanner.rollback.on.failure:false}\"/\u003e\n        \u003c/subsystem\u003e\n        \u003csubsystem xmlns=\"urn:jboss:domain:datasources:4.0\"\u003e\n            \u003cdatasources\u003e\n                \u003cdatasource jndi-name=\"java:jboss/datasources/ExampleDS\" pool-name=\"ExampleDS\" enabled=\"true\" use-java-context=\"true\"\u003e\n                    \u003cconnection-url\u003ejdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE\u003c/connection-url\u003e\n                    \u003cdriver\u003eh2\u003c/driver\u003e\n                    \u003csecurity\u003e\n                        \u003cuser-name\u003esa\u003c/user-name\u003e\n                        \u003cpassword\u003esa\u003c/password\u003e\n                    \u003c/security\u003e\n                \u003c/datasource\u003e\n                \u003cdrivers\u003e\n                    \u003cdriver name=\"h2\" module=\"com.h2database.h2\"\u003e\n                        \u003cxa-datasource-class\u003eorg.h2.jdbcx.JdbcDataSource\u003c/xa-datasource-class\u003e\n                    \u003c/driver\u003e\n                \u003c/drivers\u003e\n            \u003c/datasources\u003e\n        \u003c/subsystem\u003e\n        \u003csubsystem xmlns=\"urn:infinispan:server:core:9.1\" default-cache-container=\"clustered\"\u003e\n            \u003ccache-container name=\"clustered\" default-cache=\"default\" statistics=\"true\"\u003e\n                \u003ctransport lock-timeout=\"60000\"/\u003e\n                \u003cglobal-state/\u003e\n                \u003cdistributed-cache-configuration name=\"transactional\"\u003e\n                    \u003ctransaction mode=\"NON_XA\" locking=\"PESSIMISTIC\"/\u003e\n                \u003c/distributed-cache-configuration\u003e\n                \u003cdistributed-cache-configuration name=\"async\" mode=\"ASYNC\"/\u003e\n                \u003creplicated-cache-configuration name=\"replicated\"/\u003e\n                \u003cdistributed-cache-configuration name=\"persistent-file-store\"\u003e\n                    \u003cfile-store shared=\"false\" fetch-state=\"true\" passivation=\"false\"/\u003e\n                \u003c/distributed-cache-configuration\u003e\n                \u003cdistributed-cache-configuration name=\"indexed\"\u003e\n                    \u003cindexing index=\"LOCAL\" auto-config=\"true\"/\u003e\n                \u003c/distributed-cache-configuration\u003e\n                \u003cdistributed-cache-configuration name=\"memory-bounded\"\u003e\n                    \u003cmemory\u003e\n                        \u003cbinary size=\"10000000\" eviction=\"MEMORY\"/\u003e\n                    \u003c/memory\u003e\n                \u003c/distributed-cache-configuration\u003e\n                \u003cdistributed-cache-configuration name=\"persistent-file-store-passivation\"\u003e\n                    \u003cmemory\u003e\n                        \u003cobject size=\"10000\"/\u003e\n                    \u003c/memory\u003e\n                    \u003cfile-store shared=\"false\" fetch-state=\"true\" passivation=\"true\"\u003e\n                        \u003cwrite-behind modification-queue-size=\"1024\" thread-pool-size=\"1\"/\u003e\n                    \u003c/file-store\u003e\n                \u003c/distributed-cache-configuration\u003e\n                \u003cdistributed-cache-configuration name=\"persistent-file-store-write-behind\"\u003e\n                    \u003cfile-store shared=\"false\" fetch-state=\"true\" passivation=\"false\"\u003e\n                        \u003cwrite-behind modification-queue-size=\"1024\" thread-pool-size=\"1\"/\u003e\n                    \u003c/file-store\u003e\n                \u003c/distributed-cache-configuration\u003e\n                \u003cdistributed-cache-configuration name=\"persistent-rocksdb-store\"\u003e\n                    \u003crocksdb-store shared=\"false\" fetch-state=\"true\" passivation=\"false\"/\u003e\n                \u003c/distributed-cache-configuration\u003e\n                \u003cdistributed-cache-configuration name=\"persistent-jdbc-string-keyed\"\u003e\n                    \u003cstring-keyed-jdbc-store datasource=\"java:jboss/datasources/ExampleDS\" fetch-state=\"true\" preload=\"false\" purge=\"false\" shared=\"false\" passivation=\"false\"\u003e\n                        \u003cstring-keyed-table prefix=\"ISPN\"\u003e\n                            \u003cid-column name=\"id\" type=\"VARCHAR\"/\u003e\n                            \u003cdata-column name=\"datum\" type=\"BINARY\"/\u003e\n                            \u003ctimestamp-column name=\"version\" type=\"BIGINT\"/\u003e\n                        \u003c/string-keyed-table\u003e\n                        \u003cwrite-behind modification-queue-size=\"1024\" thread-pool-size=\"1\"/\u003e\n                    \u003c/string-keyed-jdbc-store\u003e\n                \u003c/distributed-cache-configuration\u003e\n                \u003cdistributed-cache name=\"default\"\u003e\n                    \u003crocksdb-store shared=\"false\" fetch-state=\"true\" passivation=\"false\" preload=\"true\" /\u003e\n                \u003c/distributed-cache\u003e\n                \u003creplicated-cache name=\"repl\" configuration=\"replicated\"/\u003e\n            \u003c/cache-container\u003e\n        \u003c/subsystem\u003e\n        \u003csubsystem xmlns=\"urn:infinispan:server:endpoint:9.0\"\u003e\n            \u003chotrod-connector socket-binding=\"hotrod\" cache-container=\"clustered\"\u003e\n                \u003ctopology-state-transfer lazy-retrieval=\"false\" lock-timeout=\"1000\" replication-timeout=\"5000\"/\u003e\n            \u003c/hotrod-connector\u003e\n            \u003crest-connector socket-binding=\"rest\" cache-container=\"clustered\"\u003e\n                \u003cauthentication security-realm=\"ApplicationRealm\" auth-method=\"BASIC\"/\u003e\n            \u003c/rest-connector\u003e\n        \u003c/subsystem\u003e\n        \u003csubsystem xmlns=\"urn:infinispan:server:jgroups:9.0\"\u003e\n            \u003cchannels default=\"cluster\"\u003e\n                \u003cchannel name=\"cluster\"/\u003e\n            \u003c/channels\u003e\n            \u003cstacks default=\"${jboss.default.jgroups.stack:tcp-gossip}\"\u003e\n                \u003cstack name=\"tcp-gossip\"\u003e\n                    \u003ctransport type=\"TCP\" socket-binding=\"jgroups-tcp\"/\u003e\n                    \u003cprotocol type=\"TCPGOSSIP\"\u003e\n                        \u003cproperty name=\"initial_hosts\"\u003e${jgroups.gossip.initial_hosts:}\u003c/property\u003e\n                    \u003c/protocol\u003e\n                    \u003cprotocol type=\"MERGE3\"/\u003e\n                    \u003cprotocol type=\"FD_SOCK\" socket-binding=\"jgroups-tcp-fd\"/\u003e\n                    \u003cprotocol type=\"FD_ALL\"/\u003e\n                    \u003cprotocol type=\"VERIFY_SUSPECT\"/\u003e\n                    \u003cprotocol type=\"pbcast.NAKACK2\"\u003e\n                        \u003cproperty name=\"use_mcast_xmit\"\u003efalse\u003c/property\u003e\n                    \u003c/protocol\u003e\n                    \u003cprotocol type=\"UNICAST3\"/\u003e\n                    \u003cprotocol type=\"pbcast.STABLE\"/\u003e\n                    \u003cprotocol type=\"pbcast.GMS\"/\u003e\n                    \u003cprotocol type=\"MFC\"/\u003e\n                \u003c/stack\u003e\n                \u003cstack name=\"s3-private\"\u003e\n                    \u003ctransport type=\"TCP\" socket-binding=\"jgroups-tcp\"/\u003e\n                    \u003cprotocol type=\"S3_PING\"\u003e\n                        \u003cproperty name=\"location\"\u003e${jgroups.s3.bucket:}\u003c/property\u003e\n                        \u003cproperty name=\"access_key\"\u003e${jgroups.s3.access_key:}\u003c/property\u003e\n                        \u003cproperty name=\"secret_access_key\"\u003e${jgroups.s3.secret_access_key:}\u003c/property\u003e\n                    \u003c/protocol\u003e\n                    \u003cprotocol type=\"MERGE3\"/\u003e\n                    \u003cprotocol type=\"FD_SOCK\" socket-binding=\"jgroups-tcp-fd\"/\u003e\n                    \u003cprotocol type=\"FD_ALL\"/\u003e\n                    \u003cprotocol type=\"VERIFY_SUSPECT\"/\u003e\n                    \u003cprotocol type=\"pbcast.NAKACK2\"\u003e\n                        \u003cproperty name=\"use_mcast_xmit\"\u003efalse\u003c/property\u003e\n                    \u003c/protocol\u003e\n                    \u003cprotocol type=\"UNICAST3\"/\u003e\n                    \u003cprotocol type=\"pbcast.STABLE\"/\u003e\n                    \u003cprotocol type=\"pbcast.GMS\"/\u003e\n                    \u003cprotocol type=\"MFC\"/\u003e\n                    \u003cprotocol type=\"FRAG3\"/\u003e\n                \u003c/stack\u003e\n                \u003cstack name=\"s3-presigned\"\u003e\n                    \u003ctransport type=\"TCP\" socket-binding=\"jgroups-tcp\"/\u003e\n                    \u003cprotocol type=\"S3_PING\"\u003e\n                        \u003cproperty name=\"pre_signed_delete_url\"\u003e${jgroups.s3.pre_signed_delete_url:}\u003c/property\u003e\n                        \u003cproperty name=\"pre_signed_put_url\"\u003e${jgroups.s3.pre_signed_put_url:}\u003c/property\u003e\n                    \u003c/protocol\u003e\n                    \u003cprotocol type=\"MERGE3\"/\u003e\n                    \u003cprotocol type=\"FD_SOCK\" socket-binding=\"jgroups-tcp-fd\"/\u003e\n                    \u003cprotocol type=\"FD_ALL\"/\u003e\n                    \u003cprotocol type=\"VERIFY_SUSPECT\"/\u003e\n                    \u003cprotocol type=\"pbcast.NAKACK2\"\u003e\n                        \u003cproperty name=\"use_mcast_xmit\"\u003efalse\u003c/property\u003e\n                    \u003c/protocol\u003e\n                    \u003cprotocol type=\"UNICAST3\"/\u003e\n                    \u003cprotocol type=\"pbcast.STABLE\"/\u003e\n                    \u003cprotocol type=\"pbcast.GMS\"/\u003e\n                    \u003cprotocol type=\"MFC\"/\u003e\n                    \u003cprotocol type=\"FRAG3\"/\u003e\n                \u003c/stack\u003e\n                \u003cstack name=\"s3-public\"\u003e\n                    \u003ctransport type=\"TCP\" socket-binding=\"jgroups-tcp\"/\u003e\n                    \u003cprotocol type=\"S3_PING\"\u003e\n                        \u003cproperty name=\"location\"\u003e${jgroups.s3.bucket:}\u003c/property\u003e\n                    \u003c/protocol\u003e\n                    \u003cprotocol type=\"MERGE3\"/\u003e\n                    \u003cprotocol type=\"FD_SOCK\" socket-binding=\"jgroups-tcp-fd\"/\u003e\n                    \u003cprotocol type=\"FD_ALL\"/\u003e\n                    \u003cprotocol type=\"VERIFY_SUSPECT\"/\u003e\n                    \u003cprotocol type=\"pbcast.NAKACK2\"\u003e\n                        \u003cproperty name=\"use_mcast_xmit\"\u003efalse\u003c/property\u003e\n                    \u003c/protocol\u003e\n                    \u003cprotocol type=\"UNICAST3\"/\u003e\n                    \u003cprotocol type=\"pbcast.STABLE\"/\u003e\n                    \u003cprotocol type=\"pbcast.GMS\"/\u003e\n                    \u003cprotocol type=\"MFC\"/\u003e\n                    \u003cprotocol type=\"FRAG3\"/\u003e\n                \u003c/stack\u003e\n                \u003cstack name=\"google\"\u003e\n                    \u003ctransport type=\"TCP\" socket-binding=\"jgroups-tcp\"/\u003e\n                    \u003cprotocol type=\"GOOGLE_PING\"\u003e\n                        \u003cproperty name=\"location\"\u003e${jgroups.google.bucket:}\u003c/property\u003e\n                        \u003cproperty name=\"access_key\"\u003e${jgroups.google.access_key:}\u003c/property\u003e\n                        \u003cproperty name=\"secret_access_key\"\u003e${jgroups.google.secret_access_key:}\u003c/property\u003e\n                    \u003c/protocol\u003e\n                    \u003cprotocol type=\"MERGE3\"/\u003e\n                    \u003cprotocol type=\"FD_SOCK\" socket-binding=\"jgroups-tcp-fd\"/\u003e\n                    \u003cprotocol type=\"FD_ALL\"/\u003e\n                    \u003cprotocol type=\"VERIFY_SUSPECT\"/\u003e\n                    \u003cprotocol type=\"pbcast.NAKACK2\"\u003e\n                        \u003cproperty name=\"use_mcast_xmit\"\u003efalse\u003c/property\u003e\n                    \u003c/protocol\u003e\n                    \u003cprotocol type=\"UNICAST3\"/\u003e\n                    \u003cprotocol type=\"pbcast.STABLE\"/\u003e\n                    \u003cprotocol type=\"pbcast.GMS\"/\u003e\n                    \u003cprotocol type=\"MFC\"/\u003e\n                    \u003cprotocol type=\"FRAG3\"/\u003e\n                \u003c/stack\u003e\n                \u003cstack name=\"kubernetes\"\u003e\n                    \u003ctransport type=\"TCP\" socket-binding=\"jgroups-tcp\"\u003e\n                        \u003cproperty name=\"logical_addr_cache_expiration\"\u003e360000\u003c/property\u003e\n                    \u003c/transport\u003e\n                    \u003cprotocol type=\"kubernetes.KUBE_PING\"/\u003e\n                    \u003cprotocol type=\"MERGE3\"/\u003e\n                    \u003cprotocol type=\"FD_SOCK\" socket-binding=\"jgroups-tcp-fd\"/\u003e\n                    \u003cprotocol type=\"FD_ALL\"/\u003e\n                    \u003cprotocol type=\"VERIFY_SUSPECT\"/\u003e\n                    \u003cprotocol type=\"pbcast.NAKACK2\"\u003e\n                        \u003cproperty name=\"use_mcast_xmit\"\u003efalse\u003c/property\u003e\n                    \u003c/protocol\u003e\n                    \u003cprotocol type=\"UNICAST3\"/\u003e\n                    \u003cprotocol type=\"pbcast.STABLE\"/\u003e\n                    \u003cprotocol type=\"pbcast.GMS\"/\u003e\n                    \u003cprotocol type=\"MFC\"/\u003e\n                    \u003cprotocol type=\"FRAG3\"/\u003e\n                \u003c/stack\u003e\n            \u003c/stacks\u003e\n        \u003c/subsystem\u003e\n        \u003csubsystem xmlns=\"urn:jboss:domain:io:1.1\"\u003e\n            \u003cworker name=\"default\"/\u003e\n            \u003cbuffer-pool name=\"default\"/\u003e\n        \u003c/subsystem\u003e\n        \u003csubsystem xmlns=\"urn:jboss:domain:jca:4.0\"\u003e\n            \u003carchive-validation enabled=\"true\" fail-on-error=\"true\" fail-on-warn=\"false\"/\u003e\n            \u003cbean-validation enabled=\"true\"/\u003e\n            \u003cdefault-workmanager\u003e\n                \u003cshort-running-threads\u003e\n                    \u003ccore-threads count=\"50\"/\u003e\n                    \u003cqueue-length count=\"50\"/\u003e\n                    \u003cmax-threads count=\"50\"/\u003e\n                    \u003ckeepalive-time time=\"10\" unit=\"seconds\"/\u003e\n                \u003c/short-running-threads\u003e\n                \u003clong-running-threads\u003e\n                    \u003ccore-threads count=\"50\"/\u003e\n                    \u003cqueue-length count=\"50\"/\u003e\n                    \u003cmax-threads count=\"50\"/\u003e\n                    \u003ckeepalive-time time=\"10\" unit=\"seconds\"/\u003e\n                \u003c/long-running-threads\u003e\n            \u003c/default-workmanager\u003e\n            \u003ccached-connection-manager/\u003e\n        \u003c/subsystem\u003e\n        \u003csubsystem xmlns=\"urn:jboss:domain:jdr:1.0\"/\u003e\n        \u003csubsystem xmlns=\"urn:jboss:domain:jmx:1.3\"\u003e\n            \u003cexpose-resolved-model/\u003e\n            \u003cexpose-expression-model/\u003e\n            \u003cremoting-connector/\u003e\n        \u003c/subsystem\u003e\n        \u003csubsystem xmlns=\"urn:jboss:domain:naming:2.0\"\u003e\n            \u003cremote-naming/\u003e\n        \u003c/subsystem\u003e\n        \u003csubsystem xmlns=\"urn:jboss:domain:remoting:3.0\"\u003e\n            \u003cendpoint/\u003e\n            \u003chttp-connector name=\"http-remoting-connector\" connector-ref=\"default\" security-realm=\"ApplicationRealm\"/\u003e\n        \u003c/subsystem\u003e\n        \u003csubsystem xmlns=\"urn:jboss:domain:security:1.2\"\u003e\n            \u003csecurity-domains\u003e\n                \u003csecurity-domain name=\"other\" cache-type=\"default\"\u003e\n                    \u003cauthentication\u003e\n                        \u003clogin-module code=\"Remoting\" flag=\"optional\"\u003e\n                            \u003cmodule-option name=\"password-stacking\" value=\"useFirstPass\"/\u003e\n                        \u003c/login-module\u003e\n                        \u003clogin-module code=\"RealmDirect\" flag=\"required\"\u003e\n                            \u003cmodule-option name=\"password-stacking\" value=\"useFirstPass\"/\u003e\n                        \u003c/login-module\u003e\n                    \u003c/authentication\u003e\n                \u003c/security-domain\u003e\n                \u003csecurity-domain name=\"jboss-web-policy\" cache-type=\"default\"\u003e\n                    \u003cauthorization\u003e\n                        \u003cpolicy-module code=\"Delegating\" flag=\"required\"/\u003e\n                    \u003c/authorization\u003e\n                \u003c/security-domain\u003e\n                \u003csecurity-domain name=\"jboss-ejb-policy\" cache-type=\"default\"\u003e\n                    \u003cauthorization\u003e\n                        \u003cpolicy-module code=\"Delegating\" flag=\"required\"/\u003e\n                    \u003c/authorization\u003e\n                \u003c/security-domain\u003e\n                \u003csecurity-domain name=\"jaspitest\" cache-type=\"default\"\u003e\n                    \u003cauthentication-jaspi\u003e\n                        \u003clogin-module-stack name=\"dummy\"\u003e\n                            \u003clogin-module code=\"Dummy\" flag=\"optional\"/\u003e\n                        \u003c/login-module-stack\u003e\n                        \u003cauth-module code=\"Dummy\"/\u003e\n                    \u003c/authentication-jaspi\u003e\n                \u003c/security-domain\u003e\n            \u003c/security-domains\u003e\n        \u003c/subsystem\u003e\n        \u003csubsystem xmlns=\"urn:jboss:domain:transactions:3.0\"\u003e\n            \u003ccore-environment\u003e\n                \u003cprocess-id\u003e\n                    \u003cuuid/\u003e\n                \u003c/process-id\u003e\n            \u003c/core-environment\u003e\n            \u003crecovery-environment socket-binding=\"txn-recovery-environment\" status-socket-binding=\"txn-status-manager\"/\u003e\n        \u003c/subsystem\u003e\n    \u003c/profile\u003e\n    \u003cinterfaces\u003e\n        \u003cinterface name=\"management\"\u003e\n            \u003cinet-address value=\"${jboss.bind.address.management:127.0.0.1}\"/\u003e\n        \u003c/interface\u003e\n        \u003cinterface name=\"public\"\u003e\n            \u003cinet-address value=\"${jboss.bind.address:127.0.0.1}\"/\u003e\n        \u003c/interface\u003e\n    \u003c/interfaces\u003e\n    \u003csocket-binding-group name=\"standard-sockets\" default-interface=\"public\" port-offset=\"${jboss.socket.binding.port-offset:0}\"\u003e\n        \u003csocket-binding name=\"management-http\" interface=\"management\" port=\"${jboss.management.http.port:9990}\"/\u003e\n        \u003csocket-binding name=\"management-https\" interface=\"management\" port=\"${jboss.management.https.port:9993}\"/\u003e\n        \u003csocket-binding name=\"hotrod\" port=\"11222\"/\u003e\n        \u003csocket-binding name=\"hotrod-internal\" port=\"11223\"/\u003e\n        \u003csocket-binding name=\"hotrod-multi-tenancy\" port=\"11224\"/\u003e\n        \u003csocket-binding name=\"jgroups-mping\" port=\"0\" multicast-address=\"${jboss.default.multicast.address:234.99.54.14}\" multicast-port=\"45700\"/\u003e\n        \u003csocket-binding name=\"jgroups-tcp\" port=\"7600\"/\u003e\n        \u003csocket-binding name=\"jgroups-tcp-fd\" port=\"57600\"/\u003e\n        \u003csocket-binding name=\"jgroups-udp\" port=\"55200\" multicast-address=\"${jboss.default.multicast.address:234.99.54.14}\" multicast-port=\"45688\"/\u003e\n        \u003csocket-binding name=\"jgroups-udp-fd\" port=\"54200\"/\u003e\n        \u003csocket-binding name=\"memcached\" port=\"11211\"/\u003e\n        \u003csocket-binding name=\"rest\" port=\"8080\"/\u003e\n        \u003csocket-binding name=\"rest-multi-tenancy\" port=\"8081\"/\u003e\n        \u003csocket-binding name=\"rest-ssl\" port=\"8443\"/\u003e\n        \u003csocket-binding name=\"txn-recovery-environment\" port=\"4712\"/\u003e\n        \u003csocket-binding name=\"txn-status-manager\" port=\"4713\"/\u003e\n        \u003csocket-binding name=\"websocket\" port=\"8181\"/\u003e\n        \u003coutbound-socket-binding name=\"remote-store-hotrod-server\"\u003e\n            \u003cremote-destination host=\"remote-host\" port=\"11222\"/\u003e\n        \u003c/outbound-socket-binding\u003e\n        \u003coutbound-socket-binding name=\"remote-store-rest-server\"\u003e\n            \u003cremote-destination host=\"remote-host\" port=\"8080\"/\u003e\n        \u003c/outbound-socket-binding\u003e\n    \u003c/socket-binding-group\u003e\n\u003c/server\u003e\n"
+      }
+    },
+    {
+      "apiVersion": "apps/v1beta1",
+      "kind": "StatefulSet",
+      "metadata": {
+        "labels": {
+          "application": "${APPLICATION_NAME}"
+        },
+        "name": "${APPLICATION_NAME}"
+      },
+      "spec": {
+        "serviceName": "${APPLICATION_NAME}-headless",
+        "replicas": "${{NUMBER_OF_INSTANCES}}",
+        "strategy": {
+          "type": "Rolling",
+          "rollingParams": {
+            "updatePeriodSeconds": 20,
+            "intervalSeconds": 20,
+            "timeoutSeconds": 1200,
+            "maxUnavailable": 1,
+            "maxSurge": 1
+          }
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "application": "${APPLICATION_NAME}",
+              "deploymentConfig": "${APPLICATION_NAME}"
+            },
+            "name": "${APPLICATION_NAME}"
+          },
+          "spec": {
+            "containers": [
+              {
+                "args": [
+                  "custom/cloud-persistent.xml",
+                  "-Djboss.default.jgroups.stack=kubernetes",
+                  "-Djboss.node.name=$(NODE_NAME)"
+                ],
+                "env": [
+                  {
+                    "name": "OPENSHIFT_KUBE_PING_LABELS",
+                    "value": "application=${APPLICATION_NAME}"
+                  },
+                  {
+                    "name": "OPENSHIFT_KUBE_PING_NAMESPACE",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.namespace"
+                      }
+                    }
+                  },
+                  {
+                    "name": "KUBERNETES_LABELS",
+                    "value": "application=${APPLICATION_NAME}"
+                  },
+                  {
+                    "name": "KUBERNETES_NAMESPACE",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.namespace"
+                      }
+                    }
+                  },
+                  {
+                    "name": "NODE_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.name"
+                      }
+                    }
+                  },
+                  {
+                    "name": "MGMT_USER",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "key": "management-user",
+                        "name": "${APPLICATION_NAME}"
+                      }
+                    }
+                  },
+                  {
+                    "name": "MGMT_PASS",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "key": "management-password",
+                        "name": "${APPLICATION_NAME}"
+                      }
+                    }
+                  },
+                  {
+                    "name": "APP_USER",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "key": "application-user",
+                        "name": "${APPLICATION_NAME}"
+                      }
+                    }
+                  },
+                  {
+                    "name": "APP_PASS",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "key": "application-password",
+                        "name": "${APPLICATION_NAME}"
+                      }
+                    }
+                  }
+                ],
+                "image": "${IMAGE}",
+                "livenessProbe": {
+                  "exec": {
+                    "command": [
+                      "/usr/local/bin/is_running.sh"
+                    ]
+                  },
+                  "initialDelaySeconds": 10,
+                  "timeoutSeconds": 80,
+                  "periodSeconds": 60,
+                  "successThreshold": 1,
+                  "failureThreshold": 5
+                },
+                "readinessProbe": {
+                  "exec": {
+                    "command": [
+                      "/usr/local/bin/is_healthy.sh"
+                    ]
+                  },
+                  "initialDelaySeconds": 10,
+                  "timeoutSeconds": 80,
+                  "periodSeconds": 60,
+                  "successThreshold": 2,
+                  "failureThreshold": 5
+                },
+                "name": "${APPLICATION_NAME}",
+                "ports": [
+                  {
+                    "containerPort": 8080,
+                    "name": "http",
+                    "protocol": "TCP"
+                  },
+                  {
+                    "containerPort": 9990,
+                    "name": "management",
+                    "protocol": "TCP"
+                  },
+                  {
+                    "containerPort": 8888,
+                    "name": "ping",
+                    "protocol": "TCP"
+                  },
+                  {
+                    "containerPort": 11222,
+                    "name": "hotrod",
+                    "protocol": "TCP"
+                  }
+                ],
+                "volumeMounts": [
+                  {
+                    "name": "${APPLICATION_NAME}-configuration",
+                    "mountPath": "/opt/jboss/infinispan-server/standalone/configuration/custom"
+                  },
+                  {
+                    "name": "${APPLICATION_NAME}-data",
+                    "mountPath": "/opt/jboss/infinispan-server/standalone/data"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "0.5",
+                    "memory": "512Mi"
+                  }
+                }
+              }
+            ],
+            "terminationGracePeriodSeconds": 120,
+            "serviceAccountName": "${APPLICATION_NAME}",
+            "volumes": [
+              {
+                "name": "${APPLICATION_NAME}-configuration",
+                "configMap": {
+                  "name": "${APPLICATION_NAME}-configuration"
+                }
+              }
+            ]
+          }
+        },
+        "triggers": [
+          {
+            "type": "ConfigChange"
+          }
+        ],
+        "volumeClaimTemplates": [
+          {
+            "metadata": {
+              "name": "${APPLICATION_NAME}-data"
+            },
+            "spec": {
+              "accessModes": [
+                "ReadWriteOnce"
+              ],
+              "resources": {
+                "requests": {
+                  "storage": "1Gi"
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "description": "Namespace for the application. Note: The namespace is required for creating proper RoleBindings. Specifying wrong namespace will prevent cluster from forming.",
+      "name": "NAMESPACE",
+      "required": true,
+      "value": "myproject"
+    },
+    {
+      "description": "The name for the application.",
+      "name": "APPLICATION_NAME",
+      "required": true,
+      "value": "infinispan-persistent-app"
+    },
+    {
+      "description": "Username for accessing REST (and possible Hot Rod) endpoint.",
+      "name": "APPLICATION_USER",
+      "required": true,
+      "generate": "expression",
+      "from": "[a-zA-Z0-9]{8}"
+    },
+    {
+      "description": "Password for accessing REST (and possible Hot Rod) endpoint.",
+      "name": "APPLICATION_PASSWORD",
+      "required": true,
+      "generate": "expression",
+      "from": "[a-zA-Z0-9]{8}"
+    },
+    {
+      "description": "Username for accessing management console.",
+      "name": "MANAGEMENT_USER",
+      "required": true,
+      "generate": "expression",
+      "from": "[a-zA-Z0-9]{8}"
+    },
+    {
+      "description": "Password for accessing management console.",
+      "name": "MANAGEMENT_PASSWORD",
+      "required": true,
+      "generate": "expression",
+      "from": "[a-zA-Z0-9]{8}"
+    },
+    {
+      "description": "Infinispan image.",
+      "name": "IMAGE",
+      "required": true,
+      "value": "jboss/infinispan-server:9.1.3.Final"
+    },
+    {
+      "description": "Number of instances in the cluster.",
+      "name": "NUMBER_OF_INSTANCES",
+      "required": true,
+      "value": "1"
+    }
+  ]
+}
