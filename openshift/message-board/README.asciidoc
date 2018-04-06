@@ -3,6 +3,14 @@ Data MicroService Demo.
 
 Made with Hibernate ORM, Hibernate OGM and Infinispan for OpenShift Container Platform. 
 
+## Pre-Requirement
+
+* Java 8
+* Maven 3+
+* NPM (https://www.npmjs.com/)
+* Angular Cli (npm install -g @angular/cli)
+* OpenShift (3.7+) client
+
 ## Install demo
 ----
 cd script
