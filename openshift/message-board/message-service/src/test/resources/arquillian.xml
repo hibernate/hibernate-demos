@@ -17,7 +17,7 @@
                 <property name="jbossHome">${home.wildfly}</property>
                 <property name="managementPort">10990</property>
                 <property name="javaVmArguments">-XX:MaxPermSize=512m -Djava.net.preferIPv4Stack=true -XX:+IgnoreUnrecognizedVMOptions -Djboss.socket.binding.port-offset=1000</property>
-                <property name="serverConfig">standalone.xml</property>
+                <property name="serverConfig">standalone-ee8.xml</property>
             </configuration>
         </container>
         <container qualifier="infinispan">
@@ -25,7 +25,7 @@
                 <property name="jbossHome">${home.infinispan}</property>
                 <property name="managementPort">10140</property>
                 <property name="javaVmArguments">-XX:MaxPermSize=512m -Djava.net.preferIPv4Stack=true -XX:+IgnoreUnrecognizedVMOptions -Djboss.socket.binding.port-offset=150</property>
-                <property name="serverConfig">standalone.xml</property>
+                <property name="serverConfig">clustered.xml</property>
                 <property name="waitForPorts">11372</property>
             </configuration>
         </container>

@@ -8,8 +8,13 @@ Made with Hibernate ORM, Hibernate OGM and Infinispan for OpenShift Container Pl
 * Java 8
 * Maven 3+
 * NPM (https://www.npmjs.com/)
-* Angular Cli (npm install -g @angular/cli)
+* Angular Cli (npm install -g @angular/cli) [avoid 6.1.x]
 * OpenShift (3.7+) client
+
+## Build demo
+----
+mvn clean install
+----
 
 ## Install demo
 ----
@@ -66,3 +71,18 @@ http://web-message-board.[YOUR-IP].nip.io/account-service/user
 ----
 http://account-service-message-board.[YOUR-IP].nip.io/account-service/user
 ----
+
+## Known Issues
+
+### NodeJs module Angular cli 6.1.x
+It seems there is an issue on angular-cli versions 6.1.0 and 6.1.1.
+It might need to downgrade angular-cli version:
+----
+sudo -s npm uninstall -g @angular/cli
+sudo -s npm install -g @angular/cli@6.0.8
+----
+For more information see https://github.com/angular/angular-cli/issues/11661[Issue Page].
+
+### MiniShift CDK v3.5.0-1
+Actually there is an issue with MiniShift v1.20.0+1bd6d5c, CDK v3.5.0-1.
+The persistent volume for Infinispan server pod is mounted as root user.

@@ -121,6 +121,14 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <!-- TODO Workaround to fix wildfly-arquillian-container-managed \https://issues.jboss.org/browse/WFLY-9747 -->
+            <groupId>org.wildfly.security</groupId>
+            <artifactId>wildfly-elytron</artifactId>
+            <version>1.1.0.Final</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

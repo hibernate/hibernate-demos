@@ -13,11 +13,8 @@
     <packaging>war</packaging>
 
     <properties>
-        <version.hibernate.ogm>5.3.0.Final</version.hibernate.ogm>
-        <version.hibernate.orm>5.2.13.Final</version.hibernate.orm>
-        <version.infinispan>9.1.6.Final</version.infinispan>
-
-        <classifier.wildfly>wildfly-11-dist</classifier.wildfly>
+        <version.hibernate.ogm>5.4.0.Beta2</version.hibernate.ogm>
+        <version.infinispan>9.3.0.Final</version.infinispan>
 
         <name.wildfly>wildfly-${version.wildfly}</name.wildfly>
         <name.infinispan>infinispan-server-${version.infinispan}</name.infinispan>
@@ -135,6 +132,13 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <!-- TODO Workaround to fix wildfly-arquillian-container-managed https://issues.jboss.org/browse/WFLY-9747 -->
+            <groupId>org.wildfly.security</groupId>
+            <artifactId>wildfly-elytron</artifactId>
+            <version>1.1.0.Final</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -144,13 +148,11 @@
                 <filtering>true</filtering>
             </testResource>
         </testResources>
-
         <plugins>
-
             <plugin>
                 <groupId>org.wildfly.build</groupId>
                 <artifactId>wildfly-server-provisioning-maven-plugin</artifactId>
-                <version>1.2.9.Final</version>
+                <version>1.2.10.Final</version>
                 <executions>
                     <execution>
                         <id>wildfly-server</id>
@@ -176,56 +178,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.0.1</version>
-                <executions>
-                    <execution>
-                        <id>unpack</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <!-- Hibernate OGM Wildfly modules -->
-                                <artifactItem>
-                                    <groupId>org.hibernate.ogm</groupId>
-                                    <artifactId>hibernate-ogm-modules</artifactId>
-                                    <classifier>${classifier.wildfly}</classifier>
-                                    <version>${version.hibernate.ogm}</version>
-                                    <type>zip</type>
-                                    <overWrite>false</overWrite>
-                                    <outputDirectory>${home.wildfly}/modules</outputDirectory>
-                                </artifactItem>
-
-                                <!-- Hibernate ORM Wildfly modules -->
-                                <artifactItem>
-                                    <groupId>org.hibernate</groupId>
-                                    <artifactId>hibernate-orm-modules</artifactId>
-                                    <version>${version.hibernate.orm}</version>
-                                    <classifier>${classifier.wildfly}</classifier>
-                                    <type>zip</type>
-                                    <overWrite>false</overWrite>
-                                    <outputDirectory>${home.wildfly}/modules</outputDirectory>
-                                </artifactItem>
-
-                                <!-- Infinispan Wildfly modules -->
-                                <artifactItem>
-                                    <groupId>org.infinispan</groupId>
-                                    <artifactId>infinispan-wildfly-modules</artifactId>
-                                    <version>${version.infinispan}</version>
-                                    <type>zip</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${home.wildfly}/modules</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.20</version>
@@ -246,8 +198,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
-
 </project>

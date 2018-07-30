@@ -6,8 +6,6 @@
     <persistence-unit name="primary" transaction-type="JTA">
         <provider>org.hibernate.ogm.jpa.HibernateOgmPersistence</provider>
         <properties>
-            <property name="jboss.as.jpa.providerModule" value="org.hibernate:5.2"/>
-
             <property name="hibernate.ogm.datastore.provider" value="infinispan_remote" />
             <property name="hibernate.ogm.infinispan_remote.configuration_resource_name" value="hotrodclient.properties" />
             <property name="hibernate.ogm.datastore.create_database" value="true" />

@@ -48,7 +48,7 @@ public class Message implements Comparable<Message> {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date moment = new Date();
 
-	private Message() {
+	public Message() {
 	}
 
 	public Message(String username, String body) {
@@ -74,6 +74,14 @@ public class Message implements Comparable<Message> {
 
 	public String getBody() {
 		return body;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setBody(String body) {
+		this.body = body;
 	}
 
 	public void setTags(Set<Tag> tags) {

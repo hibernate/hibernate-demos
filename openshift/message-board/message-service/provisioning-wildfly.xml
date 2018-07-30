@@ -1,7 +1,6 @@
 <server-provisioning xmlns="urn:wildfly:server-provisioning:1.1">
 	<feature-packs>
-
 		<feature-pack groupId="org.wildfly" artifactId="wildfly-feature-pack" version="${version.wildfly}" />
-
+		<feature-pack groupId="org.hibernate.ogm" artifactId="hibernate-ogm-featurepack-infinispan-remote" version="${version.hibernate.ogm}" />
 	</feature-packs>
 </server-provisioning>
