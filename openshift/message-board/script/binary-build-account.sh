@@ -9,4 +9,4 @@ mvn -f ../account-service/pom.xml clean install
 cp -f ../account-service/target/account-service.war ./account-service
 
 # New build on OCP
-oc start-build account-service --from-dir=./account-service --follow
+oc start-build account-service --from-dir=./account-service

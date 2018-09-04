@@ -14,4 +14,4 @@ cd ../script
 cp -f ../config/nginx.conf ./message-board-web
 
 # New build on OCP
-oc start-build message-board-web --from-dir=./message-board-web --follow
+oc start-build message-board-web --from-dir=./message-board-web

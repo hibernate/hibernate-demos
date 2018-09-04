@@ -8,6 +8,7 @@ package org.hibernate.demo.message.post.core.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -19,6 +20,7 @@ public class Tag {
 
 	@Id
 	@NotEmpty
+	@Pattern( regexp = "#[\\p{L}0-9-_]+" )
 	private String name;
 
 	private Tag() {
@@ -36,6 +38,14 @@ public class Tag {
 		Tag tag = (Tag) o;
 
 		return name.equals( tag.name );
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override

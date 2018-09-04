@@ -1,5 +1,7 @@
 package org.hibernate.demo.message.post.core.service;
 
+import static org.hibernate.demo.message.post.core.service.TagHelper.readTagFromBody;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -17,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.hibernate.demo.message.post.core.entity.Board;
 import org.hibernate.demo.message.post.core.entity.Message;
+import org.hibernate.demo.message.post.core.entity.Tag;
 import org.hibernate.demo.message.post.core.repo.BoardRepo;
 import org.hibernate.demo.message.post.core.repo.MessageRepo;
 import org.hibernate.demo.message.post.core.repo.TagRepo;
@@ -24,7 +27,7 @@ import org.hibernate.demo.message.post.core.service.exception.ResourceNotFoundEx
 
 import org.slf4j.Logger;
 
-@Path( "/messages" )
+@Path("/messages")
 @Stateless
 public class MessageService {
 
@@ -35,17 +38,17 @@ public class MessageService {
 	private BoardRepo boards;
 
 	@Inject
-	private TagRepo tags;
+	private TagRepo tagRepo;
 
 	@Inject
 	private Logger log;
 
 	@GET
-	@Produces( MediaType.APPLICATION_JSON )
-	public List<Message> findMessagesByUser( @QueryParam( "username" ) String username ) {
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Message> findMessagesByUser(@QueryParam("username") String username) {
 
 		Board board = boards.find( username );
-		if (board == null) {
+		if ( board == null ) {
 			return new ArrayList<>();
 		}
 
@@ -56,11 +59,35 @@ public class MessageService {
 
 	}
 
-	@POST
-	@Consumes( MediaType.APPLICATION_JSON )
-	public void addMessage( @Valid Message message ) {
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("tag/{tag}")
+	public List<Message> findMessagesByTag(@PathParam("tag") String tag, @QueryParam("page") Integer page, @QueryParam("size") Integer size) {
+		if ( tag == null || tag.trim().isEmpty() ) {
+			return new ArrayList<>();
+		}
 
-		log.info( "Pusing message '{}' to the board '{}'", message.getBody(), message.getUsername()  );
+		if ( page == null || size == null ) {
+			page = 0;
+			size = Integer.SIZE;
+		}
+
+		if ( tag != null && !tag.startsWith( "#" ) ) {
+			tag = "#" + tag;
+		}
+		return messages.findMessagesByTag( tag, page, size );
+	}
+
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void addMessage(@Valid Message message) {
+		log.info( "Pusing message '{}' to the board '{}'", message.getBody(), message.getUsername() );
+
+		List<String> tags = readTagFromBody( message.getBody() );
+		for ( String tagVal : tags ) {
+			Tag tag = tagRepo.findOrCreate( tagVal );
+			message.addTag( tag );
+		}
 
 		messages.add( message );
 		Board board = boards.find( message.getUsername() );
@@ -84,12 +111,11 @@ public class MessageService {
 
 	}
 
-	@Path( "{id}" )
+	@Path("{id}")
 	@DELETE
-	public void deleteMessage( @PathParam( "id" ) Long id ) throws ResourceNotFoundException {
-
+	public void deleteMessage(@PathParam("id") Long id) throws ResourceNotFoundException {
 		Message message = messages.findById( id );
-		if (message == null) {
+		if ( message == null ) {
 			throw new ResourceNotFoundException( "message", id );
 		}
 
@@ -101,7 +127,8 @@ public class MessageService {
 		board.popMessage( message );
 		if ( board.isEmpty() ) {
 			boards.delete( board );
-		} else {
+		}
+		else {
 			boards.update( board );
 		}
 
@@ -109,6 +136,4 @@ public class MessageService {
 		messages.remove( message );
 
 	}
-
-
 }

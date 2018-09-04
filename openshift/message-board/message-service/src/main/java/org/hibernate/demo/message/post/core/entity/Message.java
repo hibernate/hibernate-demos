@@ -15,13 +15,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -41,8 +38,7 @@ public class Message implements Comparable<Message> {
 	@NotEmpty
 	private String body;
 
-	@OneToMany(fetch = FetchType.EAGER)
-	@Cascade(CascadeType.PERSIST)
+	@ManyToMany(fetch = FetchType.EAGER)
 	private Set<Tag> tags = new HashSet<>();
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -54,10 +50,6 @@ public class Message implements Comparable<Message> {
 	public Message(String username, String body) {
 		this.username = username;
 		this.body = body;
-	}
-
-	public void addTag(String tagName) {
-		this.tags.add( new Tag( tagName ) );
 	}
 
 	public Set<Tag> getTags() {
@@ -86,6 +78,10 @@ public class Message implements Comparable<Message> {
 
 	public void setTags(Set<Tag> tags) {
 		this.tags = tags;
+	}
+
+	public void addTag(Tag tag) {
+		this.tags.add( tag );
 	}
 
 	@Override

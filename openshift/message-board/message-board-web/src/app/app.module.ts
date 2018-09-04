@@ -15,6 +15,7 @@ import { BoardDetailComponent } from './board-detail/board-detail.component';
 import { PostMessageComponent } from './post-message/post-message.component';
 import { MessageComponent } from './message/message.component';
 import { EventComponent } from './event/event.component';
+import { TagComponent } from './tag/tag.component';
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import { EventComponent } from './event/event.component';
     BoardDetailComponent,
     PostMessageComponent,
     MessageComponent,
-    EventComponent
+    EventComponent,
+    TagComponent
   ],
   providers: [MessageService, AccountService, EventService],
   bootstrap: [AppComponent]

@@ -28,6 +28,16 @@ export class MessageService {
       .pipe( catchError( this.handleError<Message[]>('findMessagesByUsername', []) ) );
   }
 
+  findMessagesByTag(term: string): Observable<Message[]> {
+      if (!term || !term.trim()) {
+        // if not search term, return empty message array.
+        return of([]);
+      }
+      this.username = term;
+      return this.http.get<Message[]>(`message-service/messages/tag/${term}`)
+        .pipe( catchError( this.handleError<Message[]>('findMessagesByTag', []) ) );
+    }
+
   postMessage(body: string): Observable<any> {
     const message = new Message();
     message.username = this.username;
