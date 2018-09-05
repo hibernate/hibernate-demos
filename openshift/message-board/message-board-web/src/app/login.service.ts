@@ -1,9 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable} from 'rxjs/Observable';
+import {Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
-import {of} from 'rxjs/observable/of';
-import 'rxjs/add/operator/map';
 
 
 
@@ -24,19 +22,7 @@ export class LoginService {
   login(userName: String): Observable<User> {
     const url = `account-service/user?username=${userName}`;
     console.log(url);
-    return this.http.get<User>(url).map(
-      user => {
-        console.log('user ->  ' + user.id);
-        if (user.id == null) {
-          console.log('user is empty');
-          Observable.throw('Username or password is incorrect');
-        } else {
-          console.log('a new user ');
-          localStorage.setItem('currentUser', JSON.stringify(user));
-        }
-        return user;
-      }
-    );
+    return this.http.get<User>(url);
   }
 
 
