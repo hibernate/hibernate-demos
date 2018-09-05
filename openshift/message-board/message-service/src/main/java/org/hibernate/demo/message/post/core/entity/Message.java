@@ -68,6 +68,10 @@ public class Message implements Comparable<Message> {
 		return body;
 	}
 
+	public Date getMoment() {
+		return moment;
+	}
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -82,6 +86,10 @@ public class Message implements Comparable<Message> {
 
 	public void addTag(Tag tag) {
 		this.tags.add( tag );
+	}
+
+	public void setMoment(Date moment) {
+		this.moment = moment;
 	}
 
 	@Override

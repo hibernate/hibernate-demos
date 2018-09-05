@@ -7,6 +7,7 @@
 package org.hibernate.demo.message.post.core.repo;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -60,7 +61,7 @@ public class MessageRepo {
 	}
 
 	public List<Message> findMessagesByIds(List<Long> ids) {
-		List resultList = em.createQuery( "from Message where id in (:ids)" )
+		List resultList = em.createQuery( "from Message where id in (:ids) order by moment desc" )
 				.setParameter( "ids", ids )
 				.getResultList();
 
@@ -72,5 +73,17 @@ public class MessageRepo {
 		List<Long> messageIdsByTag = findMessageIdsByTag( tag, pageNumber, pageSize );
 		return (messageIdsByTag.isEmpty()) ?
 			new ArrayList<>() : findMessagesByIds( messageIdsByTag );
+	}
+
+	public List<Message> findMessageByTime(Date start, Date end) {
+		// end has to be after start
+		if ( !end.after( start ) ) {
+			return new ArrayList<>();
+		}
+
+		return em.createQuery( "from Message where moment BETWEEN :start and :end order by moment desc" )
+			.setParameter( "start", start )
+			.setParameter( "end", end )
+			.getResultList();
 	}
 }

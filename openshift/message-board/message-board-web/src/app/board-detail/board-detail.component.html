@@ -6,8 +6,17 @@
     <div class="card">
       <div class="card-body">
         <p class="card-text">{{ message.body }}</p>
-        <button class="btn btn-outline-danger btn-sm" (click)="delete(message.id)">Delete</button>
-        <a *ngFor="let tag of message.tags" routerLink="/tag/{{tag.name}}" class="card-link text-info">{{ tag.name }}</a>
+        <div class="row">
+          <div class="col-lg-1">
+            <button class="btn btn-outline-danger btn-sm" (click)="delete(message.id)">Delete</button>
+          </div>
+          <div class="col-lg-4">
+            <span class="card-text text-success">{{ message.moment }}</span>
+          </div>
+          <div class="col-lg-7">
+            <a *ngFor="let tag of message.tags" routerLink="/tag/{{tag.name}}" class="card-link text-info">{{ tag.name }}</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>

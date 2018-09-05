@@ -3,6 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 import { AppRoutingModule } from './app-routing.module';
 
 import { MessageService } from './message.service';
@@ -16,13 +18,15 @@ import { PostMessageComponent } from './post-message/post-message.component';
 import { MessageComponent } from './message/message.component';
 import { EventComponent } from './event/event.component';
 import { TagComponent } from './tag/tag.component';
+import { TimeComponent } from './time/time.component';
 
 @NgModule({
   imports: [
     BrowserModule,
     FormsModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    NgbModule
   ],
   declarations: [
     AppComponent,
@@ -31,7 +35,8 @@ import { TagComponent } from './tag/tag.component';
     PostMessageComponent,
     MessageComponent,
     EventComponent,
-    TagComponent
+    TagComponent,
+    TimeComponent
   ],
   providers: [MessageService, AccountService, EventService],
   bootstrap: [AppComponent]

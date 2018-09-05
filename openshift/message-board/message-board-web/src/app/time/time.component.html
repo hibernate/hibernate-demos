@@ -1,10 +1,28 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-lg-3">
-      <div class="float-right">
-        <label>Tag:
-          <input [(ngModel)]="tag" placeholder="tag">
-        </label>
+      <div class="form-group">
+        <label>Since</label>
+        <div class="input-group">
+          <input class="form-control" placeholder="yyyy-mm-dd"
+                 name="dp1" [(ngModel)]="startDate" ngbDatepicker #d1="ngbDatepicker">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button"></button>
+          </div>
+        </div>
+        <ngb-timepicker [(ngModel)]="startTime" [seconds]="true"></ngb-timepicker>
+      </div>
+
+      <div class="form-group">
+        <label>To</label>
+        <div class="input-group">
+          <input class="form-control" placeholder="yyyy-mm-dd"
+                 name="dp2" [(ngModel)]="endDate" ngbDatepicker #d2="ngbDatepicker">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button"></button>
+          </div>
+        </div>
+        <ngb-timepicker [(ngModel)]="endTime" [seconds]="true"></ngb-timepicker>
       </div>
     </div>
     <div class="col-lg-9">

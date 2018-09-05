@@ -7,6 +7,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.validation.Valid;
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -78,6 +79,13 @@ public class MessageService {
 		return messages.findMessagesByTag( tag, page, size );
 	}
 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("since/{sYear}/{sMonth}/{sDay}/{sHour}/{sMinute}/{sSecond}/to/{eYear}/{eMonth}/{eDay}/{eHour}/{eMinute}/{eSecond}")
+	public List<Message> findMessagesByDate(@BeanParam TimeInterval interval) {
+		return messages.findMessageByTime( interval.getStart(), interval.getEnd() );
+	}
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void addMessage(@Valid Message message) {
@@ -108,7 +116,6 @@ public class MessageService {
 		boards.update( board );
 
 		log.info( "Board After Push {}", board );
-
 	}
 
 	@Path("{id}")
@@ -134,6 +141,5 @@ public class MessageService {
 
 		log.info( "Board [After Pop] {}", board );
 		messages.remove( message );
-
 	}
 }

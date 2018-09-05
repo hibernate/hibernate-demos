@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
+import { NgbDateStruct, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
+
 import { Message } from './message';
 import { EventService } from './event.service';
 
@@ -28,14 +30,21 @@ export class MessageService {
   }
 
   findMessagesByTag(term: string): Observable<Message[]> {
-      if (!term || !term.trim()) {
-        // if not search term, return empty message array.
-        return of([]);
-      }
-      this.username = term;
-      return this.http.get<Message[]>(`message-service/messages/tag/${term}`)
-        .pipe( catchError( this.handleError<Message[]>('findMessagesByTag', []) ) );
+    if (!term || !term.trim()) {
+      // if not search term, return empty message array.
+      return of([]);
     }
+    return this.http.get<Message[]>(`message-service/messages/tag/${term}`)
+      .pipe( catchError( this.handleError<Message[]>('findMessagesByTag', []) ) );
+  }
+
+  findMessagesByTime(startDate: NgbDateStruct, endDate: NgbDateStruct, startTime: NgbTimeStruct, endTime: NgbTimeStruct): Observable<Message[]> {
+    if (!startDate || !endDate || !startTime || !endTime) {
+	  return of([]);
+    }
+    return this.http.get<Message[]>(`message-service/messages/since/${startDate.year}/${startDate.month}/${startDate.day}/${startTime.hour}/${startTime.minute}/${startTime.second}/to/${endDate.year}/${endDate.month}/${endDate.day}/${endTime.hour}/${endTime.minute}/${endTime.second}`)
+	  .pipe( catchError( this.handleError<Message[]>('findMessagesByTime', []) ) );
+  }
 
   postMessage(body: string): Observable<any> {
     const message = new Message();

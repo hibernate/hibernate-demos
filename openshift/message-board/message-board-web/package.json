@@ -21,6 +21,7 @@
     "@angular/platform-browser": "6.1.6",
     "@angular/platform-browser-dynamic": "6.1.6",
     "@angular/router": "6.1.6",
+    "@ng-bootstrap/ng-bootstrap": "^3.2.0",
     "core-js": "^2.4.1",
     "npm": "^5.6.0",
     "rxjs": "^6.3.2",
