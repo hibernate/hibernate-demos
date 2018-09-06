@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.hibernate.demos.messageboard</groupId>
+        <artifactId>extra</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>message-server-task</artifactId>
+    <packaging>jar</packaging>
+
+    <properties>
+        <!-- taken from hibernate-ogm-bom-5.4.0.Beta2 -->
+        <!-- when update OGM version on message, update this version too -->
+        <version.org.infinispan>9.3.0.Final</version.org.infinispan>
+
+        <!-- taken from wildfly-bom-13 -->
+        <!-- when update Wildfly version on message, update this version too -->
+        <version.slf4j>1.7.22</version.slf4j>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-tasks</artifactId>
+            <version>${version.org.infinispan}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-remote-query-server</artifactId>
+            <version>${version.org.infinispan}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${version.slf4j}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+</project>
