@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -x
 set -e
 
 # Copy bundles for the binary builds
@@ -10,7 +11,8 @@ oc create -f ../template/infinispan-persistent.json
 oc import-image openshift/wildfly-130-centos7 --confirm
 
 # Install Infinispan Server
-oc new-app --template=infinispan-persistent
+CUSTOM_INFINISPAN_IMAGE=`cat CUSTOM_INFINISPAN_IMAGE`
+oc new-app --template=infinispan-persistent -p IMAGE="$CUSTOM_INFINISPAN_IMAGE"
 oc delete route infinispan-persistent-app-management
 
 # Install MySql Server

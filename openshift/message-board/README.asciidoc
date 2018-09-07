@@ -16,12 +16,18 @@ Made with Hibernate ORM, Hibernate OGM and Infinispan for OpenShift Container Pl
 mvn clean install
 ----
 
+## Deploy Infinispan custom Docker image
+----
+cd script
+sh ./add-custom-infinispan-image.sh
+----
+
 ## Install demo
 ----
 cd script
 
-oc login -u [YOUR-USER-NAME]
-oc new-project [YOUR-PROJECT-NAME]
+( oc login -u [YOUR-USER-NAME] ) <<optional>>
+( oc new-project [YOUR-PROJECT-NAME] ) <<optional>>
 
 sh ./install-all.sh
 ----
@@ -36,6 +42,12 @@ sh ./binary-build-account.sh
 ----
 cd script
 sh ./binary-build-message.sh
+----
+
+## Update Web App
+----
+cd script
+sh ./binary-build-web.sh
 ----
 
 ## Test

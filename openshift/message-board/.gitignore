@@ -42,4 +42,5 @@ script/nocontent
 script/account-service
 script/message-service
 script/message-board-web
+script/CUSTOM_INFINISPAN_IMAGE
 !*sh
