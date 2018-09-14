@@ -27,5 +27,5 @@ docker push ${IMAGE}
 
 # store the image reference to file
 # it will be used by the install-all script
-rm ./CUSTOM_INFINISPAN_IMAGE
+rm -fv ./CUSTOM_INFINISPAN_IMAGE
 echo "$IMAGE" >> CUSTOM_INFINISPAN_IMAGE
