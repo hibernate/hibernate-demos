@@ -19,7 +19,7 @@ mvn clean install
 ## Deploy Infinispan custom Docker image
 ----
 cd script
-sh ./add-custom-infinispan-image.sh
+sh ./install-custom-infinispan-image.sh
 ----
 
 ## Install demo
