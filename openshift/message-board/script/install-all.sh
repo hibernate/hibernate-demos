@@ -39,4 +39,4 @@ oc set probe dc/message-service --liveness --failure-threshold 3 --initial-delay
 oc set probe dc/account-service --readiness --failure-threshold 3 --initial-delay-seconds 30 --get-url=http://:8080/account-service/health
 oc set probe dc/message-service --readiness --failure-threshold 3 --initial-delay-seconds 30 --get-url=http://:8080/message-service/health
 
-oc get pods -w
+echo "Insatallation finished!"
