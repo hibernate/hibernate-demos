@@ -3,7 +3,7 @@ set -e
 # Message MicroService
 
 # Compile && Test
-mvn -f ../message-service/pom.xml clean install
+mvn -f ../message-service/pom.xml clean install -s ../settings.xml
 
 # Update war
 cp -f ../message-service/target/message-service.war ./message-service

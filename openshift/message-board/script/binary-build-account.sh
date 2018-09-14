@@ -3,7 +3,7 @@ set -e
 # Account MicroService
 
 # Compile && Test
-mvn -f ../account-service/pom.xml clean install
+mvn -f ../account-service/pom.xml clean install -s ../settings.xml
 
 # Update war
 cp -f ../account-service/target/account-service.war ./account-service
