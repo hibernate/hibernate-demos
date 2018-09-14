@@ -3,7 +3,9 @@ Data MicroService Demo.
 
 Made with Hibernate ORM, Hibernate OGM and Infinispan for OpenShift Container Platform. 
 
-## Pre-Requirement
+## Installing the demo
+
+### Pre-Requirement
 
 * Java 8
 * Maven 3+
@@ -11,18 +13,12 @@ Made with Hibernate ORM, Hibernate OGM and Infinispan for OpenShift Container Pl
 * Angular Cli (npm install -g @angular/cli) [avoid 6.1.x]
 * OpenShift (3.7+) client
 
-## Build demo
+### Build demo
 ----
-mvn clean install
-----
-
-## Deploy Infinispan custom Docker image
-----
-cd script
-sh ./install-custom-infinispan-image.sh
+mvn clean install -s settings.xml
 ----
 
-## Install demo
+### Install demo
 ----
 cd script
 
@@ -32,27 +28,30 @@ cd script
 sh ./install-all.sh
 ----
 
-## Update Account MicroService
+## Additional scripts
+
+If you need to update only some parts of the demo
+you can use the following scripts:
+
+### Update Account MicroService
 ----
 cd script
 sh ./binary-build-account.sh
 ----
 
-## Update Message MicroService
+### Update Message MicroService
 ----
 cd script
 sh ./binary-build-message.sh
 ----
 
-## Update Web App
+### Update Web App
 ----
 cd script
 sh ./binary-build-web.sh
 ----
 
-## Test
-
-### Web [FORM]
+## Web [FORM]
 
 [YOUR-USER-NAME] is your OCP username like **developer**
 [YOUR-PROJECT-NAME] is your OCP project like **message-board**
