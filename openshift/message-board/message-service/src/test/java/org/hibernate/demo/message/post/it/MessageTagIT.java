@@ -17,7 +17,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.container.test.api.TargetsContainer;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 @RunWith(Arquillian.class)
@@ -25,7 +27,13 @@ public class MessageTagIT {
 
 	@Deployment
 	public static WebArchive doDeploy() {
-		return DeploymentUtil.create();
+		return DeploymentUtil.wildFly();
+	}
+
+	@Deployment(name = "infinispan", testable = false)
+	@TargetsContainer("infinispan")
+	public static JavaArchive getInfinispanDeployment() {
+		return DeploymentUtil.infinispan();
 	}
 
 	private Message[] messages = new Message[3];

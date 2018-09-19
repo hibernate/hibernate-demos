@@ -13,7 +13,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.container.test.api.TargetsContainer;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 @RunWith(Arquillian.class)
@@ -22,8 +24,14 @@ public class MessageOrderIT {
 	public static final String USERNAME = "keepInOrder";
 
 	@Deployment
-	public static WebArchive create() {
-		return DeploymentUtil.create();
+	public static WebArchive doDeploy() {
+		return DeploymentUtil.wildFly();
+	}
+
+	@Deployment(name = "infinispan", testable = false)
+	@TargetsContainer("infinispan")
+	public static JavaArchive getInfinispanDeployment() {
+		return DeploymentUtil.infinispan();
 	}
 
 	@Inject
@@ -40,7 +48,5 @@ public class MessageOrderIT {
 		assertEquals( "Message #3", loadedMessages.get( 0 ).getBody() );
 		assertEquals( "Message #2", loadedMessages.get( 1 ).getBody() );
 		assertEquals( "Message #1", loadedMessages.get( 2 ).getBody() );
-
 	}
-
 }

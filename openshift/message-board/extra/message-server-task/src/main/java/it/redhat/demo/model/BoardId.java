@@ -71,7 +71,7 @@ public class BoardId {
 
 		@Override
 		public String getTypeName() {
-			return "HibernateOGMGenerated.BoardId";
+			return "HibernateOGMGenerated.Board_id";
 		}
 	}
 }

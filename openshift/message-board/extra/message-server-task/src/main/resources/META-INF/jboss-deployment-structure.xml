@@ -5,6 +5,7 @@
         <dependencies>
             <module name="org.infinispan.protostream" slot="ispn-9.3" />
             <module name="org.infinispan.remote-query.server" slot="ispn-9.3" />
+            <module name="org.infinispan.query.dsl" slot="ispn-9.3" />
         </dependencies>
     </deployment>
 </jboss-deployment-structure>

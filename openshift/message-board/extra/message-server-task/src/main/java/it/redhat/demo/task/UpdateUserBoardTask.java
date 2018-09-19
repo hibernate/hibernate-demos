@@ -1,13 +1,13 @@
 package it.redhat.demo.task;
 
+import static it.redhat.demo.task.TranscodingHelper.getWithTranscoding;
+import static it.redhat.demo.task.TranscodingHelper.putWithTranscoding;
+
 import java.util.Optional;
+import javax.transaction.TransactionManager;
 
 import org.infinispan.Cache;
-import org.infinispan.commons.dataconversion.IdentityEncoder;
 import org.infinispan.manager.EmbeddedCacheManager;
-import org.infinispan.query.Search;
-import org.infinispan.query.dsl.Query;
-import org.infinispan.query.dsl.QueryFactory;
 import org.infinispan.tasks.ServerTask;
 import org.infinispan.tasks.TaskContext;
 
@@ -18,52 +18,67 @@ import it.redhat.demo.model.BoardMessageId;
 import it.redhat.demo.model.Message;
 import it.redhat.demo.model.MessageId;
 
-public class UpdateUserBoardTask implements ServerTask<Void> {
-
-	private static final String MESSAGE_ID_PARAM_NAME = "messageId";
+public class UpdateUserBoardTask implements ServerTask<Integer> {
 
 	private TaskContext taskContext;
+	private Long messageId;
 
 	@Override
 	public void setTaskContext(TaskContext taskContext) {
 		this.taskContext = taskContext;
+		this.messageId = taskContext.getParameters()
+				.map( p -> p.get( "messageId" ) )
+				.map( Long.class::cast )
+				.orElseThrow( () -> new RuntimeException( "Missing parameter 'messageId'" ) );
 	}
 
+	/**
+	 * Updates the board with the last message.
+	 *
+	 * @return the new size of the board, after we've added the message
+	 * @throws Exception
+	 */
 	@Override
-	public Void call() throws Exception {
-		Long messageId = (Long) this.taskContext.getParameters().get().get( MESSAGE_ID_PARAM_NAME );
-
+	public Integer call() throws Exception {
 		Cache<MessageId, Message> messages = getCache( Message.CACHE_NAME );
 		Cache<BoardId, Board> boards = getCache( Board.CACHE_NAME );
 		Cache<BoardMessageId, BoardMessage> joinCache = getCache( BoardMessage.CACHE_NAME );
 
-		// maybe we shall synchronize this get with the previous put
-		// let's try without any kind of synchronization
-		Message message = messages.get( new MessageId( messageId ) );
+		MessageId key = new MessageId( messageId );
+		Message message = getWithTranscoding( key, messages );
+		if ( message == null ) {
+			throw new KeyNotFoundException( key, messages );
+		}
+
+		TransactionManager transactionManager = boards.getAdvancedCache().getTransactionManager();
+		transactionManager.begin();
 		BoardId boardId = new BoardId( message.getUsername() );
 
-		// inserts on the **same user** board must be serialized
-		// according to the Infinispan API the lock will be released at the end of transaction
-		boards.getAdvancedCache().lock( boardId );
+		// transaction-config LockingMode seems strangely OPTIMISTIC
+		// OGM should have been created it PESSIMISTIC
+		//TODO: after the problem is solved, we will restore the lock here:
+		// // inserts on the **same user** board must be serialized
+		// // according to the Infinispan API the lock will be released at the end of transaction
+		// --> boards.getAdvancedCache().lock( boardId ); <--
 
-		Board board = boards.get( boardId );
-		int boardMessageSize = 0;
+		Board board = getWithTranscoding( boardId, boards );
 
 		if ( board == null ) {
-			// create a board if it doesn't exist
-			boards.put( boardId, new Board( message.getUsername() ) );
-		} else {
-			QueryFactory queryFactory = Search.getQueryFactory( joinCache );
-			Query query = queryFactory.from( BoardMessage.class ).having( "boardUsername" ).eq( message.getUsername() ).build();
-			boardMessageSize = query.list().size();
+			board = new Board( message.getUsername() );
 		}
 
 		// add message to the board
-		BoardMessageId id = new BoardMessageId( message.getUsername(), boardMessageSize );
-		BoardMessage value = new BoardMessage( message.getUsername(), messageId, boardMessageSize );
-		joinCache.put( id, value );
+		BoardMessageId id = new BoardMessageId( message.getUsername(), board.getNext() );
+		BoardMessage value = new BoardMessage( message.getUsername(), messageId, board.getNext() );
+		putWithTranscoding( id, value, joinCache );
 
-		return null;
+		// increment for the next insert
+		board.increment();
+		putWithTranscoding( boardId, board, boards );
+
+		// free lock here:
+		transactionManager.commit();
+		return board.getNext();
 	}
 
 	@Override
@@ -72,8 +87,7 @@ public class UpdateUserBoardTask implements ServerTask<Void> {
 	}
 
 	private <K, V> Cache<K, V> getCache(String cacheName) {
-		// identity encoding is required in order to use the compatibility mode
-		return (Cache<K, V>) getCacheManager().getCache( cacheName ).getAdvancedCache().withEncoding( IdentityEncoder.class );
+		return (Cache<K, V>) getCacheManager().getCache( cacheName );
 	}
 
 	private EmbeddedCacheManager getCacheManager() {

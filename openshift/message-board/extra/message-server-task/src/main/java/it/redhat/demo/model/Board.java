@@ -10,6 +10,9 @@ public class Board {
 
 	private String username;
 
+	// field is initialized and used here (server side)
+	private Integer next = 0;
+
 	public Board() {
 	}
 
@@ -17,11 +20,20 @@ public class Board {
 		this.username = username;
 	}
 
+	public Integer getNext() {
+		return next;
+	}
+
+	public void increment() {
+		next++;
+	}
+
 	/*
 	 * package HibernateOGMGenerated;
 	 *
 	 * message Board {
 	 *   required string username = 1;
+	 *   optional int32 next = 2;
 	 * }
 	 *
 	 */
@@ -31,6 +43,7 @@ public class Board {
 		public Board readFrom(ProtoStreamReader reader) throws IOException {
 			Board board = new Board();
 			board.username = reader.readString( "username" );
+			board.next = reader.readInt( "next" );
 
 			return board;
 		}
@@ -38,6 +51,7 @@ public class Board {
 		@Override
 		public void writeTo(ProtoStreamWriter writer, Board board) throws IOException {
 			writer.writeString( "username", board.username );
+			writer.writeInt( "next", board.next );
 		}
 
 		@Override
