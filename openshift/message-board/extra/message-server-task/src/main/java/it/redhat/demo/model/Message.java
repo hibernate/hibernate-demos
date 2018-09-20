@@ -17,6 +17,10 @@ public class Message {
 		return username;
 	}
 
+	public String getBody() {
+		return body;
+	}
+
 	/*
 	 * package HibernateOGMGenerated;
 	 *

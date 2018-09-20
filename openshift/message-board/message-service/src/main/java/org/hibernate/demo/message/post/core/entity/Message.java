@@ -88,6 +88,10 @@ public class Message implements Comparable<Message> {
 		this.tags.add( tag );
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public void setMoment(Date moment) {
 		this.moment = moment;
 	}
@@ -113,17 +117,24 @@ public class Message implements Comparable<Message> {
 		}
 		Message message = (Message) o;
 		return Objects.equals( username, message.username ) &&
+				Objects.equals( body, message.body ) &&
 				Objects.equals( moment, message.moment );
 	}
 
 	@Override
 	public int hashCode() {
-
-		return Objects.hash( username, moment );
+		return Objects.hash( username, body, moment );
 	}
 
 	@Override
 	public int compareTo(Message o) {
-		return this.moment.compareTo( o.moment );
+		int compareMoments = this.moment.compareTo( o.moment );
+		if ( compareMoments != 0 ) {
+			return compareMoments;
+		}
+
+		// if two messages have the same time
+		// then compare their bodies
+		return this.body.compareTo( o.body );
 	}
 }

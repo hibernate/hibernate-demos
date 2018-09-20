@@ -6,7 +6,7 @@ import org.infinispan.protostream.MessageMarshaller;
 
 public class BoardMessage {
 
-	public static final String CACHE_NAME = BoardMessage.class.getSimpleName();
+	public static final String CACHE_NAME = "Board_Message";
 
 	private String boardUsername;
 	private Long messagesId;

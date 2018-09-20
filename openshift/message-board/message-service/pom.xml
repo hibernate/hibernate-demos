@@ -15,6 +15,7 @@
     <properties>
         <version.hibernate.ogm>5.4.0.Beta2</version.hibernate.ogm>
         <version.infinispan>9.3.0.Final</version.infinispan>
+        <version.asserj>3.11.1</version.asserj>
 
         <name.wildfly>wildfly-${version.wildfly}</name.wildfly>
         <name.infinispan>infinispan-server-${version.infinispan}</name.infinispan>
@@ -74,6 +75,12 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jackson2-provider</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Log -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -83,17 +90,18 @@
 
         <!-- Test -->
         <dependency>
-            <groupId>org.hibernate.demos.messageboard</groupId>
-            <artifactId>test-util</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${version.asserj}</version>
+            <scope>test</scope>
+        </dependency>
+
 
         <dependency>
             <groupId>org.jboss.arquillian.junit</groupId>
@@ -128,13 +136,6 @@
         <dependency>
             <groupId>org.jboss.shrinkwrap.resolver</groupId>
             <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.196</version>
             <scope>test</scope>
         </dependency>
 

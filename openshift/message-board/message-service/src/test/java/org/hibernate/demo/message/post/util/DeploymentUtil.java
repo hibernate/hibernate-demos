@@ -2,18 +2,18 @@ package org.hibernate.demo.message.post.util;
 
 import java.io.File;
 
-import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.descriptor.api.Descriptors;
 import org.jboss.shrinkwrap.descriptor.api.persistence21.PersistenceDescriptor;
 import org.jboss.shrinkwrap.descriptor.api.persistence21.PersistenceUnitTransactionType;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 
 public class DeploymentUtil {
 
-	@Deployment
-	public static WebArchive create() {
+	public static WebArchive wildFly() {
 		return ShrinkWrap
 			.create( WebArchive.class, "message-service.war" )
 			.addPackages( true, "org.hibernate.demo.message.post.core" )
@@ -38,5 +38,13 @@ public class DeploymentUtil {
 			.createProperty().name( "hibernate.ogm.infinispan_remote.configuration_resource_name" ).value( "hotrodclient.properties" ).up()
 			.createProperty().name( "hibernate.ogm.datastore.create_database" ).value( "true" ).up()
 			.up().up();
+	}
+
+	public static JavaArchive infinispan() {
+		File file = Maven.resolver()
+				.resolve( "org.hibernate.demos.messageboard:message-server-task:jar:" + MavenUtils.getProperty( "project.version" ) )
+				.withoutTransitivity().asSingleFile();
+
+		return ShrinkWrap.createFromZipFile( JavaArchive.class, file );
 	}
 }

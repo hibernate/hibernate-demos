@@ -12,6 +12,7 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.hibernate.Session;
@@ -38,6 +39,7 @@ public class MessageRepo {
 		this.em = em;
 	}
 
+	@Transactional(Transactional.TxType.REQUIRES_NEW)
 	public void add(@Valid Message post) {
 		em.persist( post );
 	}

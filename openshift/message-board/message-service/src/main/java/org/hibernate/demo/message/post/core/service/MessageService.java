@@ -25,6 +25,7 @@ import org.hibernate.demo.message.post.core.repo.BoardRepo;
 import org.hibernate.demo.message.post.core.repo.MessageRepo;
 import org.hibernate.demo.message.post.core.repo.TagRepo;
 import org.hibernate.demo.message.post.core.service.exception.ResourceNotFoundException;
+import org.hibernate.demo.message.post.core.service.procedure.StoredProcedureService;
 
 import org.slf4j.Logger;
 
@@ -43,6 +44,9 @@ public class MessageService {
 
 	@Inject
 	private Logger log;
+
+	@Inject
+	private StoredProcedureService procedureService;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -88,8 +92,8 @@ public class MessageService {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void addMessage(@Valid Message message) {
-		log.info( "Pusing message '{}' to the board '{}'", message.getBody(), message.getUsername() );
+	public Integer addMessage(@Valid Message message) {
+		log.info( "Pushing message '{}' to the board '{}'", message.getBody(), message.getUsername() );
 
 		List<String> tags = readTagFromBody( message.getBody() );
 		for ( String tagVal : tags ) {
@@ -98,24 +102,7 @@ public class MessageService {
 		}
 
 		messages.add( message );
-		Board board = boards.find( message.getUsername() );
-
-		if ( board == null ) {
-			log.info( "Board Not Exist. Creating a new one.", message.getUsername() );
-
-			board = new Board( message );
-			boards.add( board );
-
-			log.info( "Board After Push {}", board );
-			return;
-		}
-
-		log.info( "Board Before Push {}", board );
-
-		board.pushMessage( message );
-		boards.update( board );
-
-		log.info( "Board After Push {}", board );
+		return procedureService.updateBoardWithMessage( message.getId() );
 	}
 
 	@Path("{id}")

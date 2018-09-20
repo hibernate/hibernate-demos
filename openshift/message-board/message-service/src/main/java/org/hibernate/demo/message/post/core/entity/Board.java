@@ -23,6 +23,8 @@ public class Board {
 	@OrderColumn(name = "order")
 	private List<Message> messages = new LinkedList<>();
 
+	private Integer next = 0;
+
 	public Board() {
 	}
 
@@ -40,14 +42,20 @@ public class Board {
 			((LinkedList)messages).removeFirst();
 		}
 		messages.add( message );
+		next = messages.size();
 	}
 
 	public void popMessage(Message message) {
-		this.messages.remove( message );
+		messages.remove( message );
+		next = messages.size();
 	}
 
 	public boolean isEmpty() {
 		return this.messages.isEmpty();
+	}
+
+	public Integer getNext() {
+		return next;
 	}
 
 	@Override

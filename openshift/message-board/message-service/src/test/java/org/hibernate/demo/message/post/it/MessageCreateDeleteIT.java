@@ -14,7 +14,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.container.test.api.TargetsContainer;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 import org.slf4j.Logger;
@@ -25,8 +27,14 @@ public class MessageCreateDeleteIT {
 	public static final String USERNAME = "myuser";
 
 	@Deployment
-	public static WebArchive create() {
-		return DeploymentUtil.create();
+	public static WebArchive doDeploy() {
+		return DeploymentUtil.wildFly();
+	}
+
+	@Deployment(name = "infinispan", testable = false)
+	@TargetsContainer("infinispan")
+	public static JavaArchive getInfinispanDeployment() {
+		return DeploymentUtil.infinispan();
 	}
 
 	@Inject

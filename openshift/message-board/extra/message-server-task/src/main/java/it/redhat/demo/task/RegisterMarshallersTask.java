@@ -12,9 +12,14 @@ import it.redhat.demo.model.BoardMessage;
 import it.redhat.demo.model.BoardMessageId;
 import it.redhat.demo.model.Message;
 import it.redhat.demo.model.MessageId;
+import it.redhat.demo.model.MessageTag;
+import it.redhat.demo.model.MessageTagId;
+import it.redhat.demo.model.Tag;
+import it.redhat.demo.model.TagId;
 
 public class RegisterMarshallersTask implements ServerTask {
 
+	private static final int ANY_NOTNULL_NUMBER = 7;
 	private TaskContext ctx;
 
 	@Override
@@ -38,8 +43,12 @@ public class RegisterMarshallersTask implements ServerTask {
 		protobufMetadataManager.registerMarshaller( new BoardMessageId.Marshaller() );
 		protobufMetadataManager.registerMarshaller( new Message.Marshaller() );
 		protobufMetadataManager.registerMarshaller( new MessageId.Marshaller() );
+		protobufMetadataManager.registerMarshaller( new MessageTag.Marshaller() );
+		protobufMetadataManager.registerMarshaller( new MessageTagId.Marshaller() );
+		protobufMetadataManager.registerMarshaller( new Tag.Marshaller() );
+		protobufMetadataManager.registerMarshaller( new TagId.Marshaller() );
 
-		return null;
+		return ANY_NOTNULL_NUMBER;
 	}
 
 	@Override
