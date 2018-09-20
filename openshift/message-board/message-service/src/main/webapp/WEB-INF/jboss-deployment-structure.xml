@@ -6,5 +6,11 @@
             <module name="org.hibernate.ogm" services="export" />
             <module name="org.hibernate.ogm.infinispan-remote" services="export" />
         </dependencies>
+        <exclusions>
+            <!-- We have to exclude the Jackson1 provided module, -->
+            <!-- in order to use our Jackson2 object mapper provider class: -->
+            <!-- org.hibernate.demo.message.post.core.service.json.JacksonConfig -->
+            <module name="org.jboss.resteasy.resteasy-json-binding-provider" />
+        </exclusions>
     </deployment>
 </jboss-deployment-structure>
