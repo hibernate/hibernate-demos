@@ -25,7 +25,6 @@ oc new-app --template=mysql-persistent -p DATABASE_SERVICE_NAME=mysql -p MYSQL_U
 oc new-app --image-stream=wildfly-130-centos7~./nocontent -e MYSQL_USER=messageboard -e MYSQL_PASSWORD=redhat -e MYSQL_DATABASE=account -e OPENSHIFT_KUBE_PING_NAMESPACE=account --name=account-service
 oc start-build account-service --from-dir=./account-service
 
-
 # Install Message MicroService
 oc new-app --image-stream=wildfly-130-centos7~./nocontent -e OPENSHIFT_KUBE_PING_NAMESPACE=message --name=message-service
 oc start-build message-service --from-dir=./message-service
@@ -42,15 +41,6 @@ oc set probe dc/message-service --liveness --failure-threshold 3 --initial-delay
 # Setting readiness probes
 oc set probe dc/account-service --readiness --failure-threshold 3 --initial-delay-seconds 30 --get-url=http://:8080/account-service/health
 oc set probe dc/message-service --readiness --failure-threshold 3 --initial-delay-seconds 30 --get-url=http://:8080/message-service/health
-
-# Update Account MicroService
-sh ./binary-build-account.sh
-
-# Update Message MicroService
-sh ./binary-build-message.sh
-
-# Update Web App 
-sh ./binary-build-web.sh
 
 echo "Installation Completed!"
 echo "OpenShift Console: https://127.0.0.1:8443/console"
