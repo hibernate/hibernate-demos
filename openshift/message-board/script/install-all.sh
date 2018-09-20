@@ -10,7 +10,7 @@ sh ./create-binary-build-directory.sh
 
 # Install templates and image stream
 # Infinispan template taken from here: https://github.com/infinispan/infinispan-openshift-templates
-oc create -f ../template/infinispan-persistent.json
+oc create -f ../extra/template/infinispan-persistent.json
 oc import-image openshift/wildfly-130-centos7 --confirm
 
 # Install Infinispan Server

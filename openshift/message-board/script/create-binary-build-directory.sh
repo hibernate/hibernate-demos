@@ -17,4 +17,4 @@ cp -r ../message-service/target/wildfly-13.0.0.Final/modules/system/add-ons/ispn
 mkdir -p ./message-service/modules/net/bytebuddy
 cp -r ../message-service/target/wildfly-13.0.0.Final/modules/system/layers/base/net/bytebuddy/1.8.12 ./message-service/modules/net/bytebuddy/1.8.12
 cp ../message-service/target/wildfly-13.0.0.Final/standalone/configuration/standalone-ee8.xml ./message-service/configuration/standalone.xml
-cp -f ../config/nginx.conf ./message-board-web
+cp -f ../extra/config/nginx.conf ./message-board-web
