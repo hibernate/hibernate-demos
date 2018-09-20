@@ -22,7 +22,6 @@
         <module>extra</module>
         <module>account-service</module>
         <module>message-service</module>
-        <module>test-util</module>
     </modules>
 
     <dependencyManagement>
