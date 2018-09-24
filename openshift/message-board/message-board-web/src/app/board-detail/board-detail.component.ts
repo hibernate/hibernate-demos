@@ -2,6 +2,8 @@ import {Component, OnInit, Input} from '@angular/core';
 
 import {Message} from '../message';
 import {MessageService} from '../message.service';
+import {WebSocketService} from '../websocket.service';
+import {EventService} from '../event.service';
 
 @Component({
   selector: 'app-board-detail',
@@ -12,11 +14,16 @@ export class BoardDetailComponent implements OnInit {
   private _userName: string;
   messages: Message[];
 
-  constructor(private service: MessageService) {}
+  constructor(private service: MessageService, private socket: WebSocketService, private eventService: EventService) {}
 
   ngOnInit() {
     console.log('init BoardDetailComponent');
     this.getMessages();
+	this.socket.ws().onmessage = (response) => {
+	  console.log('inc ', response);
+	  this.eventService.add("Board Update:" + response.data);
+	  this.messages = JSON.parse(response.data);
+	}
   }
 
   get userName(): string {
@@ -28,6 +35,7 @@ export class BoardDetailComponent implements OnInit {
     console.log('user changed: ' + this._userName + ' -> ' + userName);
     this._userName = userName;
     this.getMessages();
+    this.socket.listenTo(userName);
   }
 
   getMessages(): void {

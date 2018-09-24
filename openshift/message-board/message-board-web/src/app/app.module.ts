@@ -10,6 +10,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { MessageService } from './message.service';
 import { AccountService } from './account.service';
 import { EventService } from './event.service';
+import { WebSocketService } from './websocket.service';
 
 import { AppComponent } from './app.component';
 import { CreateAccountComponent } from './create-account/create-account.component';
@@ -38,7 +39,7 @@ import { TimeComponent } from './time/time.component';
     TagComponent,
     TimeComponent
   ],
-  providers: [MessageService, AccountService, EventService],
+  providers: [MessageService, AccountService, EventService, WebSocketService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
