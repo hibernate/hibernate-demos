@@ -20,6 +20,7 @@ public class JacksonConfig implements ContextResolver<ObjectMapper> {
 
 	private static final String DATE_FORMAT = "dd-MM-yy HH:mm:ss";
 
+	@javax.enterprise.inject.Produces
 	private ObjectMapper objectMapper;
 
 	public JacksonConfig() {

@@ -5,6 +5,9 @@
         <dependencies>
             <module name="org.hibernate.ogm" services="export" />
             <module name="org.hibernate.ogm.infinispan-remote" services="export" />
+
+            <!-- used by client listener -->
+            <module name="org.infinispan.client.hotrod" slot="ispn-9.3"/>
         </dependencies>
         <exclusions>
             <!-- We have to exclude the Jackson1 provided module, -->

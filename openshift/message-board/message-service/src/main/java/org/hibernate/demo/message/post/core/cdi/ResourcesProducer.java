@@ -10,7 +10,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,10 @@ public class ResourcesProducer {
 	@Produces
 	@PersistenceContext
 	private EntityManager em;
+
+	@Produces
+	@PersistenceUnit
+	private EntityManagerFactory emf;
 
 	@Produces
 	private Logger produceLog(InjectionPoint injectionPoint) {
