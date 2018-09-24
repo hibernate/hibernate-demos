@@ -28,6 +28,7 @@ oc start-build account-service --from-dir=./account-service
 # Install Message MicroService
 oc new-app --image-stream=wildfly-130-centos7~./nocontent -e OPENSHIFT_KUBE_PING_NAMESPACE=message --name=message-service
 oc start-build message-service --from-dir=./message-service
+oc expose svc/message-service --name=message
 
 # Install Web App
 oc new-app --image-stream=nginx~./nocontent --name=message-board-web

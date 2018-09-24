@@ -11,7 +11,7 @@ sh ./build.sh
 cd ../script
 
 # Update Nginx proxy conf
-cp -f ../config/nginx.conf ./message-board-web
+cp -f ../extra/config/nginx.conf ./message-board-web
 
 # New build on OCP
 oc start-build message-board-web --from-dir=./message-board-web
