@@ -8,7 +8,8 @@
         <properties>
             <property name="hibernate.ogm.datastore.provider" value="infinispan_remote" />
             <property name="hibernate.ogm.infinispan_remote.configuration_resource_name" value="hotrodclient.properties" />
-            <property name="hibernate.ogm.datastore.create_database" value="true" />
+            <property name="hibernate.ogm.datastore.create_database" value="false" />
+            <property name="hibernate.ogm.infinispan_remote.schema_override_resource" value="message.proto" />
         </properties>
     </persistence-unit>
 </persistence>

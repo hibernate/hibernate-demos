@@ -81,6 +81,12 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.jboss.spec.javax.websocket</groupId>
+            <artifactId>jboss-websocket-api_1.1_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Log -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -181,6 +187,29 @@
                         <configuration>
                             <config-file>provisioning-infinispan.xml</config-file>
                             <server-name>${name.infinispan}</server-name>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>update-infinispan-config</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${home.infinispan}/standalone/configuration</outputDirectory>
+                            <overwrite>true</overwrite>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/src/test/resources/infinispan-config</directory>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>

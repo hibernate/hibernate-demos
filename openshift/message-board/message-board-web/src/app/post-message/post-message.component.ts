@@ -19,10 +19,7 @@ export class PostMessageComponent implements OnInit {
 
   postMessage(): void {
     console.log('Posting message:' + this.text);
-    this.service.postMessage(this.text)
-      .subscribe(result => {
-        this.messages.getMessages();
-      });
+    this.service.postMessage(this.text).subscribe();
     this.text = '';
   }
 

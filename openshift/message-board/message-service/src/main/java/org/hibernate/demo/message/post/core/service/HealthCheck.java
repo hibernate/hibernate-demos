@@ -25,7 +25,7 @@ public class HealthCheck {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Message> healthCheck() {
-		log.info( "healthCheck invoked by OCP" );
+		log.trace( "healthCheck invoked by OCP" );
 
 		return service.findMessagesByUser( "andrea" );
 	}
