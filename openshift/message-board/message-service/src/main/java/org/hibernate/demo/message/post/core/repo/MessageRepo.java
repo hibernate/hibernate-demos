@@ -88,4 +88,13 @@ public class MessageRepo {
 			.setParameter( "end", end )
 			.getResultList();
 	}
+
+	public List findByTerm(String term, int pageNumber, int pageSize) {
+		List result = em.unwrap( Session.class ).createNativeQuery( "from HibernateOGMGenerated.Message m where m.body:'" + term + "'" )
+				.setFirstResult( pageNumber * pageSize )
+				.setMaxResults( pageSize )
+				.list();
+
+		return result;
+	}
 }
