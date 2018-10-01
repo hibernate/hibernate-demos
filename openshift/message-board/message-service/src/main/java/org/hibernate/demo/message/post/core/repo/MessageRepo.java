@@ -12,6 +12,7 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
@@ -87,5 +88,13 @@ public class MessageRepo {
 			.setParameter( "start", start )
 			.setParameter( "end", end )
 			.getResultList();
+	}
+
+	public List findByTerm(String term, int pageNumber, int pageSize) {
+		Query query = em.createNativeQuery( "from HibernateOGMGenerated.Message m where m.body:'" + term + "'", Message.class )
+				.setMaxResults( pageSize )
+				.setFirstResult( pageNumber * pageSize );
+
+		return query.getResultList();
 	}
 }
