@@ -15,7 +15,7 @@
     <properties>
         <!-- taken from hibernate-ogm-bom-5.4.0.Beta2 -->
         <!-- when update OGM version on message, update this version too -->
-        <version.org.infinispan>9.3.0.Final</version.org.infinispan>
+        <version.org.infinispan>9.3.3.Final</version.org.infinispan>
 
         <!-- taken from wildfly-bom-13 -->
         <!-- when update Wildfly version on message, update this version too -->
