@@ -90,6 +90,18 @@ public class MessageService {
 		return messages.findMessageByTime( interval.getStart(), interval.getEnd() );
 	}
 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("term/{term}")
+	public List<Message> findByTerm(@PathParam("term") String term, @QueryParam("page") Integer page, @QueryParam("size") Integer size) {
+		if ( page == null || size == null ) {
+			page = 0;
+			size = Integer.SIZE;
+		}
+
+		return messages.findByTerm( term, page, size );
+	}
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Integer addMessage(@Valid Message message) {

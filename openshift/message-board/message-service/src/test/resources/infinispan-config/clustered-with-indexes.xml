@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 
-<server xmlns="urn:jboss:domain:5.0">
+<server xmlns="urn:jboss:domain:7.0">
     <extensions>
         <extension module="org.infinispan.extension"/>
         <extension module="org.infinispan.server.endpoint"/>
@@ -166,7 +166,7 @@
                 </drivers>
             </datasources>
         </subsystem>
-        <subsystem xmlns="urn:wildfly:elytron:1.2" final-providers="combined-providers" disallowed-providers="OracleUcrypto">
+        <subsystem xmlns="urn:wildfly:elytron:3.0" final-providers="combined-providers" disallowed-providers="OracleUcrypto">
             <providers>
                 <aggregate-providers name="combined-providers">
                     <providers name="elytron"/>
@@ -203,9 +203,11 @@
                 <simple-permission-mapper name="default-permission-mapper" mapping-mode="first">
                     <permission-mapping>
                         <principal name="anonymous"/>
+                        <permission-set name="default-permissions"/>
                     </permission-mapping>
                     <permission-mapping match-all="true">
-                        <permission class-name="org.wildfly.security.auth.permission.LoginPermission"/>
+                        <permission-set name="login-permission"/>
+                        <permission-set name="default-permissions"/>
                     </permission-mapping>
                 </simple-permission-mapper>
                 <constant-realm-mapper name="local" realm-name="local"/>
@@ -214,15 +216,14 @@
                     <role name="SuperUser"/>
                 </constant-role-mapper>
             </mappers>
+            <permission-sets>
+                <permission-set name="login-permission">
+                    <permission class-name="org.wildfly.security.auth.permission.LoginPermission"/>
+                </permission-set>
+                <permission-set name="default-permissions"/>
+            </permission-sets>
             <http>
-                <http-authentication-factory name="management-http-authentication" http-server-mechanism-factory="global" security-domain="ManagementDomain">
-                    <mechanism-configuration>
-                        <mechanism mechanism-name="DIGEST">
-                            <mechanism-realm realm-name="ManagementRealm"/>
-                        </mechanism>
-                    </mechanism-configuration>
-                </http-authentication-factory>
-                <http-authentication-factory name="application-http-authentication" http-server-mechanism-factory="global" security-domain="ApplicationDomain">
+                <http-authentication-factory name="application-http-authentication" security-domain="ApplicationDomain" http-server-mechanism-factory="global">
                     <mechanism-configuration>
                         <mechanism mechanism-name="BASIC">
                             <mechanism-realm realm-name="Application Realm"/>
@@ -230,22 +231,29 @@
                         <mechanism mechanism-name="FORM"/>
                     </mechanism-configuration>
                 </http-authentication-factory>
-                <provider-http-server-mechanism-factory name="global"/>
-            </http>
-            <sasl>
-                <sasl-authentication-factory name="management-sasl-authentication" sasl-server-factory="configured" security-domain="ManagementDomain">
+                <http-authentication-factory name="management-http-authentication" security-domain="ManagementDomain" http-server-mechanism-factory="global">
                     <mechanism-configuration>
-                        <mechanism mechanism-name="JBOSS-LOCAL-USER" realm-mapper="local"/>
-                        <mechanism mechanism-name="DIGEST-MD5">
+                        <mechanism mechanism-name="DIGEST">
                             <mechanism-realm realm-name="ManagementRealm"/>
                         </mechanism>
                     </mechanism-configuration>
-                </sasl-authentication-factory>
+                </http-authentication-factory>
+                <provider-http-server-mechanism-factory name="global"/>
+            </http>
+            <sasl>
                 <sasl-authentication-factory name="application-sasl-authentication" sasl-server-factory="configured" security-domain="ApplicationDomain">
                     <mechanism-configuration>
                         <mechanism mechanism-name="JBOSS-LOCAL-USER" realm-mapper="local"/>
                         <mechanism mechanism-name="DIGEST-MD5">
                             <mechanism-realm realm-name="ApplicationRealm"/>
+                        </mechanism>
+                    </mechanism-configuration>
+                </sasl-authentication-factory>
+                <sasl-authentication-factory name="management-sasl-authentication" sasl-server-factory="configured" security-domain="ManagementDomain">
+                    <mechanism-configuration>
+                        <mechanism mechanism-name="JBOSS-LOCAL-USER" realm-mapper="local"/>
+                        <mechanism mechanism-name="DIGEST-MD5">
+                            <mechanism-realm realm-name="ManagementRealm"/>
                         </mechanism>
                     </mechanism-configuration>
                 </sasl-authentication-factory>
@@ -262,7 +270,7 @@
                 <provider-sasl-server-factory name="global"/>
             </sasl>
         </subsystem>
-        <subsystem xmlns="urn:infinispan:server:core:9.2" default-cache-container="clustered">
+        <subsystem xmlns="urn:infinispan:server:core:9.3" default-cache-container="clustered">
             <cache-container name="clustered" default-cache="default" statistics="true">
                 <transport lock-timeout="60000"/>
                 <global-state/>
@@ -308,11 +316,8 @@
                         <write-behind modification-queue-size="1024" thread-pool-size="1"/>
                     </string-keyed-jdbc-store>
                 </distributed-cache-configuration>
-                <distributed-cache name="default">
-                    <rocksdb-store shared="false" fetch-state="true" passivation="false" preload="true" />
-                </distributed-cache>
+                <distributed-cache name="default"/>
                 <replicated-cache name="repl" configuration="replicated"/>
-                <!-- Declare Message Board demo caches in order to use indexes -->
                 <distributed-cache-configuration name="message-board-with-indexes">
                     <locking isolation="REPEATABLE_READ" striping="false" acquire-timeout="10000" concurrency-level="50"/>
                     <transaction mode="NON_DURABLE_XA" locking="PESSIMISTIC"/>
@@ -333,7 +338,7 @@
                 <distributed-cache name="Tag" configuration="message-board"/>
             </cache-container>
         </subsystem>
-        <subsystem xmlns="urn:infinispan:server:endpoint:9.2">
+        <subsystem xmlns="urn:infinispan:server:endpoint:9.3">
             <hotrod-connector socket-binding="hotrod" cache-container="clustered">
                 <topology-state-transfer lazy-retrieval="false" lock-timeout="1000" replication-timeout="5000"/>
             </hotrod-connector>
@@ -341,11 +346,42 @@
                 <authentication security-realm="ApplicationRealm" auth-method="BASIC"/>
             </rest-connector>
         </subsystem>
-        <subsystem xmlns="urn:infinispan:server:jgroups:9.2">
+        <subsystem xmlns="urn:infinispan:server:jgroups:9.3">
             <channels default="cluster">
                 <channel name="cluster"/>
             </channels>
-            <stacks default="${jboss.default.jgroups.stack:tcp-gossip}">
+            <stacks default="${jboss.default.jgroups.stack:udp}">
+                <stack name="udp">
+                    <transport type="UDP" socket-binding="jgroups-udp"/>
+                    <protocol type="PING"/>
+                    <protocol type="MERGE3"/>
+                    <protocol type="FD_SOCK" socket-binding="jgroups-udp-fd"/>
+                    <protocol type="FD_ALL"/>
+                    <protocol type="VERIFY_SUSPECT"/>
+                    <protocol type="pbcast.NAKACK2"/>
+                    <protocol type="UNICAST3"/>
+                    <protocol type="pbcast.STABLE"/>
+                    <protocol type="pbcast.GMS"/>
+                    <protocol type="UFC_NB"/>
+                    <protocol type="MFC_NB"/>
+                    <protocol type="FRAG3"/>
+                </stack>
+                <stack name="tcp">
+                    <transport type="TCP" socket-binding="jgroups-tcp"/>
+                    <protocol type="MPING" socket-binding="jgroups-mping"/>
+                    <protocol type="MERGE3"/>
+                    <protocol type="FD_SOCK" socket-binding="jgroups-tcp-fd"/>
+                    <protocol type="FD_ALL"/>
+                    <protocol type="VERIFY_SUSPECT"/>
+                    <protocol type="pbcast.NAKACK2">
+                        <property name="use_mcast_xmit">false</property>
+                    </protocol>
+                    <protocol type="UNICAST3"/>
+                    <protocol type="pbcast.STABLE"/>
+                    <protocol type="pbcast.GMS"/>
+                    <protocol type="MFC_NB"/>
+                    <protocol type="FRAG3"/>
+                </stack>
                 <stack name="tcp-gossip">
                     <transport type="TCP" socket-binding="jgroups-tcp"/>
                     <protocol type="TCPGOSSIP">
@@ -361,126 +397,12 @@
                     <protocol type="UNICAST3"/>
                     <protocol type="pbcast.STABLE"/>
                     <protocol type="pbcast.GMS"/>
-                    <protocol type="MFC"/>
-                </stack>
-                <stack name="azure">
-                    <transport type="TCP" socket-binding="jgroups-tcp"/>
-                    <protocol type="azure.AZURE_PING">
-                        <property name="storage_account_name">${jgroups.azure.storage_account_name:}</property>
-                        <property name="storage_access_key">${jgroups.azure.storage_access_key:}</property>
-                        <property name="container">${jgroups.azure.container:}</property>
-                    </protocol>
-                    <protocol type="MERGE3"/>
-                    <protocol type="FD_SOCK" socket-binding="jgroups-tcp-fd"/>
-                    <protocol type="FD_ALL"/>
-                    <protocol type="VERIFY_SUSPECT"/>
-                    <protocol type="pbcast.NAKACK2">
-                        <property name="use_mcast_xmit">false</property>
-                    </protocol>
-                    <protocol type="UNICAST3"/>
-                    <protocol type="pbcast.STABLE"/>
-                    <protocol type="pbcast.GMS"/>
-                    <protocol type="MFC"/>
-                    <protocol type="FRAG3"/>
-                </stack>
-                <stack name="s3-private">
-                    <transport type="TCP" socket-binding="jgroups-tcp"/>
-                    <protocol type="S3_PING">
-                        <property name="location">${jgroups.s3.bucket:}</property>
-                        <property name="access_key">${jgroups.s3.access_key:}</property>
-                        <property name="secret_access_key">${jgroups.s3.secret_access_key:}</property>
-                    </protocol>
-                    <protocol type="MERGE3"/>
-                    <protocol type="FD_SOCK" socket-binding="jgroups-tcp-fd"/>
-                    <protocol type="FD_ALL"/>
-                    <protocol type="VERIFY_SUSPECT"/>
-                    <protocol type="pbcast.NAKACK2">
-                        <property name="use_mcast_xmit">false</property>
-                    </protocol>
-                    <protocol type="UNICAST3"/>
-                    <protocol type="pbcast.STABLE"/>
-                    <protocol type="pbcast.GMS"/>
-                    <protocol type="MFC"/>
-                    <protocol type="FRAG3"/>
-                </stack>
-                <stack name="s3-presigned">
-                    <transport type="TCP" socket-binding="jgroups-tcp"/>
-                    <protocol type="S3_PING">
-                        <property name="pre_signed_delete_url">${jgroups.s3.pre_signed_delete_url:}</property>
-                        <property name="pre_signed_put_url">${jgroups.s3.pre_signed_put_url:}</property>
-                    </protocol>
-                    <protocol type="MERGE3"/>
-                    <protocol type="FD_SOCK" socket-binding="jgroups-tcp-fd"/>
-                    <protocol type="FD_ALL"/>
-                    <protocol type="VERIFY_SUSPECT"/>
-                    <protocol type="pbcast.NAKACK2">
-                        <property name="use_mcast_xmit">false</property>
-                    </protocol>
-                    <protocol type="UNICAST3"/>
-                    <protocol type="pbcast.STABLE"/>
-                    <protocol type="pbcast.GMS"/>
-                    <protocol type="MFC"/>
-                    <protocol type="FRAG3"/>
-                </stack>
-                <stack name="s3-public">
-                    <transport type="TCP" socket-binding="jgroups-tcp"/>
-                    <protocol type="S3_PING">
-                        <property name="location">${jgroups.s3.bucket:}</property>
-                    </protocol>
-                    <protocol type="MERGE3"/>
-                    <protocol type="FD_SOCK" socket-binding="jgroups-tcp-fd"/>
-                    <protocol type="FD_ALL"/>
-                    <protocol type="VERIFY_SUSPECT"/>
-                    <protocol type="pbcast.NAKACK2">
-                        <property name="use_mcast_xmit">false</property>
-                    </protocol>
-                    <protocol type="UNICAST3"/>
-                    <protocol type="pbcast.STABLE"/>
-                    <protocol type="pbcast.GMS"/>
-                    <protocol type="MFC"/>
-                    <protocol type="FRAG3"/>
-                </stack>
-                <stack name="google">
-                    <transport type="TCP" socket-binding="jgroups-tcp"/>
-                    <protocol type="GOOGLE_PING">
-                        <property name="location">${jgroups.google.bucket:}</property>
-                        <property name="access_key">${jgroups.google.access_key:}</property>
-                        <property name="secret_access_key">${jgroups.google.secret_access_key:}</property>
-                    </protocol>
-                    <protocol type="MERGE3"/>
-                    <protocol type="FD_SOCK" socket-binding="jgroups-tcp-fd"/>
-                    <protocol type="FD_ALL"/>
-                    <protocol type="VERIFY_SUSPECT"/>
-                    <protocol type="pbcast.NAKACK2">
-                        <property name="use_mcast_xmit">false</property>
-                    </protocol>
-                    <protocol type="UNICAST3"/>
-                    <protocol type="pbcast.STABLE"/>
-                    <protocol type="pbcast.GMS"/>
-                    <protocol type="MFC"/>
-                    <protocol type="FRAG3"/>
-                </stack>
-                <stack name="kubernetes">
-                    <transport type="TCP" socket-binding="jgroups-tcp">
-                        <property name="logical_addr_cache_expiration">360000</property>
-                    </transport>
-                    <protocol type="kubernetes.KUBE_PING"/>
-                    <protocol type="MERGE3"/>
-                    <protocol type="FD_SOCK" socket-binding="jgroups-tcp-fd"/>
-                    <protocol type="FD_ALL"/>
-                    <protocol type="VERIFY_SUSPECT"/>
-                    <protocol type="pbcast.NAKACK2">
-                        <property name="use_mcast_xmit">false</property>
-                    </protocol>
-                    <protocol type="UNICAST3"/>
-                    <protocol type="pbcast.STABLE"/>
-                    <protocol type="pbcast.GMS"/>
-                    <protocol type="MFC"/>
+                    <protocol type="MFC_NB"/>
                     <protocol type="FRAG3"/>
                 </stack>
             </stacks>
         </subsystem>
-        <subsystem xmlns="urn:jboss:domain:io:2.0">
+        <subsystem xmlns="urn:jboss:domain:io:3.0">
             <worker name="default"/>
             <buffer-pool name="default"/>
         </subsystem>
@@ -513,7 +435,6 @@
             <remote-naming/>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:remoting:4.0">
-            <endpoint/>
             <http-connector name="http-remoting-connector" connector-ref="default" security-realm="ApplicationRealm"/>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:security:2.0">

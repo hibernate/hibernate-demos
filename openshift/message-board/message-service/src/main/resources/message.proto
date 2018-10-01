@@ -1,0 +1,69 @@
+package HibernateOGMGenerated;
+
+message Message_Tag_id {
+	required int64 Message_id = 1;
+	required string tags_name = 2;
+}
+
+message Message_Tag {
+	required int64 Message_id = 1;
+	required string tags_name = 2;
+}
+
+message Board_id {
+	required string username = 1;
+}
+
+message Board {
+	required string username = 1;
+	optional int32 next = 2;
+}
+
+message Message_id {
+	required int64 id = 1;
+}
+
+/**
+ * @Indexed
+ */
+message Message {
+
+	/**
+	 * @Field(index = Index.NO, store = Store.NO, analyze = Analyze.NO)
+	 */
+	required int64 id = 1;
+
+	/**
+	 * @Field(index = Index.YES, store = Store.NO, analyze = Analyze.YES, analyzer = @Analyzer(definition = "standard"))
+	 */
+	optional string body = 2;
+
+	/**
+	 * @Field(index = Index.YES, store = Store.NO, analyze = Analyze.NO)
+	 */
+	optional int64 moment = 3;
+
+	/**
+	 * @Field(index = Index.YES, store = Store.NO, analyze = Analyze.NO)
+	 */
+	optional string username = 4;
+}
+
+message Board_Message_id {
+	required string Board_username = 1;
+	required int32 order = 2;
+}
+
+message Board_Message {
+	required string Board_username = 1;
+	optional int64 messages_id = 2;
+	required int32 order = 3;
+}
+
+message Tag_id {
+	required string name = 1;
+}
+
+message Tag {
+	required string name = 1;
+}
