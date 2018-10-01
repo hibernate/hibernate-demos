@@ -15,6 +15,7 @@ oc import-image openshift/wildfly-130-centos7 --confirm
 
 # Install Infinispan Server
 CUSTOM_INFINISPAN_IMAGE=`cat CUSTOM_INFINISPAN_IMAGE`
+oc create configmap infinispan-persistent-app-configuration --from-file=../extra/template/cloud-persistent.xml
 oc new-app --template=infinispan-persistent -p IMAGE="$CUSTOM_INFINISPAN_IMAGE"
 oc delete route infinispan-persistent-app-management
 
