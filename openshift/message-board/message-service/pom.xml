@@ -13,8 +13,8 @@
     <packaging>war</packaging>
 
     <properties>
-        <version.hibernate.ogm>5.4.0.Beta2</version.hibernate.ogm>
-        <version.infinispan>9.3.0.Final</version.infinispan>
+        <version.hibernate.ogm>5.4.0.CR1</version.hibernate.ogm>
+        <version.infinispan>9.3.3.Final</version.infinispan>
         <version.asserj>3.11.1</version.asserj>
 
         <name.wildfly>wildfly-${version.wildfly}</name.wildfly>
@@ -187,6 +187,29 @@
                         <configuration>
                             <config-file>provisioning-infinispan.xml</config-file>
                             <server-name>${name.infinispan}</server-name>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>update-infinispan-config</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${home.infinispan}/standalone/configuration</outputDirectory>
+                            <overwrite>true</overwrite>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/src/test/resources/infinispan-config</directory>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>
