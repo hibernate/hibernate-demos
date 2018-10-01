@@ -19,6 +19,7 @@ import { PostMessageComponent } from './post-message/post-message.component';
 import { MessageComponent } from './message/message.component';
 import { EventComponent } from './event/event.component';
 import { TagComponent } from './tag/tag.component';
+import { TermComponent } from './term/term.component';
 import { TimeComponent } from './time/time.component';
 
 @NgModule({
@@ -37,6 +38,7 @@ import { TimeComponent } from './time/time.component';
     MessageComponent,
     EventComponent,
     TagComponent,
+    TermComponent,
     TimeComponent
   ],
   providers: [MessageService, AccountService, EventService, WebSocketService],

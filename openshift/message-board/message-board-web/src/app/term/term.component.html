@@ -1,0 +1,33 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-3">
+      <div class="float-right">
+        <label>Term:
+          <input [(ngModel)]="term" placeholder="term">
+        </label>
+      </div>
+    </div>
+    <div class="col-lg-9">
+      <div class="container-fluid">
+        <div *ngFor="let message of messages" class="container-fluid">
+          <div class="card">
+            <div class="card-body">
+              <p class="card-text">{{ message.body }}</p>
+              <div class="row">
+                <div class="col-lg-2">
+                  <a routerLink="/message/{{message.username}}" class="card-link text-danger">{{ message.username }}</a>
+                </div>
+                <div class="col-lg-5">
+                  <span class="card-text text-success">{{ message.moment }}</span>
+                </div>
+                <div class="col-lg-5">
+                  <a *ngFor="let tag of message.tags" (click)="onSelect(tag)" routerLink="/tag/{{tag.name}}" class="card-link text-info">{{ tag.name }}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

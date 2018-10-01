@@ -38,6 +38,15 @@ export class MessageService {
       .pipe( catchError( this.handleError<Message[]>('findMessagesByTag', []) ) );
   }
 
+  findMessagesByTerm(term: string): Observable<Message[]> {
+	if (!term || !term.trim()) {
+      // if not search term, return empty message array.
+	  return of([]);
+	}
+	return this.http.get<Message[]>(`message-service/messages/term/${term}`)
+	  .pipe( catchError( this.handleError<Message[]>('findMessagesByTerm', []) ) );
+  }
+
   findMessagesByTime(startDate: NgbDateStruct, endDate: NgbDateStruct, startTime: NgbTimeStruct, endTime: NgbTimeStruct): Observable<Message[]> {
     if (!startDate || !endDate || !startTime || !endTime) {
 	  return of([]);
