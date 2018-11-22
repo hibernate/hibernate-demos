@@ -16,6 +16,8 @@ spring.datasource:
 spring.jpa.properties:
   hibernate:
     dialect: org.hibernate.dialect.PostgreSQL95Dialect
+    # https://hibernate.atlassian.net/browse/HHH-12368
+    jdbc.lob.non_contextual_creation: true
   hibernate.search:
     default:
       indexmanager: elasticsearch
