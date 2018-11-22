@@ -2,41 +2,29 @@
 
 ## Database
 
-Install postgresql and configure it ([see here for Fedora](https://fedoraproject.org/wiki/PostgreSQL)).
+Install postgresql and configure it.
 
-Create a database and user:
-
-```
-# From a shell
-sudo -i -u postgres
-createuser -U postgres -P hibernate_demo # When prompted, use "hibernate_demo" as a password
-createdb -U postgres -O hibernate_demo hsearch_es_wikipedia
-```
-
-You need to enable the `md5` authentication scheme for the local network connection.
-
-So, if you just installed PostgreSQL, you should make your `/var/lib/pgsql/data/pg_hba.conf` file look like:
-```
-local   all             all                                     peer
-host    all             all             127.0.0.1/32            md5
-host    all             all             ::1/128                 md5
-```
-(just change `ident` to `md5` in the existing lines)
-
-Don't forget to reload your PostgreSQL server after this change:
-```
-sudo systemctl reload postgresql
-```
+* One-liner with docker:
+  ```
+  sudo docker run --name postgresql-hibernate_demo -e POSTGRES_PASSWORD=hibernate_demo -e POSTGRES_USER=hibernate_demo -e POSTGRES_DB=hsearch_es_wikipedia -p 5432:5432 -d postgres:11.1
+  ```
+* Otherwise, for Fedora, [see here](https://fedoraproject.org/wiki/PostgreSQL)).
+You will need to enable the `md5` authentication scheme for the local network connection,
+and to create a `hibernate_demo` user with the password `hibernate_demo`.
 
 ## Data
 
 You can try a fully automated initialization using this command:
 
 ```
-./src/init/init
+./src/init/init -d postgresql-hibernate_demo
 ```
 
-The script will ask for a password: just use `hibernate_demo`.
+Or, if not using docker:
+
+```
+./src/init/init
+```
 
 If this succeeds, you're all set, you can go to the next step.
 
@@ -63,9 +51,13 @@ The script will ask for a password: just use `hibernate_demo`.
 
 ## Elasticsearch
 
-Ensure you have an Elasticsearch 5 instance running and accessible from <http://localhost:9200/>.
+Ensure you have an Elasticsearch 5 instance running and accessible from <http://localhost:9200/>:
 
-You can download Elasticsearch from here: <https://www.elastic.co/downloads/elasticsearch>.
+* One-liner using temporary storage with docker (ES6, but it should work for this demo):
+  ```
+  sudo docker run --ulimit memlock=-1:-1 -ti --tmpfs /run --tmpfs=/opt/elasticsearch/volatile/data:uid=1000 --tmpfs=/opt/elasticsearch/volatile/logs:uid=1000 -p 9200:9200 -p 9300:9300 --name es-it sanne/elasticsearch-light-testing
+  ```
+* Otherwise, you can download Elasticsearch from here: <https://www.elastic.co/downloads/elasticsearch>.
 Unzip the downloaded file, and just run `bin/elasticsearch` to start an instance on <http://localhost:9200>.
 
 # Running the project
