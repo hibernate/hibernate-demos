@@ -17,8 +17,8 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 
-		<version.org.hibernate.search>5.10.5.Final</version.org.hibernate.search>
-		<version.org.hibernate.orm>5.3.7.Final</version.org.hibernate.orm>
+		<version.org.hibernate.search>5.11.0.Final</version.org.hibernate.search>
+		<version.org.hibernate.orm>5.4.0.Final</version.org.hibernate.orm>
 		<test.elasticsearch.host.version>5.6.8</test.elasticsearch.host.version>
 	</properties>
 
@@ -89,7 +89,6 @@
 				<version>5.11</version>
 				<configuration>
 					<clusterName>HibernateSearchDemoCluster</clusterName>
-					<tcpPort>9300</tcpPort>
 					<httpPort>9200</httpPort>
 					<version>${test.elasticsearch.host.version}</version>
 				</configuration>
