@@ -38,23 +38,6 @@ do
 			DOCKER_CONTAINER_NAME="$OPTARG"
 			log "Will attempt to connect to docker container with name '$DOCKER_CONTAINER_NAME'"
                         ;;
-                h)
-                        FEATURE=git_history
-                        ;;
-                f)
-                        case "$OPTARG" in
-                                "api"|"spi"|"public"|"impl"|"test"|"main"|"all")
-                                        FILTER="$OPTARG"
-                                        ;;
-                                *)
-                                        echo 2>&1 "Unrecognized source filter: $OPTARG"
-                                        exit 1
-                                        ;;
-                        esac
-                        ;;
-                i)
-                        INTERNAL_PACKAGE_MARKER="$OPTARG"
-                        ;;
                 \?)
                         exit 1
                         ;;
