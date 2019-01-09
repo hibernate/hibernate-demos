@@ -77,9 +77,6 @@ public class PageEndpoint {
 	@GET
 	@Path("/search")
 	public SearchResult<PageOutputDto> search(@QueryParam("q") String queryString, @QueryParam("p") Integer page) {
-		if ( queryString == null || queryString.isEmpty() ) {
-			return null;
-		}
 		if ( page == null ) {
 			page = 0;
 		}

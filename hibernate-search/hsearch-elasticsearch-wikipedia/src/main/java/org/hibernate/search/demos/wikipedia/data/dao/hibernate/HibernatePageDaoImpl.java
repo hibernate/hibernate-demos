@@ -41,12 +41,18 @@ public class HibernatePageDaoImpl extends AbstractHibernateDao implements PageDa
 		FullTextEntityManager fullTextEm = Search.getFullTextEntityManager( getEm() );
 		QueryBuilder queryBuilder = fullTextEm.getSearchFactory().buildQueryBuilder()
 				.forEntity( Page.class ).get();
-		
-		Query luceneQuery = queryBuilder.keyword()
-				.onField( "title" ).boostedTo( 2.0f )
-				.andField( "content" )
-				.matching( term )
-				.createQuery();
+
+		Query luceneQuery;
+		if ( term == null || term.isEmpty() ) {
+			luceneQuery = queryBuilder.all().createQuery();
+		}
+		else {
+			luceneQuery = queryBuilder.keyword()
+					.onField( "title" ).boostedTo( 2.0f )
+					.andField( "content" )
+					.matching( term )
+					.createQuery();
+		}
 		
 		Sort scoreSort = queryBuilder.sort().byScore().createSort();
 
