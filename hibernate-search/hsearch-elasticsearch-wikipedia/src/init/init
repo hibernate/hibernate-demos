@@ -20,43 +20,44 @@ function guess_remote_dump_url() {
 }
 
 function do_psql() {
-	if [ -n "$DOCKER_CONTAINER_NAME" ]
+	local options="--link "$DOCKER_CONTAINER_NAME":postgres -e PGPASSWORD=hibernate_demo"
+	if [ -n "$DOCKER_NETWORK_NAME" ]
 	then
-		sudo -p "Sudo password (to execute docker): " docker run -i --rm --link "$DOCKER_CONTAINER_NAME":postgres -e PGPASSWORD=hibernate_demo postgres:11.1 psql -h postgres -U hibernate_demo hsearch_es_wikipedia
-	else
-		PGPASSWORD=hibernate_demo psql -U hibernate_demo -h localhost -W hsearch_es_wikipedia
+		options+=" --net $DOCKER_NETWORK_NAME"
 	fi
+	sudo -p "Sudo password (to execute docker): " docker run -i --rm $options postgres:11.1 psql -h postgres -U hibernate_demo hsearch_es_wikipedia
 }
 
 
 which xsltproc 1>/dev/null 2>&1 || abort "Command 'xsltproc' isn't in the \$PATH; please install the command or add it to the \$PATH."
 
-while getopts 'd:' opt
+DOCKER_CONTAINER_NAME="hsearch-elasticsearch-wikipedia_db_1"
+DOCKER_NETWORK_NAME="hsearch-elasticsearch-wikipedia_postgresnet"
+LOCAL_DUMP_FILE=
+while getopts 'c:n:f:' opt
 do
         case "$opt" in
-                d)
+                c)
 			DOCKER_CONTAINER_NAME="$OPTARG"
-			log "Will attempt to connect to docker container with name '$DOCKER_CONTAINER_NAME'"
                         ;;
+                n)
+			DOCKER_NETWORK_NAME="$OPTARG"
+                        ;;
+		f)
+			LOCAL_DUMP_FILE="$OPTARG"
+			;;
                 \?)
                         exit 1
                         ;;
         esac
 done
-
 shift $(( OPTIND - 1 ))
 
-if [ -z "$DOCKER_CONTAINER_NAME" ]
-then
-	log "No docker container name given (-d option missing). Will attempt to use a local 'psql' command."
-	which "psql" 1>/dev/null 2>&1 || abort "Command 'psql' isn't in the \$PATH; please install the command or add it to the \$PATH."
-fi
-
-LOCAL_DUMP_FILE=$1
+log "Will attempt to connect to docker container with name '$DOCKER_CONTAINER_NAME' within network '$DOCKER_NETWORK_NAME'"
 
 if [ -z "$LOCAL_DUMP_FILE" ]
 then
-	log "No argument given; will try to retrieve the dump file automatically."
+	log "No dump file path given; will try to retrieve the dump file automatically."
 	LOCAL_DUMP_DIR="/tmp/hsearch_es_wikipedia"
 	LOCAL_DUMP_FILE="$LOCAL_DUMP_DIR/enwiki-latest-pages-meta-current1.xml"
 

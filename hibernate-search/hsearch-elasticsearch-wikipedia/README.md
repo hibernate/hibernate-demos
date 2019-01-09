@@ -1,26 +1,22 @@
 # Setting up the environment
 
-## Database
+## Services
 
-Install postgresql and configure it.
+Install docker and docker-compose, then run this from the root of the project:
 
-* One-liner with docker:
-  ```
-  sudo docker run --name postgresql-hibernate_demo -e POSTGRES_PASSWORD=hibernate_demo -e POSTGRES_USER=hibernate_demo -e POSTGRES_DB=hsearch_es_wikipedia -p 5432:5432 -d postgres:11.1
-  ```
-* Otherwise, for Fedora, [see here](https://fedoraproject.org/wiki/PostgreSQL)).
-You will need to enable the `md5` authentication scheme for the local network connection,
-and to create a `hibernate_demo` user with the password `hibernate_demo`.
+```
+sudo docker-compose -f environment-stack.yml -p hsearch-elasticsearch-wikipedia up
+```
+
+You can later remove the created services and volumes with this command:
+
+```
+sudo docker-compose -f environment-stack.yml -p hsearch-elasticsearch-wikipedia down -v
+```
 
 ## Data
 
 You can try a fully automated initialization using this command:
-
-```
-./src/init/init -d postgresql-hibernate_demo
-```
-
-Or, if not using docker:
 
 ```
 ./src/init/init
@@ -44,21 +40,8 @@ bunzip2 <the dump>
 Initialize the database using the provided script:
 
 ```
-./src/init/init <the uncompressed dump>
+./src/init/init -f <path to the uncompressed dump>
 ```
-
-The script will ask for a password: just use `hibernate_demo`.
-
-## Elasticsearch
-
-Ensure you have an Elasticsearch 5 instance running and accessible from <http://localhost:9200/>:
-
-* One-liner using temporary storage with docker (ES6, but it should work for this demo):
-  ```
-  sudo docker run --ulimit memlock=-1:-1 -ti --tmpfs /run --tmpfs=/opt/elasticsearch/volatile/data:uid=1000 --tmpfs=/opt/elasticsearch/volatile/logs:uid=1000 -p 9200:9200 -p 9300:9300 --name es-it sanne/elasticsearch-light-testing
-  ```
-* Otherwise, you can download Elasticsearch from here: <https://www.elastic.co/downloads/elasticsearch>.
-Unzip the downloaded file, and just run `bin/elasticsearch` to start an instance on <http://localhost:9200>.
 
 # Running the project
 
