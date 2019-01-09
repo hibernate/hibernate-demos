@@ -8,53 +8,15 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
-import org.apache.lucene.analysis.charfilter.HTMLStripCharFilterFactory;
-import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
-import org.apache.lucene.analysis.core.StopFilterFactory;
-import org.apache.lucene.analysis.core.WhitespaceTokenizerFactory;
-import org.apache.lucene.analysis.en.PorterStemFilterFactory;
-import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilterFactory;
 import org.hibernate.annotations.Type;
-import org.hibernate.search.annotations.Analyzer;
-import org.hibernate.search.annotations.AnalyzerDef;
-import org.hibernate.search.annotations.CharFilterDef;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
-import org.hibernate.search.annotations.TokenFilterDef;
-import org.hibernate.search.annotations.TokenizerDef;
+import org.hibernate.search.mapper.pojo.dirtiness.ReindexOnUpdate;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
 
 @Entity
 @Indexed(index = "page")
-/*
- * Note: analyzer definitions are globally available,
- * you don't need to repeat them for each single entity. 
- */
-@AnalyzerDef(
-		name = "cleaned_text",
-		charFilters = {
-				@CharFilterDef(
-						factory = HTMLStripCharFilterFactory.class
-				)
-		},
-		tokenizer = @TokenizerDef(
-				factory = WhitespaceTokenizerFactory.class
-		),
-		filters = {
-				@TokenFilterDef(
-						factory = ASCIIFoldingFilterFactory.class
-				),
-				@TokenFilterDef(
-						factory = LowerCaseFilterFactory.class
-				),
-				@TokenFilterDef(
-						factory = StopFilterFactory.class
-				),
-				@TokenFilterDef(
-						factory = PorterStemFilterFactory.class
-				)
-		}
-)
 public class Page {
 
 	@Id
@@ -63,16 +25,19 @@ public class Page {
 	private Long id;
 
 	@Basic(optional = false)
-	@Field(analyzer = @Analyzer(definition = "cleaned_text"))
+	@FullTextField(analyzer = "cleaned_text")
 	private String title;
 
 	@Basic(optional = false)
 	@Type(type = "text")
-	@Field(analyzer = @Analyzer(definition = "cleaned_text"))
+	@FullTextField(analyzer = "cleaned_text")
 	private String content;
 
 	@ManyToOne
-	@IndexedEmbedded
+	@IndexedEmbedded(includePaths = "username")
+	// Each user may have contributed to a lot of pages - do not reindex pages automatically when a user changes his info
+	// This will work fine because the info we're relying on here is effectively immutable
+	@IndexingDependency(reindexOnUpdate = ReindexOnUpdate.NO)
 	private User lastContributor;
 
 	public Long getId() {

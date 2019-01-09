@@ -8,11 +8,12 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.hibernate.CacheMode;
-import org.hibernate.search.MassIndexer;
 import org.hibernate.search.demos.wikipedia.data.Page;
 import org.hibernate.search.demos.wikipedia.data.User;
-import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.jpa.Search;
+import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.jpa.FullTextEntityManager;
+import org.hibernate.search.mapper.orm.massindexing.MassIndexer;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

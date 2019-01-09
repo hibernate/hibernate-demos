@@ -17,13 +17,17 @@ spring.jpa.properties:
   hibernate:
     dialect: org.hibernate.dialect.PostgreSQL95Dialect
   hibernate.search:
-    default:
-      indexmanager: elasticsearch
-      elasticsearch:
-        index_schema_management_strategy: create
-        refresh_after_write: true
-        required_index_status: yellow
+    default_backend: elasticsearch1
+    backends:
+      elasticsearch1:
+        type: elasticsearch
+        host: http://localhost:9200
         discovery.enabled: true
+        analysis_configurer: analysisConfigurerSpringBean
+        index_defaults:
+          lifecycle.strategy: create
+          lifecycle.required_status: yellow
+          refresh_after_write: true
 
 spring.jackson:
   serialization:
@@ -33,5 +37,6 @@ spring.jackson:
 logging.level:
   # Uncomment for extensive SQL logging
   #org.hibernate.SQL: DEBUG
-  org.hibernate.search.batchindexing: INFO
+  org.hibernate.search.massindexing: INFO
   org.hibernate.search.fulltext_query: DEBUG
+  #org.hibernate.search.elasticsearch.request: DEBUG
