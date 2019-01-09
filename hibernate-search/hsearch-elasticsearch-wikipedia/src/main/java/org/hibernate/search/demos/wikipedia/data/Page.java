@@ -59,7 +59,7 @@ public class Page {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pageId")
-	@SequenceGenerator(name = "pageId", sequenceName = "page_id_seq")
+	@SequenceGenerator(name = "pageId", sequenceName = "page_id_seq", allocationSize = 1)
 	private Long id;
 
 	@Basic(optional = false)
