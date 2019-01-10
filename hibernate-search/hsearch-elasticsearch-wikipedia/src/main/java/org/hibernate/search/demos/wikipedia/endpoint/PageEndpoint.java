@@ -21,6 +21,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.hibernate.search.demos.wikipedia.data.Page;
 import org.hibernate.search.demos.wikipedia.data.dao.PageDao;
+import org.hibernate.search.demos.wikipedia.data.dao.PageSort;
 import org.hibernate.search.demos.wikipedia.dto.PageInputDto;
 import org.hibernate.search.demos.wikipedia.dto.PageOutputDto;
 import org.hibernate.search.demos.wikipedia.dto.mapper.PageMapper;
@@ -76,11 +77,11 @@ public class PageEndpoint {
 
 	@GET
 	@Path("/search")
-	public SearchResult<PageOutputDto> search(@QueryParam("q") String queryString, @QueryParam("p") Integer page) {
+	public SearchResult<PageOutputDto> search(@QueryParam("q") String queryString, @QueryParam("s") PageSort sort, @QueryParam("p") Integer page) {
 		if ( page == null ) {
 			page = 0;
 		}
-		SearchResult<Page> searchResult = dao.search( queryString, page * ITEMS_PER_PAGE, ITEMS_PER_PAGE );
+		SearchResult<Page> searchResult = dao.search( queryString, sort, page * ITEMS_PER_PAGE, ITEMS_PER_PAGE );
 		
 		return new SearchResult<>(
 				searchResult.getTotalCount(),

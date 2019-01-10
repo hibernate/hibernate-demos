@@ -9,11 +9,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.Type;
+import org.hibernate.search.engine.backend.types.Sortable;
 import org.hibernate.search.mapper.pojo.dirtiness.ReindexOnUpdate;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 @Entity
 @Indexed(index = "page")
@@ -26,6 +28,7 @@ public class Page {
 
 	@Basic(optional = false)
 	@FullTextField(analyzer = "cleaned_text")
+	@KeywordField(name = "title_sort", normalizer = "cleaned_keyword", sortable = Sortable.YES)
 	private String title;
 
 	@Basic(optional = false)

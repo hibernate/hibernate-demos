@@ -2,6 +2,7 @@ package org.hibernate.search.demos.wikipedia.data.dao.hibernate;
 
 import org.hibernate.search.demos.wikipedia.data.Page;
 import org.hibernate.search.demos.wikipedia.data.dao.PageDao;
+import org.hibernate.search.demos.wikipedia.data.dao.PageSort;
 import org.hibernate.search.demos.wikipedia.util.SearchResult;
 import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.jpa.FullTextEntityManager;
@@ -35,7 +36,7 @@ public class HibernatePageDaoImpl extends AbstractHibernateDao implements PageDa
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public SearchResult<Page> search(String term, int offset, int limit) {
+	public SearchResult<Page> search(String term, PageSort sort, int offset, int limit) {
 		FullTextEntityManager fullTextEm = Search.getFullTextEntityManager( getEm() );
 
 		FullTextQuery query = fullTextEm.search( Page.class ).query()
@@ -52,7 +53,15 @@ public class HibernatePageDaoImpl extends AbstractHibernateDao implements PageDa
 								.toPredicate();
 					}
 				} )
-				.sort( f -> f.byScore() )
+				.sort( f -> {
+					switch ( sort ) {
+						case TITLE:
+							f.byField( "title_sort" );
+						case RELEVANCE:
+						default:
+							f.byScore();
+					}
+				} )
 				.build();
 
 		query.setFirstResult( offset )

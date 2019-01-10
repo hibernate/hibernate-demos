@@ -74,7 +74,13 @@ For instance:
 curl http://localhost:8080/page/search/?q=car
 ```
 
-Finally, you can retrieve a page with:
+You can also select the sort (either `RELEVANCE` or `TITLE`):
+
+```
+curl http://localhost:8080/page/search/?q=car&s=TITLE
+```
+
+Finally, you can retrieve a Wikipedia page with:
 
 ```
 curl http://localhost:8080/page/<page ID>/
