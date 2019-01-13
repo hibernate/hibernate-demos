@@ -29,12 +29,13 @@ This repository contains demos used live during presentations or in blog posts; 
       Accompanies the blog post http://in.relation.to/2018/02/26/putting-bean-validation-constraints-to-multimaps/
 
 * Java 9
-    - multi-release-jar-demo: Shows how to build multi-release JARs with Java 9.
+    - _multi-release-jar-demo_: Shows how to build multi-release JARs with Java 9.
       Accompanies the blog post http://in.relation.to/2017/02/13/building-multi-release-jars-with-maven/
-    - custom-jlink-plugin: Shows how to customize Java 9 modular runtime images with jlink plug-ins. The example shows a plug-in for adding a Jandex annotation index for one or more modules to the runtime image.
+    - _custom-jlink-plugin_: Shows how to customize Java 9 modular runtime images with jlink plug-ins. The example shows a plug-in for adding a Jandex annotation index for one or more modules to the runtime image.
 * Other
-    - wildfly-patch-creation: How to create WildFly patch files.
+    - _wildfly-patch-creation_: How to create WildFly patch files.
       Accompanies the blog post http://in.relation.to/2017/05/29/creating-patches-for-wildfly/
+    - _cdi-jpa-testing_: How to run JUnit tests using CDI, JPA and JTA
 
 ## License
 

@@ -46,3 +46,6 @@ transaction.log
 infinispan.log
 
 .gradle
+
+#Misc.
+ObjectStore
