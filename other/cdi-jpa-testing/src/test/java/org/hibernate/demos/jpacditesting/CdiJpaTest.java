@@ -5,17 +5,19 @@
 package org.hibernate.demos.jpacditesting;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.transaction.TransactionalException;
 import javax.transaction.UserTransaction;
 
 import org.junit.Test;
 
-public class CdiJpaTest extends AbstractCdiTest {
+public class CdiJpaTest extends CdiJpaTestBase {
 
     @Inject
     private EntityManager entityManager;
@@ -28,6 +30,9 @@ public class CdiJpaTest extends AbstractCdiTest {
 
     @Inject
     private TestService testService;
+
+    @Inject
+    private TransactionalTestService transactionalTestService;
 
     @Test
     public void canInjectEntityManager() {
@@ -102,5 +107,20 @@ public class CdiJpaTest extends AbstractCdiTest {
         entityManager.getTransaction().commit();
 
         assertThat(testService.getTestEntityNames()).contains("Test 1", "Test 2");
+    }
+
+    @Test
+    public void canUseDeclarativeTxControl() throws Exception {
+        try {
+            transactionalTestService.doSomething();
+            fail("Exception raised due to missing yet required transaction wasn't raised");
+        }
+        catch(TransactionalException e) {
+            assertThat(e.getMessage().contains("ARJUNA016110"));
+        }
+
+        ut.begin();
+        assertThat(transactionalTestService.doSomething()).isEqualTo("Success");
+        ut.rollback();
     }
 }

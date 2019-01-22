@@ -40,5 +40,4 @@ public class TestingTransactionServices implements TransactionServices {
     public UserTransaction getUserTransaction() {
         return com.arjuna.ats.jta.UserTransaction.userTransaction();
     }
-
 }
