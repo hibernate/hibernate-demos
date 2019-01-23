@@ -10,14 +10,44 @@ import static org.junit.Assert.fail;
 import java.util.List;
 import java.util.UUID;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.TransactionalException;
 import javax.transaction.UserTransaction;
 
+import org.hibernate.demos.jpacditesting.support.JtaEnvironment;
+import org.jboss.weld.environment.se.Weld;
+import org.jboss.weld.junit4.WeldInitiator;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
 
-public class CdiJpaTest extends CdiJpaTestBase {
+public class CdiJpaTest {
+
+    @ClassRule
+    public static JtaEnvironment jtaEnvironment = new JtaEnvironment();
+
+    @Rule
+    public WeldInitiator weld = WeldInitiator.from(new Weld())
+            .activate(RequestScoped.class)
+            .inject(this)
+            .build();
+
+    // new Weld() above enables scanning of the classpath; alternatively, only the required beans can be listed explicitly:
+
+//    @Rule
+//    public WeldInitiator weld = WeldInitiator.from(
+//            ObserverTestBean.class,
+//            TransactionalTestService.class,
+//            TestService.class,
+//            EntityManagerProducer.class,
+//            EntityManagerFactoryProducer.class,
+//            TransactionExtension.class
+//        )
+//        .activate(RequestScoped.class)
+//        .inject(this)
+//        .build();
 
     @Inject
     private EntityManager entityManager;
