@@ -27,7 +27,6 @@ spring.jpa.properties:
         index_defaults:
           lifecycle.strategy: create
           lifecycle.required_status: yellow
-          refresh_after_write: true
 
 spring.jackson:
   serialization:
