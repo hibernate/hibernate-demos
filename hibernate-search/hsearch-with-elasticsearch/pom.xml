@@ -17,8 +17,8 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 
-		<version.org.hibernate.search>5.11.0.Final</version.org.hibernate.search>
-		<version.org.hibernate.orm>5.4.0.Final</version.org.hibernate.orm>
+		<version.org.hibernate.search>5.11.1.Final</version.org.hibernate.search>
+		<version.org.hibernate.orm>5.4.1.Final</version.org.hibernate.orm>
 		<test.elasticsearch.host.version>5.6.8</test.elasticsearch.host.version>
 	</properties>
 
