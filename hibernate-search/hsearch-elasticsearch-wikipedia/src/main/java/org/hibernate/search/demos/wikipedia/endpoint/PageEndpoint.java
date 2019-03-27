@@ -81,7 +81,7 @@ public class PageEndpoint {
 		if ( page == null ) {
 			page = 0;
 		}
-		SearchResult<Page> searchResult = dao.search( queryString, sort, page * ITEMS_PER_PAGE, ITEMS_PER_PAGE );
+		SearchResult<Page> searchResult = dao.search( queryString, sort, ITEMS_PER_PAGE, page * ITEMS_PER_PAGE );
 		
 		return new SearchResult<>(
 				searchResult.getTotalCount(),

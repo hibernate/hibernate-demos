@@ -11,8 +11,8 @@ import org.hibernate.CacheMode;
 import org.hibernate.search.demos.wikipedia.data.Page;
 import org.hibernate.search.demos.wikipedia.data.User;
 import org.hibernate.search.mapper.orm.Search;
-import org.hibernate.search.mapper.orm.jpa.FullTextEntityManager;
 import org.hibernate.search.mapper.orm.massindexing.MassIndexer;
+import org.hibernate.search.mapper.orm.session.SearchSession;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,9 +28,9 @@ public class AdminEndpoint {
 	@POST
 	@Path("/reindex")
 	public Response reindex(@QueryParam("limit") Long limit) {
-		FullTextEntityManager fullTextEm = Search.getFullTextEntityManager( em );
+		SearchSession searchSession = Search.getSearchSession( em );
 
-		MassIndexer indexer = fullTextEm.createIndexer( Page.class, User.class )
+		MassIndexer indexer = searchSession.createIndexer( Page.class, User.class )
 				.purgeAllOnStart( true )
 				.typesToIndexInParallel( 2 )
 				.batchSizeToLoadObjects( 25 )

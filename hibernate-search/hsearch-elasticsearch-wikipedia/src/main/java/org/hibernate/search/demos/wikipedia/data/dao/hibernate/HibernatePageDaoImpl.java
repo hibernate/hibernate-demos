@@ -5,8 +5,8 @@ import org.hibernate.search.demos.wikipedia.data.dao.PageDao;
 import org.hibernate.search.demos.wikipedia.data.dao.PageSort;
 import org.hibernate.search.demos.wikipedia.util.SearchResult;
 import org.hibernate.search.mapper.orm.Search;
-import org.hibernate.search.mapper.orm.jpa.FullTextEntityManager;
-import org.hibernate.search.mapper.orm.jpa.FullTextQuery;
+import org.hibernate.search.mapper.orm.search.query.SearchQuery;
+import org.hibernate.search.mapper.orm.session.SearchSession;
 
 import org.springframework.stereotype.Repository;
 
@@ -35,22 +35,20 @@ public class HibernatePageDaoImpl extends AbstractHibernateDao implements PageDa
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public SearchResult<Page> search(String term, PageSort sort, int offset, int limit) {
-		FullTextEntityManager fullTextEm = Search.getFullTextEntityManager( getEm() );
+	public SearchResult<Page> search(String term, PageSort sort, int limit, int offset) {
+		SearchSession searchSession = Search.getSearchSession( getEm() );
 
-		FullTextQuery query = fullTextEm.search( Page.class ).query()
+		SearchQuery<Page> query = searchSession.search( Page.class )
 				.asEntity()
 				.predicate( f -> {
 					if ( term == null || term.isEmpty() ) {
-						return f.matchAll().toPredicate();
+						return f.matchAll();
 					}
 					else {
 						return f.match()
 								.onField( "title" ).boostedTo( 2.0f )
 								.orField( "content" )
-								.matching( term )
-								.toPredicate();
+								.matching( term );
 					}
 				} )
 				.sort( f -> {
@@ -62,12 +60,9 @@ public class HibernatePageDaoImpl extends AbstractHibernateDao implements PageDa
 							f.byScore();
 					}
 				} )
-				.build();
+				.toQuery();
 
-		query.setFirstResult( offset )
-				.setMaxResults( limit );
-
-		return new SearchResult<>( query.getResultSize(), query.getResultList() );
+		return new SearchResult<>( query.fetch( limit, offset ) );
 	}
 
 }

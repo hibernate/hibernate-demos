@@ -8,6 +8,14 @@ public class SearchResult<T> {
 
 	private List<T> hits;
 
+	/**
+	 * Wrap a Hibernate Search result to avoid exposing Hibernate Search to the rest of the application.
+	 * @param hibernateSearchSearchResult The Hibernate Search result.
+	 */
+	public SearchResult(org.hibernate.search.mapper.orm.search.query.SearchResult<T> hibernateSearchSearchResult) {
+		this( hibernateSearchSearchResult.getTotalHitCount(), hibernateSearchSearchResult.getHits() );
+	}
+
 	public SearchResult(long totalCount, List<T> hits) {
 		super();
 		this.totalCount = totalCount;

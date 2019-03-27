@@ -13,6 +13,6 @@ public interface PageDao {
 
 	Page getById(Long id);
 
-	SearchResult<Page> search(String term, PageSort sort, int offset, int limit);
+	SearchResult<Page> search(String term, PageSort sort, int limit, int offset);
 
 }
