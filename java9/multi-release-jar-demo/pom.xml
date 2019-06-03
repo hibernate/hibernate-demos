@@ -37,7 +37,7 @@
                       <compileSourceRoots>
                         <compileSourceRoot>${project.basedir}/src/main/java9</compileSourceRoot>
                       </compileSourceRoots>
-  					  <multiReleaseOutput>true</multiReleaseOutput>
+                      <multiReleaseOutput>true</multiReleaseOutput>
                     </configuration>
                   </execution>
                 </executions>
