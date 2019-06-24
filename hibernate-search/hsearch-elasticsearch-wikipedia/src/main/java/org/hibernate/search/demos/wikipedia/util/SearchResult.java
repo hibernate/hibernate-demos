@@ -12,7 +12,7 @@ public class SearchResult<T> {
 	 * Wrap a Hibernate Search result to avoid exposing Hibernate Search to the rest of the application.
 	 * @param hibernateSearchSearchResult The Hibernate Search result.
 	 */
-	public SearchResult(org.hibernate.search.mapper.orm.search.query.SearchResult<T> hibernateSearchSearchResult) {
+	public SearchResult(org.hibernate.search.engine.search.query.SearchResult <T> hibernateSearchSearchResult) {
 		this( hibernateSearchSearchResult.getTotalHitCount(), hibernateSearchSearchResult.getHits() );
 	}
 

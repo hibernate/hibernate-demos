@@ -5,7 +5,6 @@ import org.hibernate.search.demos.wikipedia.data.dao.PageDao;
 import org.hibernate.search.demos.wikipedia.data.dao.PageSort;
 import org.hibernate.search.demos.wikipedia.util.SearchResult;
 import org.hibernate.search.mapper.orm.Search;
-import org.hibernate.search.mapper.orm.search.query.SearchQuery;
 import org.hibernate.search.mapper.orm.session.SearchSession;
 
 import org.springframework.stereotype.Repository;
@@ -36,10 +35,9 @@ public class HibernatePageDaoImpl extends AbstractHibernateDao implements PageDa
 
 	@Override
 	public SearchResult<Page> search(String term, PageSort sort, int limit, int offset) {
-		SearchSession searchSession = Search.getSearchSession( getEm() );
+		SearchSession searchSession = Search.session( getEm() );
 
-		SearchQuery<Page> query = searchSession.search( Page.class )
-				.asEntity()
+		return new SearchResult<>( searchSession.search( Page.class )
 				.predicate( f -> {
 					if ( term == null || term.isEmpty() ) {
 						return f.matchAll();
@@ -54,15 +52,14 @@ public class HibernatePageDaoImpl extends AbstractHibernateDao implements PageDa
 				.sort( f -> {
 					switch ( sort ) {
 						case TITLE:
-							f.byField( "title_sort" );
+							return f.byField( "title_sort" );
 						case RELEVANCE:
 						default:
-							f.byScore();
+							return f.byScore();
 					}
 				} )
-				.toQuery();
-
-		return new SearchResult<>( query.fetch( limit, offset ) );
+				.fetch( limit, offset )
+		);
 	}
 
 }
