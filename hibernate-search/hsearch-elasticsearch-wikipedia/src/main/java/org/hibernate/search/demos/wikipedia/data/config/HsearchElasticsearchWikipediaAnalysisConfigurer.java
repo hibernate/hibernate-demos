@@ -6,6 +6,7 @@
  */
 package org.hibernate.search.demos.wikipedia.data.config;
 
+import org.hibernate.search.backend.elasticsearch.analysis.ElasticsearchAnalysisConfigurationContext;
 import org.hibernate.search.backend.elasticsearch.analysis.ElasticsearchAnalysisConfigurer;
 import org.hibernate.search.backend.elasticsearch.analysis.model.dsl.ElasticsearchAnalysisDefinitionContainerContext;
 
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component("analysisConfigurerSpringBean")
 public class HsearchElasticsearchWikipediaAnalysisConfigurer implements ElasticsearchAnalysisConfigurer {
 	@Override
-	public void configure(ElasticsearchAnalysisDefinitionContainerContext context) {
+	public void configure(ElasticsearchAnalysisConfigurationContext context) {
 		context.analyzer( "cleaned_text" ).custom()
 				.withTokenizer( "whitespace" )
 				.withCharFilters( "html_strip" )
