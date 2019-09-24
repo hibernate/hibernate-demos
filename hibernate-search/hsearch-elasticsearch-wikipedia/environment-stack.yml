@@ -13,7 +13,7 @@ services:
     networks:
       - pgnet
   es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.1.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.2
     container_name: es01
     environment:
       - node.name=es01
@@ -33,7 +33,7 @@ services:
     networks:
       - esnet
   es02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.1.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.2
     container_name: es02
     environment:
       - node.name=es02
