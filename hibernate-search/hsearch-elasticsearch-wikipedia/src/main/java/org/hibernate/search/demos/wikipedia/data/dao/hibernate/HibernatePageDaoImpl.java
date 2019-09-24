@@ -44,18 +44,18 @@ public class HibernatePageDaoImpl extends AbstractHibernateDao implements PageDa
 					}
 					else {
 						return f.match()
-								.onField( "title" ).boostedTo( 2.0f )
-								.orField( "content" )
+								.field( "title" ).boost( 2.0f )
+								.field( "content" )
 								.matching( term );
 					}
 				} )
 				.sort( f -> {
 					switch ( sort ) {
 						case TITLE:
-							return f.byField( "title_sort" );
+							return f.field( "title_sort" );
 						case RELEVANCE:
 						default:
-							return f.byScore();
+							return f.score();
 					}
 				} )
 				.fetch( limit, offset )

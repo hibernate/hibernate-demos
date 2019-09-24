@@ -8,7 +8,6 @@ package org.hibernate.search.demos.wikipedia.data.config;
 
 import org.hibernate.search.backend.elasticsearch.analysis.ElasticsearchAnalysisConfigurationContext;
 import org.hibernate.search.backend.elasticsearch.analysis.ElasticsearchAnalysisConfigurer;
-import org.hibernate.search.backend.elasticsearch.analysis.model.dsl.ElasticsearchAnalysisDefinitionContainerContext;
 
 import org.springframework.stereotype.Component;
 
@@ -17,11 +16,11 @@ public class HsearchElasticsearchWikipediaAnalysisConfigurer implements Elastics
 	@Override
 	public void configure(ElasticsearchAnalysisConfigurationContext context) {
 		context.analyzer( "cleaned_text" ).custom()
-				.withTokenizer( "whitespace" )
-				.withCharFilters( "html_strip" )
-				.withTokenFilters( "asciifolding", "lowercase", "stop", "porter_stem" );
+				.tokenizer( "whitespace" )
+				.charFilters( "html_strip" )
+				.tokenFilters( "asciifolding", "lowercase", "stop", "porter_stem" );
 
 		context.normalizer( "cleaned_keyword" ).custom()
-				.withTokenFilters( "asciifolding", "lowercase" );
+				.tokenFilters( "asciifolding", "lowercase" );
 	}
 }
