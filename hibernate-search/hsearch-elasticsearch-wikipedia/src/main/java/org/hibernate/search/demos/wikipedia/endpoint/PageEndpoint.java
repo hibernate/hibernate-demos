@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
@@ -77,11 +78,13 @@ public class PageEndpoint {
 
 	@GET
 	@Path("/search")
-	public SearchResult<PageOutputDto> search(@QueryParam("q") String queryString, @QueryParam("s") PageSort sort, @QueryParam("p") Integer page) {
-		if ( page == null ) {
-			page = 0;
-		}
-		SearchResult<Page> searchResult = dao.search( queryString, sort, ITEMS_PER_PAGE, page * ITEMS_PER_PAGE );
+	public SearchResult<PageOutputDto> search(@QueryParam("q") String queryString,
+			@QueryParam("s") @DefaultValue( "RELEVANCE" ) PageSort sort,
+			@QueryParam("p") @DefaultValue( "0" ) int page) {
+		SearchResult<Page> searchResult = dao.search(
+				queryString, sort,
+				ITEMS_PER_PAGE, page * ITEMS_PER_PAGE
+		);
 		
 		return new SearchResult<>(
 				searchResult.getTotalCount(),
