@@ -21,12 +21,12 @@ spring.jpa.properties:
     backends:
       elasticsearch1:
         type: elasticsearch
-        host: http://localhost:9200
+        hosts: http://localhost:9200
         discovery.enabled: true
         analysis.configurer: analysisConfigurerSpringBean
         index_defaults:
           lifecycle.strategy: create
-          lifecycle.required_status: yellow
+          lifecycle.minimal_required_status: yellow
 
 spring.jackson:
   serialization:
