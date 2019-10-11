@@ -34,7 +34,7 @@ public class HibernatePageDaoImpl extends AbstractHibernateDao implements PageDa
 	}
 
 	@Override
-	public SearchResult<Page> search(String term, PageSort sort, int limit, int offset) {
+	public SearchResult<Page> search(String term, PageSort sort, int offset, int limit) {
 		SearchSession searchSession = Search.session( getEm() );
 
 		return new SearchResult<>( searchSession.search( Page.class )
@@ -58,7 +58,7 @@ public class HibernatePageDaoImpl extends AbstractHibernateDao implements PageDa
 							return f.score();
 					}
 				} )
-				.fetch( limit, offset )
+				.fetch( offset, limit )
 		);
 	}
 

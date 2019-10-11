@@ -83,7 +83,7 @@ public class PageEndpoint {
 			@QueryParam("p") @DefaultValue( "0" ) int page) {
 		SearchResult<Page> searchResult = dao.search(
 				queryString, sort,
-				ITEMS_PER_PAGE, page * ITEMS_PER_PAGE
+				page * ITEMS_PER_PAGE, ITEMS_PER_PAGE
 		);
 		
 		return new SearchResult<>(
