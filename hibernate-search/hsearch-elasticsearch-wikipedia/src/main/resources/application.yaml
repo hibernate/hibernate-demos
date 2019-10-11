@@ -23,7 +23,7 @@ spring.jpa.properties:
         type: elasticsearch
         host: http://localhost:9200
         discovery.enabled: true
-        analysis_configurer: analysisConfigurerSpringBean
+        analysis.configurer: analysisConfigurerSpringBean
         index_defaults:
           lifecycle.strategy: create
           lifecycle.required_status: yellow
