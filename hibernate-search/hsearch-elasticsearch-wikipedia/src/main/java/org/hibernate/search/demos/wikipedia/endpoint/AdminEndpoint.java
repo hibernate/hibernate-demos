@@ -28,9 +28,9 @@ public class AdminEndpoint {
 	@POST
 	@Path("/reindex")
 	public Response reindex(@QueryParam("limit") Long limit) {
-		SearchSession searchSession = Search.getSearchSession( em );
+		SearchSession searchSession = Search.session( em );
 
-		MassIndexer indexer = searchSession.createIndexer( Page.class, User.class )
+		MassIndexer indexer = searchSession.massIndexer( Page.class, User.class )
 				.purgeAllOnStart( true )
 				.typesToIndexInParallel( 2 )
 				.batchSizeToLoadObjects( 25 )
