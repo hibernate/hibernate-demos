@@ -36,9 +36,9 @@ public class AdminEndpoint {
 		MassIndexer indexer = searchSession.massIndexer( Page.class, User.class )
 				.purgeAllOnStart( true )
 				.typesToIndexInParallel( 2 )
-				.batchSizeToLoadObjects( fetchsize == null ? 25 : fetchsize )
-				.idFetchSize( idfetchsize == null ? 150 : idfetchsize )
-				.threadsToLoadObjects( threads == null ? 10 :threads )
+				.batchSizeToLoadObjects( fetchsize == null ? 200 : fetchsize )
+				.idFetchSize( idfetchsize == null ? 200 : idfetchsize )
+				.threadsToLoadObjects( threads == null ? 5 :threads )
 				.cacheMode( CacheMode.IGNORE ); // Cache is likely to do more harm than good in our case (very few relations)
 		if ( limit != null ) {
 			indexer.limitIndexedObjectsTo( limit );
