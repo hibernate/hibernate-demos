@@ -27,15 +27,18 @@ public class AdminEndpoint {
 
 	@POST
 	@Path("/reindex")
-	public Response reindex(@QueryParam("limit") Long limit) {
+	public Response reindex(@QueryParam("limit") Long limit,
+			@QueryParam("idfetchsize") Integer idfetchsize,
+			@QueryParam("fetchsize") Integer fetchsize,
+			@QueryParam("threads") Integer threads) {
 		SearchSession searchSession = Search.session( em );
 
 		MassIndexer indexer = searchSession.massIndexer( Page.class, User.class )
 				.purgeAllOnStart( true )
 				.typesToIndexInParallel( 2 )
-				.batchSizeToLoadObjects( 25 )
-				.idFetchSize( 150 )
-				.threadsToLoadObjects( 10 )
+				.batchSizeToLoadObjects( fetchsize == null ? 25 : fetchsize )
+				.idFetchSize( idfetchsize == null ? 150 : idfetchsize )
+				.threadsToLoadObjects( threads == null ? 10 :threads )
 				.cacheMode( CacheMode.IGNORE ); // Cache is likely to do more harm than good in our case (very few relations)
 		if ( limit != null ) {
 			indexer.limitIndexedObjectsTo( limit );
