@@ -12,7 +12,7 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 @Indexed
 public class Client extends PanacheEntity {
 
-	@FullTextField(analyzer = "standard")
+	@FullTextField(analyzer = "english")
 	public String name;
 
 	@ManyToOne
