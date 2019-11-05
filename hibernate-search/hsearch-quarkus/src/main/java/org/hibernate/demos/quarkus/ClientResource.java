@@ -1,5 +1,7 @@
 package org.hibernate.demos.quarkus;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.persistence.EntityManagerFactory;
@@ -14,6 +16,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.hibernate.demos.quarkus.domain.Client;
@@ -23,8 +26,10 @@ import org.hibernate.demos.quarkus.dto.ClientCreateUpdateDto;
 import org.hibernate.demos.quarkus.dto.ClientMapper;
 import org.hibernate.demos.quarkus.dto.ClientRetrieveDto;
 import org.hibernate.demos.quarkus.dto.BusinessManagerRetrieveDto;
+import org.hibernate.search.engine.search.common.BooleanOperator;
 import org.hibernate.search.mapper.orm.Search;
 
+import io.quarkus.hibernate.orm.panache.Panache;
 import io.quarkus.runtime.StartupEvent;
 import io.quarkus.runtime.configuration.ProfileManager;
 
@@ -127,6 +132,21 @@ public class ClientResource {
 		if ( "dev".equals( ProfileManager.getActiveProfile() ) ) {
 			reindex();
 		}
+	}
+
+	@GET
+	@Path("/client/search")
+	public List<ClientRetrieveDto> search(@QueryParam("terms") String terms) {
+		List<Client> result = Search.session( Panache.getEntityManager() )
+				.search( Client.class )
+				.predicate( f -> f.simpleQueryString()
+						.field( "name" )
+						.matching( terms )
+						.defaultOperator( BooleanOperator.AND )
+				)
+				.fetchHits( 20 );
+
+		return result.stream().map( mapper::toDto ).collect( Collectors.toList() );
 	}
 
 	private Client findClient(Long id) {
