@@ -1,7 +1,10 @@
 package org.hibernate.demos.quarkus;
 
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import javax.persistence.EntityManagerFactory;
 import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -20,6 +23,10 @@ import org.hibernate.demos.quarkus.dto.ClientCreateUpdateDto;
 import org.hibernate.demos.quarkus.dto.ClientMapper;
 import org.hibernate.demos.quarkus.dto.ClientRetrieveDto;
 import org.hibernate.demos.quarkus.dto.BusinessManagerRetrieveDto;
+import org.hibernate.search.mapper.orm.Search;
+
+import io.quarkus.runtime.StartupEvent;
+import io.quarkus.runtime.configuration.ProfileManager;
 
 @Path("/")
 @Transactional
@@ -29,6 +36,9 @@ public class ClientResource {
 
 	@Inject
 	ClientMapper mapper;
+
+	@Inject
+	EntityManagerFactory entityManagerFactory;
 
 	@PUT
 	@Path("/client")
@@ -99,6 +109,23 @@ public class ClientResource {
 		if ( previousManager != null ) {
 			previousManager.assignedClients.remove( client );
 			client.assignedManager = null;
+		}
+	}
+
+	@POST
+	@Path("/client/reindex")
+	@Transactional(TxType.NEVER)
+	public void reindex() throws InterruptedException {
+		Search.mapping( entityManagerFactory )
+				.scope( Client.class )
+				.massIndexer()
+				.startAndWait();
+	}
+
+	@Transactional(TxType.NEVER)
+	void reindexOnStart(@Observes StartupEvent event) throws InterruptedException {
+		if ( "dev".equals( ProfileManager.getActiveProfile() ) ) {
+			reindex();
 		}
 	}
 
