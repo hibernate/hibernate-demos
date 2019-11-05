@@ -140,7 +140,7 @@ public class ClientResource {
 		List<Client> result = Search.session( Panache.getEntityManager() )
 				.search( Client.class )
 				.predicate( f -> f.simpleQueryString()
-						.field( "name" )
+						.fields( "name", "assignedManager.name" )
 						.matching( terms )
 						.defaultOperator( BooleanOperator.AND )
 				)
