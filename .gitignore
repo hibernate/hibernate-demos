@@ -37,9 +37,6 @@ bin/
 #build
 target/
 
-#custom scripts
-*.sh
-
 #test output
 test-output/
 transaction.log
