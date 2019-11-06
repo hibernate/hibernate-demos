@@ -3,6 +3,7 @@ package org.hibernate.ogm.hiking.rest;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -26,7 +27,7 @@ public class OrderResource {
 	@Path("/")
 	@Consumes("application/json")
 	@Produces("application/json")
-	public Order createOrder(Order order) {
+	public Order createOrder(@Valid Order order) {
 		order = orderRepository.createOrder(order);
 		return order;
 	}

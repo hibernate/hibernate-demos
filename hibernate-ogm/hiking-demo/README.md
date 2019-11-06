@@ -1,10 +1,12 @@
-# hibernate-ogm-hiking-demo
+# hibernate-ogm-hiking-demo and Bean Validation 2 demo
+
+## hibernate-ogm-hiking-demo
 
 This is a demo project used for the talk [Hibernate OGM: Talking to NoSQL in Red Hat JBoss EAP](http://www.redhat.com/summit/sessions/index.html#274) presented at Red Hat Summit 2014. It shows how to use MongoDB as data store in a Java EE application through JPA / Hibernate OGM.
 
 The application allows to manage (create, list, update, delete) hikes. It exposes a REST API using JAX-RS. The web client is built using AngularJS and invokes this API to display/update the data.
 
-## Building the project
+### Building the project
 
 Execute the following command to build the project:
 
@@ -18,7 +20,7 @@ Alternatively, you can execute the integration tests on a locally installed inst
 
     mvn clean install -Peap-remote
 
-## Deploying the application on a local application server
+### Deploying the application on a local application server
 
 To deploy the application on a local application server (which must have been started before), run the following command for WildFly 8:
 
@@ -36,7 +38,7 @@ You can then create hikes with sections and organizers. You also can search for 
 
     curl -X POST -d '{"name":"Bob"}' -H "Accept: application/json" -H "Content-type: application/json" http://localhost:8080/hibernate-ogm-hiking-demo-1.0-SNAPSHOT/hiking-manager/persons
 
-## Deploying the application on OpenShift
+### Deploying the application on OpenShift
 
 The demo is prepared to be deployed and run on Red Hat's platform-as-a-service, OpenShift.
 
@@ -58,3 +60,7 @@ When you then have done a deployment (e.g. by pushing the application code to th
     http://<%app-name%>-<%domain-name%>.rhcloud.com/hikes.html
     
 Any feedback on the demo is highly welcome, just send a mail to the hibernate-dev mailing list.
+
+## Bean Validation 2.0 demo
+
+See https://github.com/hibernate/hibernate-demos/tree/master/hibernate-ogm/hiking-demo/src/demo/beanvalidation2-script.adoc[./src/demo/beanvalidation2-script.adoc]

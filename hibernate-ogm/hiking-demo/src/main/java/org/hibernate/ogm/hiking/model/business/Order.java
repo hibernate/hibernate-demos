@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.Valid;
 
 /**
  * @author Emmanuel Bernard &lt;emmanuel@hibernate.org&gt;
@@ -16,8 +17,11 @@ public class Order {
 	@GeneratedValue
 	public Long id;
 
+	@OrderNumber
 	public String number;
+
 	public long tripId;
-	@Embedded
+
+	@Embedded @Valid
 	public Customer customer;
 }

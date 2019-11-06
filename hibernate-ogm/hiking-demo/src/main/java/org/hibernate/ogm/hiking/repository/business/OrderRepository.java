@@ -24,6 +24,7 @@ public class OrderRepository {
 	public Order createOrder(Order order) {
 		order.number = UUID.randomUUID().toString();
 		entityManager.persist( order );
+		entityManager.flush();
 		return order;
 	}
 

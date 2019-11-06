@@ -38,7 +38,8 @@ bin/
 target/
 
 #custom scripts
-*.sh
+# Not all scripts are custom so only exclude specific ones
+/*.sh
 
 #test output
 test-output/
