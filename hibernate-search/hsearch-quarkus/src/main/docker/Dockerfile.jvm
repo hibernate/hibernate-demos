@@ -28,4 +28,8 @@ RUN adduser -G root --no-create-home --disabled-password 1001 \
   && chown -R 1001:root /deployments
 USER 1001
 
-ENTRYPOINT [ "/deployments/run-java.sh" ]
+# Startup script that waits for backends to be ready
+RUN dnf -y install nc
+COPY src/container/wait-for-backends.sh /work/wait-for-backends.sh
+
+ENTRYPOINT ./wait-for-backends.sh && /deployments/run-java.sh
