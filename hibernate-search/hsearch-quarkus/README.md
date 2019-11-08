@@ -2,6 +2,8 @@
 
 A demonstration application using Hibernate Search within Quarkus.
 
+Related blog post: https://in.relation.to/2019/11/12/hibernate-search-quarkus/
+
 ## Building and running the application in development mode
 
 ### Setting up the execution environment
