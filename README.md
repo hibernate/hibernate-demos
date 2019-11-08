@@ -17,6 +17,9 @@ This repository contains demos used live during presentations or in blog posts; 
     - _hsearch-with-elasticsearch_: Shows how to use the Elasticsearch backend in Hibernate Search 5.x.
       Used for the talk "From Hibernate to Elasticsearch in no Time" at JavaZone 2016.
     - _hsearch-elasticsearch-wikipedia_: Demonstrates a REST service using Hibernate Search + Elasticsearch to search a large dataset from Wikipedia.
+    - _hsearch-quarkus_: Demonstrates a REST service with CRUD and full-text search features
+      implemented using Quarkus, Hibernate Search and Elasticsearch.
+      Accompanies the blog post https://in.relation.to/2019/11/12/hibernate-search-quarkus/
 * Hibernate Validator
     - _threeten-extra-validator-example_: Constraint validators for ThreeTen Extra date/time types.
       Accompanies the blog post http://in.relation.to/2017/03/02/adding-custom-constraint-definitions-via-the-java-service-loader/
