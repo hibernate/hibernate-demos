@@ -21,7 +21,8 @@ spring.jpa.properties:
     backends:
       elasticsearch1:
         type: elasticsearch
-        hosts: http://localhost:9200
+        hosts: localhost:9200
+        protocol: http
         discovery.enabled: true
         analysis.configurer: analysisConfigurerSpringBean
         index_defaults:

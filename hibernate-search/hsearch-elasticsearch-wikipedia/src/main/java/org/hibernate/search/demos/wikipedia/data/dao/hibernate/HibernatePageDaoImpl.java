@@ -38,7 +38,7 @@ public class HibernatePageDaoImpl extends AbstractHibernateDao implements PageDa
 		SearchSession searchSession = Search.session( getEm() );
 
 		return new SearchResult<>( searchSession.search( Page.class )
-				.predicate( f -> {
+				.where( f -> {
 					if ( term == null || term.isEmpty() ) {
 						return f.matchAll();
 					}
