@@ -16,6 +16,7 @@ function guess_remote_dump_url() {
 	echo -n $REMOTE_DUMP_DIR_URL
 	curl -s $REMOTE_DUMP_DIR_URL | grep -E "$REMOTE_DUMP_REGEX" \
 		| sed -r "s/.*$REMOTE_DUMP_REGEX.*/\\1/" \
+		| head -n 1 \
 		|| abort "Could not guess the URL to get the remote dump from."
 }
 
