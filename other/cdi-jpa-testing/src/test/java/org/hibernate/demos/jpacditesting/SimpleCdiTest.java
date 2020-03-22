@@ -4,22 +4,15 @@
  */
 package org.hibernate.demos.jpacditesting;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.jboss.weld.junit5.auto.EnableAutoWeld;
+import org.junit.jupiter.api.Test;
 
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
-import org.jboss.weld.junit4.WeldInitiator;
-import org.junit.Rule;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
+@EnableAutoWeld
 public class SimpleCdiTest {
-
-    @Rule
-    public WeldInitiator weld = WeldInitiator.from(GreetingService.class)
-        .activate(RequestScoped.class)
-        .inject(this)
-        .build();
 
     @Inject
     private GreetingService greeter;
