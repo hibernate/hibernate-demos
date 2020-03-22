@@ -4,35 +4,46 @@
  */
 package org.hibernate.demos.jpacditesting;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
+import org.hibernate.demos.jpacditesting.support.JtaEnvironment;
+import org.jboss.weld.junit5.auto.ActivateScopes;
+import org.jboss.weld.junit5.auto.AddPackages;
+import org.jboss.weld.junit5.auto.EnableAutoWeld;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.UUID;
-
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.TransactionalException;
 import javax.transaction.UserTransaction;
+import java.util.List;
+import java.util.UUID;
 
-import org.hibernate.demos.jpacditesting.support.JtaEnvironment;
-import org.jboss.weld.environment.se.Weld;
-import org.jboss.weld.junit4.WeldInitiator;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
+@EnableAutoWeld
+@AddPackages(JtaEnvironment.class)
+@ActivateScopes({RequestScoped.class, ApplicationScoped.class})
 public class CdiJpaTest {
 
-    @ClassRule
-    public static JtaEnvironment jtaEnvironment = new JtaEnvironment();
+    // Rewrite the @ClassRule as a @BeforeAll
 
-    @Rule
-    public WeldInitiator weld = WeldInitiator.from(new Weld())
-            .activate(RequestScoped.class)
-            .inject(this)
-            .build();
+    //@ClassRule
+    public static JtaEnvironment jtaEnvironment; //  = new JtaEnvironment();
+
+    @BeforeAll
+    public static void beforeAll() {
+        jtaEnvironment = new JtaEnvironment();
+    }
+
+
+//    @Rule
+//    public WeldInitiator weld = WeldInitiator.from(new Weld())
+//            .activate(RequestScoped.class)
+//            .inject(this)
+//            .build();
 
     // new Weld() above enables scanning of the classpath; alternatively, only the required beans can be listed explicitly:
 
