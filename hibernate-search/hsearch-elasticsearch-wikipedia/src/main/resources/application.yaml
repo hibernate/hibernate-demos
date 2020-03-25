@@ -18,6 +18,7 @@ spring.jpa.properties:
     dialect: org.hibernate.dialect.PostgreSQL95Dialect
   hibernate.search:
     default_backend: elasticsearch1
+    schema_management.strategy: create-or-validate
     backends:
       elasticsearch1:
         type: elasticsearch
@@ -26,8 +27,8 @@ spring.jpa.properties:
         discovery.enabled: true
         analysis.configurer: analysisConfigurerSpringBean
         index_defaults:
-          lifecycle.strategy: create
-          lifecycle.minimal_required_status: yellow
+          schema_management.minimal_required_status: yellow
+          indexing.max_bulk_size: 250
 
 spring.jackson:
   serialization:
@@ -40,3 +41,4 @@ logging.level:
   org.hibernate.search.massindexing: INFO
   org.hibernate.search.fulltext_query: DEBUG
   #org.hibernate.search.elasticsearch.request: DEBUG
+  #org.hibernate.search.engine.backend.orchestration.spi: DEBUG

@@ -34,7 +34,7 @@ public class AdminEndpoint {
 		SearchSession searchSession = Search.session( em );
 
 		MassIndexer indexer = searchSession.massIndexer( Page.class, User.class )
-				.purgeAllOnStart( true )
+				.dropAndCreateSchemaOnStart( true )
 				.typesToIndexInParallel( 2 )
 				.batchSizeToLoadObjects( fetchsize == null ? 200 : fetchsize )
 				.idFetchSize( idfetchsize == null ? 200 : idfetchsize )
