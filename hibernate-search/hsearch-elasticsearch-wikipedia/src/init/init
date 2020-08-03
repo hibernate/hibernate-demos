@@ -70,7 +70,7 @@ then
 		LOCAL_COMPRESSED_DUMP_FILE="$LOCAL_DUMP_FILE.bz2"
 		mkdir -p "$LOCAL_DUMP_DIR"
 		log "Attempting to retrieve the dump file from '$REMOTE_DUMP_URL'..."
-		curl --progress -o "$LOCAL_COMPRESSED_DUMP_FILE" "$REMOTE_DUMP_URL"
+		curl --progress-bar -o "$LOCAL_COMPRESSED_DUMP_FILE" "$REMOTE_DUMP_URL"
 		log "... done. Uncompressing..."
 		bunzip2 "$LOCAL_COMPRESSED_DUMP_FILE"
 		log "... done."
