@@ -5,13 +5,13 @@
 Install docker and docker-compose, then run this from the root of the project:
 
 ```
-sudo docker-compose -f environment-stack.yml -p hsearch-elasticsearch-wikipedia up
+docker-compose -f environment-stack.yml -p hsearch-elasticsearch-wikipedia up
 ```
 
 You can later remove the created services and volumes with this command:
 
 ```
-sudo docker-compose -f environment-stack.yml -p hsearch-elasticsearch-wikipedia down -v
+docker-compose -f environment-stack.yml -p hsearch-elasticsearch-wikipedia down -v
 ```
 
 ## Data
