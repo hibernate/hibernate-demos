@@ -21,19 +21,13 @@ function guess_remote_dump_url() {
 }
 
 function do_psql() {
-	local options="--link "$DOCKER_CONTAINER_NAME":postgres -e PGPASSWORD=hibernate_demo"
-	if [ -n "$DOCKER_NETWORK_NAME" ]
-	then
-		options+=" --net $DOCKER_NETWORK_NAME"
-	fi
-	sudo -p "Sudo password (to execute docker): " docker run -i --rm $options postgres:11.1 psql -h postgres -U hibernate_demo hsearch_es_wikipedia
+	docker exec -i -e 'PGPASSWORD=hibernate_demo' "$DOCKER_CONTAINER_NAME" psql -U hibernate_demo hsearch_es_wikipedia
 }
 
 
 which xsltproc 1>/dev/null 2>&1 || abort "Command 'xsltproc' isn't in the \$PATH; please install the command or add it to the \$PATH."
 
 DOCKER_CONTAINER_NAME="hsearch-elasticsearch-wikipedia_pg01_1"
-DOCKER_NETWORK_NAME="hsearch-elasticsearch-wikipedia_pgnet"
 LOCAL_DUMP_FILE=
 while getopts 'c:n:f:' opt
 do
@@ -54,7 +48,7 @@ do
 done
 shift $(( OPTIND - 1 ))
 
-log "Will attempt to connect to docker container with name '$DOCKER_CONTAINER_NAME' within network '$DOCKER_NETWORK_NAME'"
+log "Will attempt to connect to docker container with name '$DOCKER_CONTAINER_NAME'"
 
 if [ -z "$LOCAL_DUMP_FILE" ]
 then
