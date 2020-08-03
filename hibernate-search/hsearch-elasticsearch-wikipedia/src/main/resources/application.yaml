@@ -17,18 +17,14 @@ spring.jpa.properties:
   hibernate:
     dialect: org.hibernate.dialect.PostgreSQL95Dialect
   hibernate.search:
-    default_backend: elasticsearch1
     schema_management.strategy: create-or-validate
-    backends:
-      elasticsearch1:
-        type: elasticsearch
-        hosts: localhost:9200
-        protocol: http
-        discovery.enabled: true
-        analysis.configurer: analysisConfigurerSpringBean
-        index_defaults:
-          schema_management.minimal_required_status: yellow
-          indexing.max_bulk_size: 250
+    backend:
+      hosts: localhost:9200
+      protocol: http
+      discovery.enabled: true
+      analysis.configurer: analysisConfigurerSpringBean
+      schema_management.minimal_required_status: yellow
+      indexing.max_bulk_size: 250
 
 spring.jackson:
   serialization:
