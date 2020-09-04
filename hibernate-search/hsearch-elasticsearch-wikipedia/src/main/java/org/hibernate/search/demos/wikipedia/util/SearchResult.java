@@ -13,7 +13,7 @@ public class SearchResult<T> {
 	 * @param hibernateSearchSearchResult The Hibernate Search result.
 	 */
 	public SearchResult(org.hibernate.search.engine.search.query.SearchResult <T> hibernateSearchSearchResult) {
-		this( hibernateSearchSearchResult.getTotalHitCount(), hibernateSearchSearchResult.getHits() );
+		this( hibernateSearchSearchResult.total().hitCount(), hibernateSearchSearchResult.hits() );
 	}
 
 	public SearchResult(long totalCount, List<T> hits) {
