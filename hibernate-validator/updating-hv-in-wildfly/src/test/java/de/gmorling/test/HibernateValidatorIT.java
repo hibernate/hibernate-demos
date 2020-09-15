@@ -44,7 +44,7 @@ public class HibernateValidatorIT {
 	public void canUseContainerElementValidation() {
 		Set<ConstraintViolation<MyEntity>> violations = validator.validate( new MyEntity() );
 		assertEquals( 1, violations.size() );
-		assertEquals( "emails[0].<iterable element>", violations.iterator().next().getPropertyPath().toString() );
+		assertEquals( "emails[0].<list element>", violations.iterator().next().getPropertyPath().toString() );
 	}
 
 	public class MyEntity {

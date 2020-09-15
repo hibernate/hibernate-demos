@@ -24,11 +24,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <wildfly.version>10.1.0.Final</wildfly.version>
-        <wildfly.core.version>1.0.1.Final</wildfly.core.version>
-        <hibernate.validator.version>6.0.0.Alpha2</hibernate.validator.version>
+        <wildfly.version>19.0.0.Final</wildfly.version>
+        <wildfly.core.version>5.0.0.Final</wildfly.core.version>
+        <hibernate.validator.version>6.1.5.Final</hibernate.validator.version>
         <arquillian.version>1.1.13.Final</arquillian.version>
-        <wildfly.arquillian.version>2.0.2.Final</wildfly.arquillian.version>
+        <wildfly.arquillian.version>2.2.0.Final</wildfly.arquillian.version>
     </properties>
 
     <dependencyManagement>
@@ -138,7 +138,7 @@
             <plugin>
                 <groupId>org.wildfly.plugins</groupId>
                 <artifactId>wildfly-maven-plugin</artifactId>
-                <version>1.1.0.Final</version>
+                <version>1.2.1.Final</version>
                 <dependencies>
                   <!-- Contains the patch command -->
                     <dependency>
@@ -146,37 +146,26 @@
                         <artifactId>wildfly-patching</artifactId>
                         <version>${wildfly.core.version}</version>
                     </dependency>
+                    <dependency>
+                        <groupId>org.wildfly.core</groupId>
+                        <artifactId>wildfly-cli</artifactId>
+                        <version>${wildfly.core.version}</version>
+                    </dependency>
                 </dependencies>
                 <executions>
-                  <!-- Currently the WF Maven plug-in cannot apply offline commands, although patch itself wouldn't require a running
-                  server; see https://issues.jboss.org/projects/WFMP/issues/WFMP-11 -->
                     <execution>
-                        <id>start-wildfly-for-patching</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>start</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>apply-patch-file</id>
+                        <id>apply-wildfly-current-patch-file</id>
                         <phase>pre-integration-test</phase>
                         <goals>
                             <goal>execute-commands</goal>
                         </goals>
                         <configuration>
+                            <offline>true</offline>
                             <fail-on-error>false</fail-on-error>
                             <commands>
-                                <command>patch apply --path
-                                    ${project.build.directory}/hibernate-validator-modules-${hibernate.validator.version}-wildfly-${wildfly.version}-patch.zip</command>
+                                <command>patch apply ${project.build.directory}/hibernate-validator-modules-${hibernate.validator.version}-wildfly-${wildfly.version}-patch.zip</command>
                             </commands>
                         </configuration>
-                    </execution>
-                    <execution>
-                        <id>shutdown-wildfly-for-patching</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>shutdown</goal>
-                        </goals>
                     </execution>
                 </executions>
                 <configuration>
