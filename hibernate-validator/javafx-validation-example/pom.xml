@@ -29,12 +29,12 @@
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>6.0.4.Final</version>
+            <version>6.1.5.Final</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish</groupId>
-            <artifactId>javax.el</artifactId>
-            <version>3.0.0</version>
+            <artifactId>jakarta.el</artifactId>
+            <version>3.0.3</version>
         </dependency>
     </dependencies>
 

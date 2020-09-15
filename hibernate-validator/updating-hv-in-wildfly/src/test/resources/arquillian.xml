@@ -23,6 +23,9 @@
         </protocol>
         <configuration>
             <property name="jbossHome">${basedir}/target/wildfly-${wildfly.version}</property>
+            <property name="javaVmArguments">
+                -Dee8.preview.mode=true
+            </property>
         </configuration>
     </container>
 </arquillian>
