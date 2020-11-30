@@ -13,7 +13,7 @@ services:
     networks:
       - pgnet
   es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
     environment:
       - node.name=es01
       - discovery.seed_hosts=es02
@@ -35,7 +35,7 @@ services:
     networks:
       - esnet
   es02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
     environment:
       - node.name=es02
       - discovery.seed_hosts=es01
