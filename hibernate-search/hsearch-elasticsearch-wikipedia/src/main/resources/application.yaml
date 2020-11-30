@@ -23,7 +23,6 @@ spring.jpa.properties:
       protocol: http
       discovery.enabled: true
       analysis.configurer: analysisConfigurerSpringBean
-      schema_management.minimal_required_status: yellow
       indexing.max_bulk_size: 250
 
 spring.jackson:
@@ -35,6 +34,6 @@ logging.level:
   # Uncomment for extensive SQL logging
   #org.hibernate.SQL: DEBUG
   org.hibernate.search.massindexing: INFO
-  org.hibernate.search.fulltext_query: DEBUG
+  org.hibernate.search.query: TRACE
   #org.hibernate.search.elasticsearch.request: DEBUG
   #org.hibernate.search.engine.backend.orchestration.spi: DEBUG
