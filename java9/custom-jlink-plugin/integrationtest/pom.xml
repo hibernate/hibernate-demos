@@ -95,7 +95,7 @@
                                         <version>${org.jboss.jandex.version}</version>
                                     </artifact>
                                     <moduleInfo>
-                                        <name>jandex</name>
+                                        <name>org.jboss.jandex</name>
                                         <exports>
                                             org.jboss.jandex;
                                         </exports>

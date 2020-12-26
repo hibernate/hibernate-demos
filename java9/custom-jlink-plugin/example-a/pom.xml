@@ -16,44 +16,5 @@
     <packaging>jar</packaging>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-        <plugins>
-            <!-- Adding module descriptor via ModiTect so that the classes themselves
-                 can be compiled to Java 8 byte code format, as Jandex 2.0.4 ignores
-                 all files with Java 9 format -->
-            <plugin>
-                <groupId>org.moditect</groupId>
-                <artifactId>moditect-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>add-module-info</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>add-module-info</goal>
-                        </goals>
-                        <configuration>
-                                <module>
-                                    <moduleInfoSource>
-                                        module com.example.a {
-                                            exports com.example.a;
-                                        }
-                                    </moduleInfoSource>>
-                                </module>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
     </build>
 </project>

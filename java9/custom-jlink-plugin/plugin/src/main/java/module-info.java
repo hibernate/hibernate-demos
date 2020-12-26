@@ -5,5 +5,5 @@
 module org.hibernate.demos.jlink {
     exports org.hibernate.demos.jlink.plugins;
     requires jdk.jlink;
-    requires jandex;
+    requires org.jboss.jandex;
 }
