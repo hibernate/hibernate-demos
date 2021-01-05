@@ -133,4 +133,29 @@ public class TShirtServiceTest {
 						.when( Option.IGNORING_EXTRA_FIELDS ) );
 	}
 
+	@Test
+	public void search() {
+		given()
+				.when()
+						.queryParam( "q", "jump" )
+						.get( "/tshirt/search" )
+				.then()
+				.statusCode( 200 )
+				.body( jsonEquals( "{\n" +
+						"    \"totalHitCount\": 3,\n" +
+						"    \"hits\": [\n" +
+						"        {\n" +
+						"            \"name\": \"Ski jump\"\n" +
+						"        },\n" +
+						"        {\n" +
+						"            \"name\": \"Morty jumping into the abyss\"\n" +
+						"        },\n" +
+						"        {\n" +
+						"            \"name\": \"Jumping over a log\"\n" +
+						"        }\n" +
+						"    ]\n" +
+						"}" )
+						.when( Option.IGNORING_EXTRA_FIELDS, Option.IGNORING_ARRAY_ORDER ) );
+	}
+
 }

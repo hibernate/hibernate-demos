@@ -6,6 +6,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
 
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
 @Entity
@@ -16,6 +18,7 @@ public class FashionCollection extends PanacheEntity {
 	@Enumerated(EnumType.STRING)
 	public FashionSeason season;
 
+	@FullTextField(analyzer = "english")
 	public String keywords;
 
 	@OneToMany(mappedBy = "collection")
