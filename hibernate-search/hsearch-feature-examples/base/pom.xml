@@ -17,6 +17,10 @@
     <quarkus-plugin.version>1.11.0.Beta2</quarkus-plugin.version>
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
+
+    <mapstruct.version>1.4.1.Final</mapstruct.version>
+    <lombok.version>1.18.16</lombok.version>
+    <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -51,6 +55,17 @@
       <artifactId>quarkus-resteasy</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+      <version>${mapstruct.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit5</artifactId>
       <scope>test</scope>
@@ -58,6 +73,19 @@
     <dependency>
       <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.javacrumbs.json-unit</groupId>
+      <artifactId>json-unit</artifactId>
+      <version>2.22.0</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- For json-unit -->
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.8.6</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -81,6 +109,32 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${compiler-plugin.version}</version>
+        <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok-mapstruct-binding</artifactId>
+              <version>${lombok-mapstruct-binding.version}</version>
+            </path>
+            <path>
+              <groupId>org.mapstruct</groupId>
+              <artifactId>mapstruct-processor</artifactId>
+              <version>${mapstruct.version}</version>
+            </path>
+          </annotationProcessorPaths>
+          <compilerArgs>
+            <compilerArg>-parameters</compilerArg>
+            <compilerArg>-Amapstruct.suppressGeneratorTimestamp=true</compilerArg>
+            <compilerArg>-Amapstruct.suppressGeneratorVersionInfoComment=true</compilerArg>
+            <compilerArg>-Amapstruct.defaultComponentModel=cdi</compilerArg>
+            <compilerArg>-Amapstruct.defaultInjectionStrategy=constructor</compilerArg>
+          </compilerArgs>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
