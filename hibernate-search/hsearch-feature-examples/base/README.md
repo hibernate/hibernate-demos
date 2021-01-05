@@ -4,6 +4,20 @@ This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
 
+## Setting up the environment
+
+Install docker and docker-compose, then run this from the root of the project:
+
+```
+docker-compose -f ../environment-stack.yml -p hsearch-feature-examples up
+```
+
+You can later remove the created services and volumes with this command:
+
+```
+docker-compose -f environment-stack.yml -p hsearch-feature-examples down -v
+```
+
 ## Running the application in dev mode
 
 You can run your application in dev mode that enables live coding using:
@@ -42,9 +56,3 @@ Or, if you don't have GraalVM installed, you can run the native executable build
 You can then execute your native executable with: `./target/hsearch-feature-examples-1.0.0-SNAPSHOT-runner`
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.html.
-
-# RESTEasy JAX-RS
-
-<p>A Hello World RESTEasy resource</p>
-
-Guide: https://quarkus.io/guides/rest-json
