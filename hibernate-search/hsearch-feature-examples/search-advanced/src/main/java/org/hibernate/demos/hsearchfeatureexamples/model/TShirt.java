@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OrderColumn;
 
+import org.hibernate.search.engine.backend.types.ObjectStructure;
 import org.hibernate.search.engine.backend.types.Projectable;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
@@ -26,6 +27,7 @@ public class TShirt extends PanacheEntity {
 	@ElementCollection
 	@OrderColumn
 	@IndexedEmbedded
+	@IndexedEmbedded(name = "variants_nested", structure = ObjectStructure.NESTED)
 	public List<TShirtVariant> variants = new ArrayList<>();
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
