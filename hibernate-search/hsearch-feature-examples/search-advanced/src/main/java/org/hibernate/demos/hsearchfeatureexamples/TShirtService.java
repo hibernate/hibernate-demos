@@ -14,6 +14,7 @@ import org.hibernate.demos.hsearchfeatureexamples.dto.TShirtInputDto;
 import org.hibernate.demos.hsearchfeatureexamples.dto.TShirtOutputDto;
 import org.hibernate.demos.hsearchfeatureexamples.dto.mapper.TShirtMapper;
 import org.hibernate.demos.hsearchfeatureexamples.model.TShirt;
+import org.hibernate.search.engine.search.common.BooleanOperator;
 import org.hibernate.search.engine.search.query.SearchResult;
 import org.hibernate.search.mapper.orm.session.SearchSession;
 
@@ -81,6 +82,34 @@ public class TShirtService {
 				.fetch( page * PAGE_SIZE, PAGE_SIZE );
 
 		return new SearchResultDto<>( result.total().hitCount(), mapper.output( result.hits(), brief ) );
+	}
+
+	@GET
+	@Path("autocomplete")
+	public List<TShirtOutputDto> autocomplete(@QueryParam String terms) {
+		List<TShirt> hits = searchSession.search( TShirt.class )
+				.where( f -> f.simpleQueryString()
+						.fields( "name_autocomplete" )
+						.matching( terms )
+						.defaultOperator( BooleanOperator.AND ) )
+				.fetchHits( PAGE_SIZE );
+
+		return mapper.outputBrief( hits );
+	}
+
+	@GET
+	@Path("autocomplete_nodb")
+	public List<TShirtOutputDto> autocompleteNoDatabase(@QueryParam String terms) {
+		return searchSession.search( TShirt.class )
+				.select( f -> f.composite(
+						(ref, field) -> TShirtOutputDto.of( (long) ref.id(), field ),
+						f.entityReference(), f.field( "name", String.class )
+				) )
+				.where( f -> f.simpleQueryString()
+						.fields( "name_autocomplete" )
+						.matching( terms )
+						.defaultOperator( BooleanOperator.AND ) )
+				.fetchHits( PAGE_SIZE );
 	}
 
 	private TShirt find(long id) {

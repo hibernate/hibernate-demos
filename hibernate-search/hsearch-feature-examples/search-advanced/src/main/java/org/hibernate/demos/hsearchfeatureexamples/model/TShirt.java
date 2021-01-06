@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OrderColumn;
 
+import org.hibernate.search.engine.backend.types.Projectable;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
@@ -18,7 +19,8 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 @Indexed
 public class TShirt extends PanacheEntity {
 
-	@FullTextField(analyzer = "english")
+	@FullTextField(analyzer = "english", projectable = Projectable.YES)
+	@FullTextField(name = "name_autocomplete", analyzer = "autocomplete", searchAnalyzer = "autocomplete_query")
 	public String name;
 
 	@ElementCollection

@@ -9,6 +9,10 @@ import lombok.Value;
 @JsonbPropertyOrder({ "id", "name", "variants", "collection" })
 public class TShirtOutputDto {
 
+	public static TShirtOutputDto of(long id, String name) {
+		return new TShirtOutputDto(id, name, null, null);
+	}
+
 	long id;
 	String name;
 	List<TShirtVariantDto> variants;
