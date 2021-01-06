@@ -9,5 +9,6 @@
   <modules>
     <module>base</module>
     <module>search</module>
+    <module>search-advanced</module>
   </modules>
 </project>
