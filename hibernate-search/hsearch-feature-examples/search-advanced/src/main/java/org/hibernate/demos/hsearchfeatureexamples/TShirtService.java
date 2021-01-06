@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.json.JsonValue;
 import javax.transaction.Transactional;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
@@ -20,6 +21,7 @@ import org.hibernate.demos.hsearchfeatureexamples.dto.TShirtOutputDto;
 import org.hibernate.demos.hsearchfeatureexamples.dto.mapper.TShirtMapper;
 import org.hibernate.demos.hsearchfeatureexamples.model.TShirt;
 import org.hibernate.demos.hsearchfeatureexamples.model.TShirtSize;
+import org.hibernate.search.backend.elasticsearch.ElasticsearchExtension;
 import org.hibernate.search.engine.search.aggregation.AggregationKey;
 import org.hibernate.search.engine.search.common.BooleanOperator;
 import org.hibernate.search.engine.search.predicate.dsl.PredicateFinalStep;
@@ -30,6 +32,8 @@ import org.hibernate.search.util.common.data.Range;
 
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 import org.jboss.resteasy.annotations.jaxrs.QueryParam;
+
+import org.glassfish.json.JsonUtil;
 
 @Path("/tshirt")
 @Transactional
@@ -191,6 +195,35 @@ public class TShirtService {
 				variantsBool.must( f.range().field( "variants_nested.price" ).range( priceRange.value ) );
 			}
 		} );
+	}
+
+	@GET
+	@Path("pricestats")
+	public JsonValue priceStats(@QueryParam String q) {
+		AggregationKey<JsonObject> priceStats = AggregationKey.of( "price-stats" );
+
+		SearchResult<TShirt> result = searchSession.search( TShirt.class )
+				.extension( ElasticsearchExtension.get() )
+				.where( f -> {
+					if ( q == null || q.isBlank() ) {
+						return f.matchAll();
+					}
+					else {
+						return f.simpleQueryString()
+								.fields( "name", "collection.keywords",
+										"variants.color", "variants.size"
+								)
+								.matching( q );
+					}
+				} )
+				.aggregation( priceStats, f -> f.fromJson( "{\n" +
+						"  \"stats\": {\n" +
+						"    \"field\": \"variants.price\"\n" +
+						"  }\n" +
+						"}" ) )
+				.fetch( 0 );
+
+		return JsonUtil.toJson( result.aggregation( priceStats ).toString() );
 	}
 
 	private TShirt find(long id) {
