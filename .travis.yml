@@ -1,12 +1,8 @@
 sudo: required
-dist: trusty
+dist: bionic
 language: java
 jdk:
-  - oraclejdk8
-addons:
-  apt:
-    packages:
-      - oracle-java8-installer
+  - oraclejdk11
 env:
   global:
     - PROJECTS=$( find hibernate-search -name pom.xml -print -or -path '*/target/*' -prune | sort | xargs -n 1 dirname )
