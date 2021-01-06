@@ -8,5 +8,6 @@
   <packaging>pom</packaging>
   <modules>
     <module>base</module>
+    <module>search</module>
   </modules>
 </project>
