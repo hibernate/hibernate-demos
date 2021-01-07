@@ -25,5 +25,20 @@ public class AnalysisConfigurer implements ElasticsearchAnalysisConfigurer {
 				.custom()
 				.tokenizer( "whitespace" )
 				.tokenFilters( "lowercase", "asciifolding" );
+
+		context.analyzer( "suggest_trigram" )
+				.custom()
+				.tokenizer( "standard" )
+				.tokenFilters( "lowercase", "suggest_shingle" );
+
+		context.tokenFilter( "suggest_shingle" )
+				.type( "shingle" )
+				.param( "min_shingle_size", 2 )
+				.param( "max_shingle_size", 3 );
+
+		context.analyzer( "suggest_reverse" )
+				.custom()
+				.tokenizer( "standard" )
+				.tokenFilters( "lowercase", "reverse" );
 	}
 }

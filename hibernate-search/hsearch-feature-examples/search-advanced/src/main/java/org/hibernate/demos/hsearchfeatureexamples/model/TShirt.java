@@ -22,6 +22,8 @@ public class TShirt extends PanacheEntity {
 
 	@FullTextField(analyzer = "english", projectable = Projectable.YES)
 	@FullTextField(name = "name_autocomplete", analyzer = "autocomplete", searchAnalyzer = "autocomplete_query")
+	@FullTextField(name = "name_suggest", analyzer = "suggest_trigram")
+	@FullTextField(name = "name_suggest_reverse", analyzer = "suggest_reverse")
 	public String name;
 
 	@ElementCollection

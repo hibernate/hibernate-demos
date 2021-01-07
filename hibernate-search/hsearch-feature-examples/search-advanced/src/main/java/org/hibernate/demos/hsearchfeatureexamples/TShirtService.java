@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.json.JsonValue;
@@ -22,6 +23,7 @@ import org.hibernate.demos.hsearchfeatureexamples.dto.mapper.TShirtMapper;
 import org.hibernate.demos.hsearchfeatureexamples.model.TShirt;
 import org.hibernate.demos.hsearchfeatureexamples.model.TShirtSize;
 import org.hibernate.search.backend.elasticsearch.ElasticsearchExtension;
+import org.hibernate.search.backend.elasticsearch.search.query.ElasticsearchSearchResult;
 import org.hibernate.search.engine.search.aggregation.AggregationKey;
 import org.hibernate.search.engine.search.common.BooleanOperator;
 import org.hibernate.search.engine.search.predicate.dsl.PredicateFinalStep;
@@ -33,6 +35,10 @@ import org.hibernate.search.util.common.data.Range;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 import org.jboss.resteasy.annotations.jaxrs.QueryParam;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.glassfish.json.JsonUtil;
 
 @Path("/tshirt")
@@ -46,6 +52,8 @@ public class TShirtService {
 
 	@Inject
 	SearchSession searchSession;
+
+	private final Gson gson = new Gson();
 
 	@PUT
 	public TShirtOutputDto create(TShirtInputDto input) {
@@ -226,11 +234,68 @@ public class TShirtService {
 		return JsonUtil.toJson( result.aggregation( priceStats ).toString() );
 	}
 
+	@GET
+	@Path("suggest")
+	public JsonValue suggest(@QueryParam String terms) {
+		ElasticsearchSearchResult<TShirt> result = searchSession.search( TShirt.class )
+				.extension( ElasticsearchExtension.get() )
+				.where( f -> f.matchAll() )
+				.requestTransformer( context -> {
+					JsonObject body = context.body();
+					body.add( "suggest", jsonObject( suggest -> {
+						suggest.addProperty( "text", terms );
+						suggest.add( "name-suggest-phrase", gson.fromJson(
+								"{\n" +
+										"  \"phrase\": {\n" +
+										"    \"field\": \"name_suggest\",\n" +
+										"    \"size\": 2,\n" +
+										"    \"gram_size\": 3,\n" +
+										"    \"direct_generator\": [ {\n" +
+										"      \"field\": \"name_suggest\",\n" +
+										"      \"suggest_mode\": \"always\"\n" +
+										"    }, {\n" +
+										"      \"field\" : \"name_suggest_reverse\",\n" +
+										"      \"suggest_mode\" : \"always\",\n" +
+										"      \"pre_filter\" : \"suggest_reverse\",\n" +
+										"      \"post_filter\" : \"suggest_reverse\"\n" +
+										"    } ],\n" +
+										"    \"highlight\": {\n" +
+										"      \"pre_tag\": \"<em>\",\n" +
+										"      \"post_tag\": \"</em>\"\n" +
+										"    }\n" +
+										"  }\n" +
+										"}",
+								JsonObject.class
+						) );
+					} ) );
+				} )
+				.fetch( 0 );
+
+		JsonObject responseBody = result.responseBody();
+		JsonArray mySuggestResults = responseBody.getAsJsonObject( "suggest" )
+				.getAsJsonArray( "name-suggest-phrase" );
+		return JsonUtil.toJson( mySuggestResults.toString() );
+	}
+
 	private TShirt find(long id) {
 		TShirt entity = TShirt.findById( id );
 		if ( entity == null ) {
 			throw new NotFoundException();
 		}
 		return entity;
+	}
+
+	private static JsonObject jsonObject(Consumer<JsonObject> instructions) {
+		JsonObject object = new JsonObject();
+		instructions.accept( object );
+		return object;
+	}
+
+	private static JsonArray jsonArray(JsonElement... elements) {
+		JsonArray array = new JsonArray();
+		for ( JsonElement element : elements ) {
+			array.add( element );
+		}
+		return array;
 	}
 }
