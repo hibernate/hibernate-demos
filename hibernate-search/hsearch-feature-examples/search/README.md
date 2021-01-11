@@ -8,14 +8,14 @@ If you want to learn more about Quarkus, please visit its website: https://quark
 
 Install docker and docker-compose, then run this from the root of the project:
 
-```
+```shell script
 docker-compose -f ../environment-stack.yml -p hsearch-feature-examples up
 ```
 
 You can later remove the created services and volumes with this command:
 
-```
-docker-compose -f environment-stack.yml -p hsearch-feature-examples down -v
+```shell script
+docker-compose -f ../environment-stack.yml -p hsearch-feature-examples down -v
 ```
 
 ## Running the application in dev mode
@@ -23,6 +23,68 @@ docker-compose -f environment-stack.yml -p hsearch-feature-examples down -v
 You can run your application in dev mode that enables live coding using:
 ```shell script
 ./mvnw compile quarkus:dev
+```
+
+## Examples
+
+You will need to install `curl` (HTTP requests) and `jq` (JSON parsing and highlighting).
+
+### Basic CRUD
+
+See `TShirtService.java`.
+
+Listing all entities:
+
+```shell script
+curl -s -XGET -H 'Content-Type: application/json' 'localhost:8080/tshirt/' | jq
+```
+
+`PUT`, `POST` (needs ID), `DELETE` (needs ID) also available.
+
+### Full-text search
+
+See `TShirtService.java`.
+
+```shell script
+curl -s -XGET -H 'Content-Type: application/json' 'localhost:8080/tshirt/search?brief=true&q=bike' | jq
+curl -s -XGET -H 'Content-Type: application/json' 'localhost:8080/tshirt/search?brief=false&q=bike' | jq
+```
+
+### Mass indexing
+
+See `AdminService.java`.
+
+Mass indexing, for this demo application, happens automatically on startup.
+
+To trigger it manually:
+
+```shell script
+curl -s -XPOST -H "Content-Type: application/json" 'localhost:8080/admin/reindex'
+```
+
+See the application logs for the result.
+
+### Automatic indexing
+
+Creating an entity and seeing the reindexing:
+
+```shell script
+curl -s -XPUT -H 'Content-Type: application/json' 'localhost:8080/tshirt/' -d'{"name": "Jumping to the stars!", "collection": 4, "variants": [{"size": "L", "color": "Blue", "price": 4.99}]}}' | jq
+# Wait for Elasticsearch to refresh (~1 second), the see the reindexed data:
+curl -s -XGET -H 'Content-Type: application/json' 'localhost:8080/tshirt/search?brief=true&q=jump' | jq
+```
+
+Updating an indexed-embedded entity and seeing the reindexing:
+
+```shell script
+# Search before (no result):
+curl -s -XGET -H 'Content-Type: application/json' 'localhost:8080/tshirt/search?brief=true&q=bicycle' | jq
+# Show collection:
+curl -s -XGET -H 'Content-Type: application/json' 'localhost:8080/collection/2' | jq
+# Update collection:
+curl -s -XPOST -H 'Content-Type: application/json' 'localhost:8080/collection/2' -d'{"year": 2019, "season": "SPRING_SUMMER", "keywords": "bike, sport, bicycle"}}' | jq
+# Wait for Elasticsearch to refresh (~1 second), the see the reindexed data:
+curl -s -XGET -H 'Content-Type: application/json' 'localhost:8080/tshirt/search?brief=true&q=bicycle' | jq
 ```
 
 ## Packaging and running the application

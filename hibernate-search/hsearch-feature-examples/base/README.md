@@ -8,14 +8,14 @@ If you want to learn more about Quarkus, please visit its website: https://quark
 
 Install docker and docker-compose, then run this from the root of the project:
 
-```
+```shell script
 docker-compose -f ../environment-stack.yml -p hsearch-feature-examples up
 ```
 
 You can later remove the created services and volumes with this command:
 
-```
-docker-compose -f environment-stack.yml -p hsearch-feature-examples down -v
+```shell script
+docker-compose -f ../environment-stack.yml -p hsearch-feature-examples down -v
 ```
 
 ## Running the application in dev mode
@@ -24,6 +24,22 @@ You can run your application in dev mode that enables live coding using:
 ```shell script
 ./mvnw compile quarkus:dev
 ```
+
+## Examples
+
+You will need to install `curl` (HTTP requests) and `jq` (JSON parsing and highlighting).
+
+### Basic CRUD
+
+See `TShirtService.java`.
+
+Listing all entities:
+
+```shell script
+curl -s -XGET -H 'Content-Type: application/json' 'localhost:8080/tshirt/' | jq
+```
+
+`PUT`, `POST` (needs ID), `DELETE` (needs ID) also available.
 
 ## Packaging and running the application
 
