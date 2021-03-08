@@ -26,44 +26,84 @@ import javax.persistence.Id;
 
 import org.hibernate.envers.Audited;
 
+
 /**
+ * The Class Project.
+ *
  * @author Brett Meyer
  */
 @Entity
 @Audited
 public class Project {
+	
+	/** The id. */
 	@Id
 	@GeneratedValue
 	private long id;
 	
+	/** The name. */
 	private String name;
 	
+	/** The type. */
 	private String type;
 
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
 	public long getId() {
 		return id;
 	}
 
+	/**
+	 * Sets the id.
+	 *
+	 * @param id the new id
+	 */
 	public void setId(long id) {
 		this.id = id;
 	}
 	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
 	
+	/**
+	 * Sets the name.
+	 *
+	 * @param name the new name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 	
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	public String getType() {
 		return type;
 	}
 	
+	/**
+	 * Sets the type.
+	 *
+	 * @param type the new type
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return "PROJECT: id = " + id + ", name = " + name + ", type = " + type;

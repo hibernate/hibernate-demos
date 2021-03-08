@@ -32,13 +32,20 @@ import org.hibernate.envers.DefaultRevisionEntity;
 import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditEntity;
 
+
 /**
+ * The Class EnversDemo.
+ *
  * @author Brett Meyer
  */
 public class EnversDemo {
 	
+	/** The session factory. */
 	private final SessionFactory sessionFactory;
 	
+	/**
+	 * Instantiates a new envers demo.
+	 */
 	public EnversDemo() {
 		final Configuration configuration = new Configuration();
 		configuration.addAnnotatedClass( Project.class );
@@ -47,6 +54,9 @@ public class EnversDemo {
 				new StandardServiceRegistryBuilder().build() );
 	}
 	
+	/**
+	 * Insert data.
+	 */
 	public void insertData() {
 		final Session s = openSession();
 		s.getTransaction().begin();
@@ -80,6 +90,11 @@ public class EnversDemo {
 		s.close();
 	}
 
+	/**
+	 * Gets the project revisions.
+	 *
+	 * @return the project revisions
+	 */
 	// vertical
 	public List getProjectRevisions() {
 		final Session s = openSession();
@@ -89,6 +104,12 @@ public class EnversDemo {
 			    .getResultList();
 	}
 
+	/**
+	 * Gets the project revisions.
+	 *
+	 * @param property the property
+	 * @return the project revisions
+	 */
 	// vertical
 	public List getProjectRevisions(String property) {
 		final Session s = openSession();
@@ -99,6 +120,12 @@ public class EnversDemo {
 			    .getResultList();
 	}
 
+	/**
+	 * Gets the revision projects.
+	 *
+	 * @param revisionNumber the revision number
+	 * @return the revision projects
+	 */
 	// horizontal
 	public List getRevisionProjects(int revisionNumber) {
 		final Session s = openSession();
@@ -108,6 +135,11 @@ public class EnversDemo {
 			    .getResultList();
 	}
 	
+	/**
+	 * Prints the revisions.
+	 *
+	 * @param revisions the revisions
+	 */
 	public void printRevisions(List<Object[]> revisions) {
 		for (Object[] revision : revisions) {
 			final Project project = (Project) revision[0];
@@ -122,10 +154,20 @@ public class EnversDemo {
 		}
 	}
 	
+	/**
+	 * Open session.
+	 *
+	 * @return the session
+	 */
 	private Session openSession() {
 		return sessionFactory.openSession();
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		final EnversDemo demo = new EnversDemo();
 		demo.insertData();

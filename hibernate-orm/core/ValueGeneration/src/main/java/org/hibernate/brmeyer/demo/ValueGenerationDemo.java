@@ -26,11 +26,19 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
 
+
 /**
+ * The Class ValueGenerationDemo.
+ *
  * @author Brett Meyer
  */
 public class ValueGenerationDemo {
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		final Configuration configuration = new Configuration();
 		configuration.addAnnotatedClass( Project.class );

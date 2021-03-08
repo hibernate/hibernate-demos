@@ -28,11 +28,17 @@ import org.hibernate.brmeyer.demo.AbstractLazyDemo;
 import org.hibernate.brmeyer.demo.entity.lazy.Community;
 import org.hibernate.brmeyer.demo.entity.lazy.User;
 
+
 /**
+ * The Class Batch.
+ *
  * @author Brett Meyer
  */
 public class Batch extends AbstractLazyDemo {
 	
+	/* (non-Javadoc)
+	 * @see org.hibernate.brmeyer.demo.AbstractLazyDemo#persistData()
+	 */
 	@Override
 	protected int persistData() {
 		// More data is needed to demo batching, in addition to super#persistData()
@@ -51,6 +57,11 @@ public class Batch extends AbstractLazyDemo {
 		return super.persistData();
 	}
 
+	/**
+	 * Gets the users.
+	 *
+	 * @return the users
+	 */
 	@SuppressWarnings("unchecked")
 	public List<User> getUsers() {
 		final Session session = openSession();
@@ -69,6 +80,11 @@ public class Batch extends AbstractLazyDemo {
 		return users;
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		final Batch demo = new Batch();
 		demo.persistData();

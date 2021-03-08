@@ -26,10 +26,18 @@ import org.hibernate.brmeyer.demo.entity.User;
 
 
 /**
+ * The Class SecondLevelCachingDemo.
+ *
  * @author Brett Meyer
  */
 public class SecondLevelCachingDemo extends AbstractCachingDemo {
 	
+	/**
+	 * Gets the project.
+	 *
+	 * @param id the id
+	 * @return the project
+	 */
 	public Project getProject(long id) {
 		final Session s = openSession();
 		s.getTransaction().begin();
@@ -38,6 +46,12 @@ public class SecondLevelCachingDemo extends AbstractCachingDemo {
 		return project;
 	}
 	
+	/**
+	 * Gets the user.
+	 *
+	 * @param id the id
+	 * @return the user
+	 */
 	public User getUser(long id) {
 		final Session s = openSession();
 		s.getTransaction().begin();
@@ -46,16 +60,29 @@ public class SecondLevelCachingDemo extends AbstractCachingDemo {
 		return user;
 	}
 	
+	/**
+	 * Evict project.
+	 *
+	 * @param projectId the project id
+	 */
 	public void evictProject(long projectId) {
 		sessionFactory.getCache().evictEntity( Project.class, projectId );
 	}
 	
+	/**
+	 * Prints the stats.
+	 */
 	public void printStats() {
 		System.out.println("2lc put count: " + sessionFactory.getStatistics().getSecondLevelCachePutCount());
 		System.out.println("2lc hit count: " + sessionFactory.getStatistics().getSecondLevelCacheHitCount());
 		System.out.println("2lc miss count: " + sessionFactory.getStatistics().getSecondLevelCacheMissCount());
 	}
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		final SecondLevelCachingDemo demo = new SecondLevelCachingDemo();
 		final long projectId = demo.persistData();

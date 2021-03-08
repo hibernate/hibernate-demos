@@ -25,11 +25,17 @@ import java.util.UUID;
 import org.hibernate.Session;
 import org.hibernate.tuple.ValueGenerator;
 
+
 /**
+ * The Class ModifiedByValueGenerator.
+ *
  * @author Brett Meyer
  */
 public class ModifiedByValueGenerator implements ValueGenerator<String> {
 
+	/* (non-Javadoc)
+	 * @see org.hibernate.tuple.ValueGenerator#generateValue(org.hibernate.Session, java.lang.Object)
+	 */
 	@Override
 	public String generateValue(Session session, Object entity) {
 		// Would normally hook into a service to get the current user, etc.

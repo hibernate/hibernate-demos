@@ -26,12 +26,20 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
 /**
+ * The Class AbstractDemo.
+ *
  * @author Brett Meyer
  */
 public abstract class AbstractDemo {
 	
+	/** The session factory. */
 	private final SessionFactory sessionFactory;
 	
+	/**
+	 * Instantiates a new abstract demo.
+	 *
+	 * @param entities the entities
+	 */
 	protected AbstractDemo(Class<?>... entities) {
 		final Configuration configuration = new Configuration();
 		for (Class<?> entity : entities) {
@@ -41,6 +49,11 @@ public abstract class AbstractDemo {
 				new StandardServiceRegistryBuilder().build() );
 	}
 	
+	/**
+	 * Open session.
+	 *
+	 * @return the session
+	 */
 	protected Session openSession() {
 		return sessionFactory.openSession();
 	}
