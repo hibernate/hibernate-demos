@@ -14,12 +14,14 @@ This repository contains demos used live during presentations or in blog posts; 
 * Hibernate OGM
     - _hiking-demo_: Demo project used for the talk "Hibernate OGM: Talking to NoSQL in Red Hat JBoss EAP" presented at Red Hat Summit 2014. It shows how to use MongoDB as data store in a Java EE application through JPA / Hibernate OGM.
 * Hibernate Search
-    - _hsearch-with-elasticsearch_: Shows how to use the Elasticsearch backend in Hibernate Search 5.x.
-      Used for the talk "From Hibernate to Elasticsearch in no Time" at JavaZone 2016.
     - _hsearch-elasticsearch-wikipedia_: Demonstrates a REST service using Hibernate Search + Elasticsearch to search a large dataset from Wikipedia.
     - _hsearch-quarkus_: Demonstrates a REST service with CRUD and full-text search features
       implemented using Quarkus, Hibernate Search and Elasticsearch.
       Accompanies the blog post https://in.relation.to/2019/11/12/hibernate-search-quarkus/
+    - _hsearch-feature-examples_: Demonstrates various features of Hibernate Search 6 with Elasticsearch in Quarkus.
+      Used in [Quarkus insights Episode 32](https://www.youtube.com/watch?v=hwxWx-ORVwM).
+    - [OBSOLETE] _hsearch-with-elasticsearch_: Shows how to use the Elasticsearch backend in Hibernate Search 5.x.
+      Used for the talk "From Hibernate to Elasticsearch in no Time" at JavaZone 2016.
 * Hibernate Validator
     - _threeten-extra-validator-example_: Constraint validators for ThreeTen Extra date/time types.
       Accompanies the blog post http://in.relation.to/2017/03/02/adding-custom-constraint-definitions-via-the-java-service-loader/
