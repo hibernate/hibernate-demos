@@ -6,6 +6,10 @@ The application allows to manage (create, list, update, delete) hikes. It expose
 
 ## Building the project
 
+First start an instance of MongoDB, for example using docker:
+
+    docker run --rm --name some-mongo -p 27017:27017 mongo:3.6.21
+
 Execute the following command to build the project:
 
     mvn clean install
