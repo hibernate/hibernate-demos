@@ -28,7 +28,7 @@
 		<hibernate.version>5.4.32.Final</hibernate.version>
 		<!-- Override the version of Elasticsearch Rest Client in Spring Boot -->
 		<elasticsearch.version>7.10.0</elasticsearch.version>
-		<hibernate.search.version>6.0.6.Final</hibernate.search.version>
+		<hibernate.search.version>6.0.7.Final</hibernate.search.version>
 	</properties>
 
 	<dependencies>
