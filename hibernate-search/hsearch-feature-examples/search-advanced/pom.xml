@@ -20,6 +20,14 @@
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
     <quarkus.platform.version>1.11.1.Final</quarkus.platform.version>
     <surefire-plugin.version>2.22.1</surefire-plugin.version>
+
+    <docker-maven-plugin.version>0.34.1</docker-maven-plugin.version>
+    <test.postgres.run.skip>true</test.postgres.run.skip>
+    <test.postgres.run.image.name>postgres</test.postgres.run.image.name>
+    <test.postgres.run.image.tag>13.1</test.postgres.run.image.tag>
+    <test.elasticsearch.run.skip>true</test.elasticsearch.run.skip>
+    <test.elasticsearch.run.image.name>elasticsearch</test.elasticsearch.run.image.name>
+    <test.elasticsearch.run.image.tag>7.10.1</test.elasticsearch.run.image.tag>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -147,6 +155,94 @@
           </systemPropertyVariables>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>${docker-maven-plugin.version}</version>
+        <configuration>
+          <skip>${test.containers.run.skip}</skip>
+          <startParallel>true</startParallel>
+          <images>
+            <image>
+              <name>${test.elasticsearch.run.image.name}:${test.elasticsearch.run.image.tag}</name>
+              <alias>elasticsearch</alias>
+              <run>
+                <skip>${test.elasticsearch.run.skip}</skip>
+                <env>
+                  <logger.level>WARN</logger.level>
+                  <discovery.type>single-node</discovery.type>
+                  <!-- Prevent swapping
+                       This may trigger warnings upon boot if the system is not correctly set up.
+                       See https://www.elastic.co/guide/en/elasticsearch/reference/7.5/setup-configuration-memory.html#bootstrap-memory_lock
+                   -->
+                  <bootstrap.memory_lock>true</bootstrap.memory_lock>
+                  <!-- fix Docker images for older versions -->
+                  <!-- Older images require HTTP authentication for all requests;
+                       it's not practical for testing, so we disable that.
+                   -->
+                  <xpack.security.enabled>false</xpack.security.enabled>
+                </env>
+                <ports>
+                  <port>9200:9200</port>
+                </ports>
+                <log>
+                  <prefix>Elasticsearch: </prefix>
+                  <date>default</date>
+                  <color>cyan</color>
+                </log>
+                <wait>
+                  <http>
+                    <url>http://localhost:9200</url>
+                    <method>GET</method>
+                    <status>200</status>
+                  </http>
+                  <time>20000</time>
+                </wait>
+              </run>
+            </image>
+            <image>
+              <name>${test.postgres.run.image.name}:${test.postgres.run.image.tag}</name>
+              <alias>postgres</alias>
+              <run>
+                <skip>${test.postgres.run.skip}</skip>
+                <env>
+                  <POSTGRES_USER>hsearch_feature_examples</POSTGRES_USER>
+                  <POSTGRES_PASSWORD>hsearch_feature_examples</POSTGRES_PASSWORD>
+                  <POSTGRES_DB>hsearch_feature_examples</POSTGRES_DB>
+                </env>
+                <ports>
+                  <port>5432:5432</port>
+                </ports>
+                <log>
+                  <prefix>PostgreSQL: </prefix>
+                  <date>default</date>
+                  <color>blue</color>
+                </log>
+                <wait>
+                  <log>database system is ready to accept connections</log>
+                </wait>
+              </run>
+            </image>
+          </images>
+        </configuration>
+        <executions>
+          <execution>
+            <id>docker-start</id>
+            <phase>process-test-classes</phase>
+            <goals>
+              <goal>stop</goal>
+              <goal>start</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>docker-stop</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>stop</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
   <profiles>
@@ -182,6 +278,19 @@
       </build>
       <properties>
         <quarkus.package.type>native</quarkus.package.type>
+      </properties>
+    </profile>
+    <profile>
+      <id>start-containers</id>
+      <activation>
+        <property>
+          <name>start-containers</name>
+          <value>!false</value>
+        </property>
+      </activation>
+      <properties>
+        <test.postgres.run.skip>false</test.postgres.run.skip>
+        <test.elasticsearch.run.skip>false</test.elasticsearch.run.skip>
       </properties>
     </profile>
   </profiles>

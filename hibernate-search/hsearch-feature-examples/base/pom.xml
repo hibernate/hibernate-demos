@@ -21,6 +21,11 @@
     <mapstruct.version>1.4.1.Final</mapstruct.version>
     <lombok.version>1.18.16</lombok.version>
     <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+
+    <docker-maven-plugin.version>0.34.1</docker-maven-plugin.version>
+    <test.postgres.run.skip>true</test.postgres.run.skip>
+    <test.postgres.run.image.name>postgres</test.postgres.run.image.name>
+    <test.postgres.run.image.tag>13.1</test.postgres.run.image.tag>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -146,6 +151,57 @@
           </systemPropertyVariables>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>${docker-maven-plugin.version}</version>
+        <configuration>
+          <skip>${test.containers.run.skip}</skip>
+          <startParallel>true</startParallel>
+          <images>
+            <image>
+              <name>${test.postgres.run.image.name}:${test.postgres.run.image.tag}</name>
+              <alias>postgres</alias>
+              <run>
+                <skip>${test.postgres.run.skip}</skip>
+                <env>
+                  <POSTGRES_USER>hsearch_feature_examples</POSTGRES_USER>
+                  <POSTGRES_PASSWORD>hsearch_feature_examples</POSTGRES_PASSWORD>
+                  <POSTGRES_DB>hsearch_feature_examples</POSTGRES_DB>
+                </env>
+                <ports>
+                  <port>5432:5432</port>
+                </ports>
+                <log>
+                  <prefix>PostgreSQL: </prefix>
+                  <date>default</date>
+                  <color>blue</color>
+                </log>
+                <wait>
+                  <log>database system is ready to accept connections</log>
+                </wait>
+              </run>
+            </image>
+          </images>
+        </configuration>
+        <executions>
+          <execution>
+            <id>docker-start</id>
+            <phase>process-test-classes</phase>
+            <goals>
+              <goal>stop</goal>
+              <goal>start</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>docker-stop</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>stop</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
   <profiles>
@@ -181,6 +237,18 @@
       </build>
       <properties>
         <quarkus.package.type>native</quarkus.package.type>
+      </properties>
+    </profile>
+    <profile>
+      <id>start-containers</id>
+      <activation>
+        <property>
+          <name>start-containers</name>
+          <value>!false</value>
+        </property>
+      </activation>
+      <properties>
+        <test.postgres.run.skip>false</test.postgres.run.skip>
       </properties>
     </profile>
   </profiles>
