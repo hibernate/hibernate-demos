@@ -143,6 +143,13 @@ public class TShirtServiceTest {
 
 	@Test
 	public void search() {
+		// The application won't index automatically on start in native (prod) mode,
+		// so we need to do it explicitly.
+		given()
+				.when().post( "/admin/reindex/" )
+				.then()
+				.statusCode( 204 );
+
 		given()
 				.when()
 						.queryParam( "q", "jump" )
