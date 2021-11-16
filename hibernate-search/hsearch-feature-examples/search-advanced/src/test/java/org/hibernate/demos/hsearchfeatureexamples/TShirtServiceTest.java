@@ -39,7 +39,7 @@ public class TShirtServiceTest {
 						+ "    }"
 						+ "  ]"
 						+ "}" )
-				.when().put( "/tshirt/" )
+				.when().post( "/tshirt/" )
 				.then()
 				.statusCode( 200 )
 				.extract().response();
@@ -87,7 +87,7 @@ public class TShirtServiceTest {
 						+ "    }"
 						+ "  ]"
 						+ "}" )
-				.when().post( "/tshirt/" + id )
+				.when().put( "/tshirt/" + id )
 				.then()
 				.statusCode( 200 )
 				.body( jsonEquals( "{"

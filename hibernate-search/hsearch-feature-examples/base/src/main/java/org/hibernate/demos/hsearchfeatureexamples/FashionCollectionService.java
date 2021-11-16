@@ -26,7 +26,7 @@ public class FashionCollectionService {
 	@Inject
 	FashionCollectionMapper mapper;
 
-	@PUT
+	@POST
 	public FashionCollectionOutputDto create(FashionCollectionInputDto input) {
 		FashionCollection entity = new FashionCollection();
 		mapper.input( entity, input );
@@ -34,7 +34,7 @@ public class FashionCollectionService {
 		return mapper.output( entity );
 	}
 
-	@POST
+	@PUT
 	@Path("{id}")
 	public FashionCollectionOutputDto update(@PathParam long id, FashionCollectionInputDto input) {
 		FashionCollection entity = find( id );

@@ -31,7 +31,7 @@ public class TShirtService {
 	@Inject
 	TShirtMapper mapper;
 
-	@PUT
+	@POST
 	public TShirtOutputDto create(TShirtInputDto input) {
 		TShirt entity = new TShirt();
 		mapper.input( entity, input );
@@ -39,7 +39,7 @@ public class TShirtService {
 		return mapper.output( entity );
 	}
 
-	@POST
+	@PUT
 	@Path("{id}")
 	public TShirtOutputDto update(@PathParam long id, TShirtInputDto input) {
 		TShirt entity = find( id );

@@ -28,7 +28,7 @@ public class FashionCollectionServiceTest {
 						+ "  \"year\": 2021,"
 						+ "  \"keywords\": \"my keywords\""
 						+ "}" )
-				.when().put( "/collection/" )
+				.when().post( "/collection/" )
 				.then()
 				.statusCode( 200 )
 				.extract();
@@ -53,7 +53,7 @@ public class FashionCollectionServiceTest {
 						+ "  \"year\": 2021,"
 						+ "  \"keywords\": \"my keywords and some more\""
 						+ "}" )
-				.when().post( "/collection/" + id )
+				.when().put( "/collection/" + id )
 				.then()
 				.statusCode( 200 )
 				.body( jsonEquals( "{"
