@@ -8,7 +8,11 @@ import org.junit.jupiter.api.Test;
 import com.google.gson.JsonObject;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
+import io.restassured.config.LogConfig;
+import io.restassured.config.ObjectMapperConfig;
+import io.restassured.config.RestAssuredConfig;
 import io.restassured.http.ContentType;
+import io.restassured.mapper.ObjectMapperType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 
@@ -16,7 +20,11 @@ import io.restassured.response.Response;
 public class FashionCollectionServiceTest {
 
 	static {
-		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+		RestAssured.config = RestAssuredConfig.config()
+				.objectMapperConfig( ObjectMapperConfig.objectMapperConfig()
+						.defaultObjectMapperType( ObjectMapperType.GSON) )
+				.logConfig( LogConfig.logConfig()
+						.enableLoggingOfRequestAndResponseIfValidationFails() );
 	}
 
 	@Test
