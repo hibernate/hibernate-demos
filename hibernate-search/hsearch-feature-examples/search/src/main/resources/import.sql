@@ -3,7 +3,8 @@ INSERT INTO fashioncollection(id, "year", season, keywords) VALUES
     (nextval('hibernate_sequence'), 2019, 'SPRING_SUMMER', 'bike, sport'),
     (nextval('hibernate_sequence'), 2019, 'FALL_WINTER', 'mountains, snow, ski, sport'),
     (nextval('hibernate_sequence'), 2020, 'SPRING_SUMMER', 'portal, video games, science fiction'),
-    (nextval('hibernate_sequence'), 2020, 'FALL_WINTER', 'cosy, cabin');
+    (nextval('hibernate_sequence'), 2020, 'FALL_WINTER', 'cosy, cabin'),
+    (nextval('hibernate_sequence'), 2021, 'SPRING_SUMMER', 'cars, races');
 
 INSERT INTO tshirt(id, name, collection_id)
     SELECT nextval('hibernate_sequence'), raw.name, c.id
@@ -11,6 +12,7 @@ INSERT INTO tshirt(id, name, collection_id)
         (VALUES
             ('Rick and Morty portal', 2018, 'FALL_WINTER'),
             ('Morty jumping into the abyss', 2018, 'FALL_WINTER'),
+            ('Picard - Make it so', 2018, 'FALL_WINTER'),
             ('Flying saucer firing lasers', 2018, 'FALL_WINTER'),
             ('Morty frozen in snow', 2018, 'FALL_WINTER'),
             ('Bike logo with stripes', 2019, 'SPRING_SUMMER'),
@@ -27,9 +29,12 @@ INSERT INTO tshirt(id, name, collection_id)
             ('Still alive', 2020, 'SPRING_SUMMER'),
             ('Bear rug', 2020, 'FALL_WINTER'),
             ('Fireplace', 2020, 'FALL_WINTER'),
-            ('Mountains through the window', 2020, 'FALL_WINTER')
+            ('Mountains through the window', 2020, 'FALL_WINTER'),
+            ('Car race', 2021, 'SPRING_SUMMER'),
+            ('Cars! Cars! Cars!', 2021, 'SPRING_SUMMER')
         ) AS raw (name, "year", season)
-        INNER JOIN fashioncollection c ON raw."year" = c."year" AND raw.season = c.season;
+        INNER JOIN fashioncollection c ON raw."year" = c."year" AND raw.season = c.season
+        ORDER BY raw."year", raw.season, raw.name;
 
 INSERT INTO tshirt_variants(tshirt_id, "variants_order", "size", color, price)
     SELECT t.id, raw.variants_order, raw."size", raw.color, raw.price
@@ -42,6 +47,9 @@ INSERT INTO tshirt_variants(tshirt_id, "variants_order", "size", color, price)
             ('Morty jumping into the abyss', 0, 'XXL', 'Green', 12.99),
             ('Morty jumping into the abyss', 1, 'XXL', 'Purple', 12.99),
             ('Morty jumping into the abyss', 2, 'XXXL', 'Purple', 14.99),
+            ('Picard - Make it so', 0, 'XXL', 'Black', 12.99),
+            ('Picard - Make it so', 1, 'XXL', 'Black', 12.99),
+            ('Picard - Make it so', 2, 'XXXL', 'Black', 14.99),
             ('Flying saucer firing lasers', 0, 'L', 'Yellow', 10.99),
             ('Flying saucer firing lasers', 1, 'XL', 'Yellow', 10.99),
             ('Flying saucer firing lasers', 2, 'XXL', 'Yellow', 11.59),
@@ -123,6 +131,14 @@ INSERT INTO tshirt_variants(tshirt_id, "variants_order", "size", color, price)
             ('Mountains through the window', 1, 'S', 'Dark blue', 16.99),
             ('Mountains through the window', 2, 'M', 'Dark blue', 17.99),
             ('Mountains through the window', 3, 'L', 'Dark blue', 17.99),
-            ('Mountains through the window', 4, 'XL', 'Dark blue', 18.99)
+            ('Mountains through the window', 4, 'XL', 'Dark blue', 18.99),
+            ('Car race', 0, 'S', 'Red', 10.99),
+            ('Car race', 1, 'M', 'Red', 10.99),
+            ('Car race', 2, 'L', 'Red', 10.99),
+            ('Car race', 3, 'XL', 'Red', 10.99),
+            ('Cars! Cars! Cars!', 0, 'XL', 'Blue', 10.99),
+            ('Cars! Cars! Cars!', 1, 'XL', 'Blue', 10.99),
+            ('Cars! Cars! Cars!', 2, 'XL', 'Blue', 10.99),
+            ('Cars! Cars! Cars!', 3, 'XL', 'Blue', 10.99)
         ) AS raw (tshirtname, variants_order, "size", color, price)
         INNER JOIN tshirt t ON raw.tshirtname = t.name;

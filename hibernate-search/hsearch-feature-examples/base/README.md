@@ -41,6 +41,16 @@ curl -s -XGET -H 'Content-Type: application/json' 'localhost:8080/tshirt/' | jq
 
 `PUT`, `POST` (needs ID), `DELETE` (needs ID) also available.
 
+### SQL search (`like`)
+
+See `TShirtService.java`.
+
+```shell script
+curl -s -XGET -H 'Content-Type: application/json' 'localhost:8080/tshirt/search?brief=true&q=car' | jq
+curl -s -XGET -H 'Content-Type: application/json' 'localhost:8080/tshirt/search?brief=true&q=bike' | jq
+curl -s -XGET -H 'Content-Type: application/json' 'localhost:8080/tshirt/search?brief=false&q=bike' | jq
+```
+
 ## Packaging and running the application
 
 The application can be packaged using:

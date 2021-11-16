@@ -9,6 +9,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
+import org.hibernate.demos.hsearchfeatureexamples.dto.SearchResultDto;
 import org.hibernate.demos.hsearchfeatureexamples.dto.TShirtInputDto;
 import org.hibernate.demos.hsearchfeatureexamples.dto.TShirtOutputDto;
 import org.hibernate.demos.hsearchfeatureexamples.dto.mapper.TShirtMapper;
@@ -16,6 +17,10 @@ import org.hibernate.demos.hsearchfeatureexamples.model.TShirt;
 
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 import org.jboss.resteasy.annotations.jaxrs.QueryParam;
+
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.panache.common.Sort;
 
 @Path("/tshirt")
 @Transactional
@@ -54,6 +59,17 @@ public class TShirtService {
 		List<TShirt> entities = TShirt.findAll().page( page, PAGE_SIZE ).list();
 		return mapper.output( entities, brief );
 	}
+
+	@GET
+	@Path("search")
+	public SearchResultDto<TShirtOutputDto> search(@QueryParam String q,
+			@QueryParam int page, @QueryParam boolean brief) {
+		PanacheQuery<PanacheEntityBase> query = TShirt.find( "lower(name) like concat('%', lower(?1), '%')",
+				Sort.ascending( "name" ), q );
+		query.page( page, PAGE_SIZE );
+		return new SearchResultDto<>( query.count(), mapper.output( query.list(), brief ) );
+	}
+
 
 	private TShirt find(long id) {
 		TShirt entity = TShirt.findById( id );
