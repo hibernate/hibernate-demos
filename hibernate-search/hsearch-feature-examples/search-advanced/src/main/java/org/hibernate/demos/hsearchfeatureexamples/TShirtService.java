@@ -80,7 +80,8 @@ public class TShirtService {
 
 	@GET
 	public List<TShirtOutputDto> list(@QueryParam int page, @QueryParam boolean brief) {
-		List<TShirt> entities = TShirt.findAll().page( page, PAGE_SIZE ).list();
+		List<TShirt> entities = TShirt.findAll()
+				.page( page, PAGE_SIZE ).list();
 		return mapper.output( entities, brief );
 	}
 
@@ -96,14 +97,14 @@ public class TShirtService {
 					else {
 						return f.simpleQueryString()
 								.fields( "name", "collection.keywords",
-										"variants.color", "variants.size"
-								)
+										"variants.color", "variants.size" )
 								.matching( q );
 					}
 				} )
 				.fetch( page * PAGE_SIZE, PAGE_SIZE );
 
-		return new SearchResultDto<>( result.total().hitCount(), mapper.output( result.hits(), brief ) );
+		return new SearchResultDto<>( result.total().hitCount(),
+				mapper.output( result.hits(), brief ) );
 	}
 
 	@GET
@@ -140,9 +141,12 @@ public class TShirtService {
 			@QueryParam String color, @QueryParam TShirtSize size,
 			@QueryParam PriceRangeDto priceRange,
 			@QueryParam int page, @QueryParam boolean brief) {
-		AggregationKey<Map<String, Long>> countByColor = AggregationKey.of( "count-by-color" );
-		AggregationKey<Map<TShirtSize, Long>> countBySize = AggregationKey.of( "count-by-size" );
-		AggregationKey<Map<Range<BigDecimal>, Long>> countByPriceRange = AggregationKey.of( "count-by-price-range" );
+		AggregationKey<Map<String, Long>> countByColor =
+				AggregationKey.of( "count-by-color" );
+		AggregationKey<Map<TShirtSize, Long>> countBySize =
+				AggregationKey.of( "count-by-size" );
+		AggregationKey<Map<Range<BigDecimal>, Long>> countByPriceRange =
+				AggregationKey.of( "count-by-price-range" );
 
 		SearchResult<TShirt> result = searchSession.search( TShirt.class )
 				.where( f -> f.bool( b -> {
@@ -151,8 +155,7 @@ public class TShirtService {
 					if ( q != null && !q.isBlank() ) {
 						b.must( f.simpleQueryString()
 								.fields( "name", "collection.keywords",
-										"variants_nested.color", "variants_nested.size"
-								)
+										"variants_nested.color", "variants_nested.size" )
 								.matching( q ) );
 					}
 
@@ -173,17 +176,17 @@ public class TShirtService {
 						.minDocumentCount( 0 ) )
 				.aggregation( countByPriceRange, f -> f.range()
 						.field( "variants_nested.price", BigDecimal.class )
-						.ranges( EnumSet.allOf( PriceRangeDto.class ).stream().map( r -> r.value )
+						.ranges( EnumSet.allOf( PriceRangeDto.class )
+								.stream().map( r -> r.value )
 								.collect( Collectors.toList() ) )
 						.filter( f2 -> variantFilter( f2, size, color, priceRange ) ) )
 				.fetch( page * PAGE_SIZE, PAGE_SIZE );
 
-		return new SearchResultDto<>( result.total().hitCount(), mapper.output( result.hits(), brief ),
-				Map.of(
-						countByColor.name(), result.aggregation( countByColor ),
+		return new SearchResultDto<>( result.total().hitCount(),
+				mapper.output( result.hits(), brief ),
+				Map.of( countByColor.name(), result.aggregation( countByColor ),
 						countBySize.name(), result.aggregation( countBySize ),
-						countByPriceRange.name(), result.aggregation( countByPriceRange )
-				)
+						countByPriceRange.name(), result.aggregation( countByPriceRange ) )
 		);
 	}
 
@@ -194,13 +197,19 @@ public class TShirtService {
 		}
 		return f.bool( variantsBool -> {
 			if ( color != null ) {
-				variantsBool.must( f.match().field( "variants_nested.color" ).matching( color ) );
+				variantsBool.must( f.match()
+						.field( "variants_nested.color" )
+						.matching( color ) );
 			}
 			if ( size != null ) {
-				variantsBool.must( f.match().field( "variants_nested.size" ).matching( size ) );
+				variantsBool.must( f.match()
+						.field( "variants_nested.size" )
+						.matching( size ) );
 			}
 			if ( priceRange != null ) {
-				variantsBool.must( f.range().field( "variants_nested.price" ).range( priceRange.value ) );
+				variantsBool.must( f.range()
+						.field( "variants_nested.price" )
+						.range( priceRange.value ) );
 			}
 		} );
 	}

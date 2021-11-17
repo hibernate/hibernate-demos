@@ -73,14 +73,14 @@ public class TShirtService {
 					else {
 						return f.simpleQueryString()
 								.fields( "name", "collection.keywords",
-										"variants.color", "variants.size"
-								)
+										"variants.color", "variants.size" )
 								.matching( q );
 					}
 				} )
 				.fetch( page * PAGE_SIZE, PAGE_SIZE );
 
-		return new SearchResultDto<>( result.total().hitCount(), mapper.output( result.hits(), brief ) );
+		return new SearchResultDto<>( result.total().hitCount(),
+				mapper.output( result.hits(), brief ) );
 	}
 
 	private TShirt find(long id) {

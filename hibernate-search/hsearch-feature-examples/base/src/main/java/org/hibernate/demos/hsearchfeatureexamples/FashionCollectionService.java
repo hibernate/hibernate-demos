@@ -36,7 +36,8 @@ public class FashionCollectionService {
 
 	@PUT
 	@Path("{id}")
-	public FashionCollectionOutputDto update(@PathParam long id, FashionCollectionInputDto input) {
+	public FashionCollectionOutputDto update(@PathParam long id,
+			FashionCollectionInputDto input) {
 		FashionCollection entity = find( id );
 		mapper.input( entity, input );
 		return mapper.output( entity );
@@ -51,7 +52,8 @@ public class FashionCollectionService {
 
 	@GET
 	public List<FashionCollectionOutputDto> list(@QueryParam int page) {
-		List<FashionCollection> entities = FashionCollection.findAll().page( page, PAGE_SIZE ).list();
+		List<FashionCollection> entities = FashionCollection.findAll()
+				.page( page, PAGE_SIZE ).list();
 		return mapper.output( entities );
 	}
 

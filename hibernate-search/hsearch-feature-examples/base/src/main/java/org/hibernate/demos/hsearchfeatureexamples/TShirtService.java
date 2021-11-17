@@ -64,8 +64,9 @@ public class TShirtService {
 	@Path("search")
 	public SearchResultDto<TShirtOutputDto> search(@QueryParam String q,
 			@QueryParam int page, @QueryParam boolean brief) {
-		PanacheQuery<PanacheEntityBase> query = TShirt.find( "lower(name) like concat('%', lower(?1), '%')",
-				Sort.ascending( "name" ), q );
+		PanacheQuery<PanacheEntityBase> query =
+				TShirt.find( "lower(name) like concat('%', lower(?1), '%')",
+						Sort.ascending( "name" ), q );
 		query.page( page, PAGE_SIZE );
 		return new SearchResultDto<>( query.count(), mapper.output( query.list(), brief ) );
 	}
