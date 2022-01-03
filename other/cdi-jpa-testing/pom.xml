@@ -26,7 +26,7 @@
         <version.narayana>5.9.2.Final</version.narayana>
         <version.jnpserver>5.0.3.GA</version.jnpserver>
         <version.jboss-transaction-api>1.1.1.Final</version.jboss-transaction-api>
-        <version.log4j2>2.13.3</version.log4j2>
+        <version.log4j2>2.17.1</version.log4j2>
         <version.weld>3.0.5.Final</version.weld>
     </properties>
 
