@@ -26,17 +26,17 @@
 		<apt.version>1.1.3</apt.version>
 		<docker-maven-plugin.version>0.34.1</docker-maven-plugin.version>
 		<!-- Override the version of Hibernate ORM in Spring Boot -->
-		<hibernate.version>5.4.32.Final</hibernate.version>
+		<hibernate.version>5.6.5.Final</hibernate.version>
 		<!-- Override the version of Elasticsearch Rest Client in Spring Boot -->
-		<elasticsearch.version>7.10.1</elasticsearch.version>
-		<hibernate.search.version>6.0.7.Final</hibernate.search.version>
+		<elasticsearch.version>7.16.3</elasticsearch.version>
+		<hibernate.search.version>6.1.0.Final</hibernate.search.version>
 
 		<docker-maven-plugin.version>0.34.1</docker-maven-plugin.version>
 		<test.postgres.run.skip>true</test.postgres.run.skip>
 		<test.postgres.run.image.name>postgres</test.postgres.run.image.name>
 		<test.postgres.run.image.tag>13.1</test.postgres.run.image.tag>
 		<test.elasticsearch.run.skip>true</test.elasticsearch.run.skip>
-		<test.elasticsearch.run.image.name>elasticsearch</test.elasticsearch.run.image.name>
+		<test.elasticsearch.run.image.name>elastic/elasticsearch</test.elasticsearch.run.image.name>
 		<test.elasticsearch.run.image.tag>${elasticsearch.version}</test.elasticsearch.run.image.tag>
 	</properties>
 
@@ -143,16 +143,13 @@
 								<env>
 									<logger.level>WARN</logger.level>
 									<discovery.type>single-node</discovery.type>
-									<!-- Prevent swapping
-										 This may trigger warnings upon boot if the system is not correctly set up.
-										 See https://www.elastic.co/guide/en/elasticsearch/reference/7.5/setup-configuration-memory.html#bootstrap-memory_lock
-									 -->
-									<bootstrap.memory_lock>true</bootstrap.memory_lock>
-									<!-- fix Docker images for older versions -->
-									<!-- Older images require HTTP authentication for all requests;
-										 it's not practical for testing, so we disable that.
-									 -->
-									<xpack.security.enabled>false</xpack.security.enabled>
+									<!-- Limit the RAM usage.
+                                         Recent versions of ES limit themselves to 50% of the total available RAM,
+                                         but on CI this is sometimes too much, as we also have the Maven JVM
+                                         and the JVM that runs tests taking up a significant amount of RAM,
+                                         leaving too little for filesystem caches and resulting in freezes.
+                                     -->
+									<ES_JAVA_OPTS>-Xms1g -Xmx1g</ES_JAVA_OPTS>
 								</env>
 								<ports>
 									<port>9200:9200</port>
