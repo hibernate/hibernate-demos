@@ -1,0 +1,47 @@
+version: 2
+updates:
+  - package-ecosystem: "maven"
+    directory: "/hibernate-search/hsearch-elasticsearch-wikipedia"
+    schedule:
+      interval: "daily"
+    allow:
+      - dependency-name: "org.springframework*:*"
+      - dependency-name: "org.hibernate:*"
+      - dependency-name: "org.hibernate.*:*"
+    ignore:
+      - dependency-name: "org.springframework*:*"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "org.hibernate:*"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "org.hibernate.*:*"
+        update-types: [ "version-update:semver-major" ]
+  - package-ecosystem: "maven"
+    directory: "/hibernate-search/hsearch-feature-examples"
+    schedule:
+      interval: "daily"
+    allow:
+      - dependency-name: "io.quarkus:*"
+      - dependency-name: "org.hibernate:*"
+      - dependency-name: "org.hibernate.*:*"
+    ignore:
+      - dependency-name: "io.quarkus:*"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "org.hibernate:*"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "org.hibernate.*:*"
+        update-types: [ "version-update:semver-major" ]
+  - package-ecosystem: "maven"
+    directory: "/hibernate-search/hsearch-quarkus"
+    schedule:
+      interval: "daily"
+    allow:
+      - dependency-name: "io.quarkus:*"
+      - dependency-name: "org.hibernate:*"
+      - dependency-name: "org.hibernate.*:*"
+    ignore:
+      - dependency-name: "io.quarkus:*"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "org.hibernate:*"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "org.hibernate.*:*"
+        update-types: [ "version-update:semver-major" ]
