@@ -9,6 +9,9 @@ pipeline {
     options {
         disableConcurrentBuilds()
     }
+    environment {
+        TESTCONTAINERS_RYUK_DISABLED = 'true'
+    }
     stages {
         stage('Build Hibernate Search Demos') {
             steps {
