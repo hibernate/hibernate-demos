@@ -1,17 +1,20 @@
-version: '3.4'
 services:
   hsearch-quarkus:
     image: quarkus/hsearch-quarkus:latest
     depends_on:
-      - pg01
-      - es01
-      - es02
+      pg01:
+        condition: service_healthy
+      es01:
+        condition: service_healthy
+      es02:
+        condition: service_healthy
     environment:
       - POSTGRES_HOST=pg01
       - POSTGRES_DB=hsearch_demo
       - POSTGRES_USER=hsearch_demo
       - POSTGRES_PASSWORD=hsearch_demo
-      - ES_HOSTS=http://es01:9200,http://es02:9200
+      - ES_HOSTS=es01:9200,es02:9200
+      - ES_PROTOCOL=http
     ports:
       - 8080:8080
     networks:
@@ -27,12 +30,18 @@ services:
       - 5432:5432
     volumes:
       - pgdata01:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "bash", "-c", "psql -U hsearch_demo hsearch_demo"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     networks:
       pgnet:
         aliases:
           - pg01
   es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.4.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
     environment:
       - node.name=es01
       - discovery.seed_hosts=es02
@@ -40,26 +49,33 @@ services:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      # Stop Elasticsearch from complaining of *relative* low free space on large disks
+      - cluster.routing.allocation.disk.watermark.low=1gb
+      - cluster.routing.allocation.disk.watermark.high=500mb
+      - cluster.routing.allocation.disk.watermark.flood_stage=200mb
     ports:
       - 9200:9200
     ulimits:
       memlock:
         soft: -1
         hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
     volumes:
       - esdata01:/usr/share/elasticsearch/data
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9200"]
       interval: 5s
-      timeout: 1s
-      retries: 3
-      start_period: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     networks:
       esnet:
         aliases:
           - es01
   es02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.4.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
     environment:
       - node.name=es02
       - discovery.seed_hosts=es01
@@ -67,18 +83,25 @@ services:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      # Stop Elasticsearch from complaining of *relative* low free space on large disks
+      - cluster.routing.allocation.disk.watermark.low=1gb
+      - cluster.routing.allocation.disk.watermark.high=500mb
+      - cluster.routing.allocation.disk.watermark.flood_stage=200mb
     ulimits:
       memlock:
         soft: -1
         hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
     volumes:
       - esdata02:/usr/share/elasticsearch/data
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9200"]
       interval: 5s
-      timeout: 1s
-      retries: 3
-      start_period: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     networks:
       esnet:
         aliases:

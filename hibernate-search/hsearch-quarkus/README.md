@@ -32,10 +32,16 @@ Execute the following command:
 
 ## Building and running the application as a native binary in a container
 
-Build the container containing the native binary with:
+Build the native binary with:
 
 ```
-docker build -f src/main/docker/Dockerfile.multistage -t hibernate/hsearch-quarkus .
+./mvnw package -Pnative
+```
+
+Then build the container containing the native binary with:
+
+```
+docker build -f src/main/docker/Dockerfile.native -t quarkus/hsearch-quarkus .
 ```
 
 Then run the container along with PostgreSQL and Elasticsearch with:

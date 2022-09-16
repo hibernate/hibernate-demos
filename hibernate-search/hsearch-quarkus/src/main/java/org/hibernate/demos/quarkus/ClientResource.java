@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
-import javax.persistence.EntityManagerFactory;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 import javax.ws.rs.Consumes;
@@ -27,9 +26,9 @@ import org.hibernate.demos.quarkus.dto.ClientMapper;
 import org.hibernate.demos.quarkus.dto.ClientRetrieveDto;
 import org.hibernate.demos.quarkus.dto.BusinessManagerRetrieveDto;
 import org.hibernate.search.engine.search.common.BooleanOperator;
-import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.mapping.SearchMapping;
+import org.hibernate.search.mapper.orm.session.SearchSession;
 
-import io.quarkus.hibernate.orm.panache.Panache;
 import io.quarkus.runtime.StartupEvent;
 import io.quarkus.runtime.configuration.ProfileManager;
 
@@ -43,7 +42,10 @@ public class ClientResource {
 	ClientMapper mapper;
 
 	@Inject
-	EntityManagerFactory entityManagerFactory;
+	SearchMapping searchMapping;
+
+	@Inject
+	SearchSession searchSession;
 
 	@PUT
 	@Path("/client")
@@ -121,8 +123,7 @@ public class ClientResource {
 	@Path("/client/reindex")
 	@Transactional(TxType.NEVER)
 	public void reindex() throws InterruptedException {
-		Search.mapping( entityManagerFactory )
-				.scope( Client.class )
+		searchMapping.scope( Client.class )
 				.massIndexer()
 				.startAndWait();
 	}
@@ -137,13 +138,11 @@ public class ClientResource {
 	@GET
 	@Path("/client/search")
 	public List<ClientRetrieveDto> search(@QueryParam("terms") String terms) {
-		List<Client> result = Search.session( Panache.getEntityManager() )
-				.search( Client.class )
-				.predicate( f -> f.simpleQueryString()
+		List<Client> result = searchSession.search( Client.class )
+				.where( f -> f.simpleQueryString()
 						.fields( "name", "assignedManager.name" )
 						.matching( terms )
-						.defaultOperator( BooleanOperator.AND )
-				)
+						.defaultOperator( BooleanOperator.AND ) )
 				.fetchHits( 20 );
 
 		return result.stream().map( mapper::toDto ).collect( Collectors.toList() );
