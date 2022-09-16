@@ -42,7 +42,7 @@ public class PageEndpoint {
 	@Inject
 	private PageDao dao;
 
-	@PUT
+	@POST
 	@Path("/")
 	@Transactional(readOnly = false)
 	public Response create(PageInputDto pageDto, @Context UriInfo uriInfo) {
@@ -53,7 +53,7 @@ public class PageEndpoint {
 		return Response.created( pageUri ).build();
 	}
 
-	@POST
+	@PUT
 	@Path("/{id}")
 	@Transactional(readOnly = false)
 	public Response update(@PathParam("id") Long id, PageInputDto pageDto) {
