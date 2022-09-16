@@ -47,7 +47,7 @@ public class ClientResource {
 	@Inject
 	SearchSession searchSession;
 
-	@PUT
+	@POST
 	@Path("/client")
 	public ClientRetrieveDto createClient(ClientCreateUpdateDto dto) {
 		Client client = new Client();
@@ -63,7 +63,7 @@ public class ClientResource {
 		return mapper.toDto( client );
 	}
 
-	@POST
+	@PUT
 	@Path("/client/{id}")
 	public void updateClient(@PathParam("id") Long id, ClientCreateUpdateDto dto) {
 		Client client = findClient( id );
@@ -76,7 +76,7 @@ public class ClientResource {
 		findClient( id ).delete();
 	}
 
-	@PUT
+	@POST
 	@Path("/manager")
 	public BusinessManagerRetrieveDto createBusinessManager(BusinessManagerCreateUpdateDto dto) {
 		BusinessManager businessManager = new BusinessManager();
@@ -85,7 +85,7 @@ public class ClientResource {
 		return mapper.toDto( businessManager );
 	}
 
-	@POST
+	@PUT
 	@Path("/manager/{id}")
 	public void updateBusinessManager(@PathParam("id") Long id, BusinessManagerCreateUpdateDto dto) {
 		BusinessManager businessManager = findBusinessManager( id );
@@ -98,7 +98,7 @@ public class ClientResource {
 		findBusinessManager( id ).delete();
 	}
 
-	@POST
+	@PUT
 	@Path("/client/{clientId}/manager/{managerId}")
 	public void assignBusinessManager(@PathParam("clientId") Long clientId, @PathParam("managerId") Long managerId) {
 		unAssignBusinessManager( clientId );
