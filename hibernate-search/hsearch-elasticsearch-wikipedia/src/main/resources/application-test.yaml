@@ -6,9 +6,8 @@ spring.jpa:
   properties:
     hibernate.search:
       schema_management.strategy: drop-and-create-and-drop
-      backend:
-        automatic_indexing:
-          synchronization.strategy: sync
+      automatic_indexing:
+        synchronization.strategy: sync
 
 logging.level:
   org.hibernate.SQL: DEBUG
