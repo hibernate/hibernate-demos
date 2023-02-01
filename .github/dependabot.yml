@@ -21,10 +21,13 @@ updates:
       interval: "daily"
     allow:
       - dependency-name: "io.quarkus:*"
+      - dependency-name: "io.quarkus.platform:*"
       - dependency-name: "org.hibernate:*"
       - dependency-name: "org.hibernate.*:*"
     ignore:
       - dependency-name: "io.quarkus:*"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "io.quarkus.platform:*"
         update-types: [ "version-update:semver-major" ]
       - dependency-name: "org.hibernate:*"
         update-types: [ "version-update:semver-major" ]
@@ -36,10 +39,13 @@ updates:
       interval: "daily"
     allow:
       - dependency-name: "io.quarkus:*"
+      - dependency-name: "io.quarkus.platform:*"
       - dependency-name: "org.hibernate:*"
       - dependency-name: "org.hibernate.*:*"
     ignore:
       - dependency-name: "io.quarkus:*"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "io.quarkus.platform:*"
         update-types: [ "version-update:semver-major" ]
       - dependency-name: "org.hibernate:*"
         update-types: [ "version-update:semver-major" ]
