@@ -20,6 +20,8 @@ This repository contains demos used live during presentations or in blog posts; 
       Accompanies the blog post https://in.relation.to/2019/11/12/hibernate-search-quarkus/
     - _hsearch-feature-examples_: Demonstrates various features of Hibernate Search 6 with Elasticsearch in Quarkus.
       Used in [Quarkus insights Episode 32](https://www.youtube.com/watch?v=hwxWx-ORVwM).
+    - _hsearch-outbox-polling_: Demonstrates Hibernate Search's `outbox-polling` coordination with Elasticsearch in Quarkus.
+      Used for a [talk in French at RivieraDev 2023](https://yrodiere.github.io/presentation/2023-07-rivieradev-quarkus-hsearch/).
     - _hsearch-with-elasticsearch_: Shows how to use the Elasticsearch backend in Hibernate Search 6.x.
       Used for the talk "From Hibernate to Elasticsearch in no Time" at JavaZone 2016 (back then it was using Hibernate Search 5.x).
 * Hibernate Validator
