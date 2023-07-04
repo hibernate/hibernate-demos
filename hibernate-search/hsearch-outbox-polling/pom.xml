@@ -15,6 +15,8 @@
     <quarkus.platform.version>3.2.0.Final</quarkus.platform.version>
     <skipITs>true</skipITs>
     <surefire-plugin.version>3.0.0</surefire-plugin.version>
+
+    <mapstruct.version>1.5.5.Final</mapstruct.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -73,6 +75,18 @@
       <artifactId>quarkus-hibernate-orm</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+      <version>${mapstruct.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct-processor</artifactId>
+      <version>${mapstruct.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit5</artifactId>
       <scope>test</scope>
@@ -105,7 +119,11 @@
         <version>${compiler-plugin.version}</version>
         <configuration>
           <compilerArgs>
-            <arg>-parameters</arg>
+            <compilerArg>-parameters</compilerArg>
+            <compilerArg>-Amapstruct.suppressGeneratorTimestamp=true</compilerArg>
+            <compilerArg>-Amapstruct.suppressGeneratorVersionInfoComment=true</compilerArg>
+            <compilerArg>-Amapstruct.defaultComponentModel=jakarta</compilerArg>
+            <compilerArg>-Amapstruct.defaultInjectionStrategy=constructor</compilerArg>
           </compilerArgs>
         </configuration>
       </plugin>
