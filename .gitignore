@@ -46,3 +46,4 @@ infinispan.log
 
 #Misc.
 ObjectStore
+.quarkus
