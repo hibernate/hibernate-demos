@@ -1,19 +1,22 @@
 package org.hibernate.demos.hsearchfeatureexamples;
 
+import java.io.StringReader;
 import java.math.BigDecimal;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
-import javax.json.JsonValue;
-import javax.transaction.Transactional;
-import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
+import jakarta.inject.Inject;
+import jakarta.json.Json;
+import jakarta.json.JsonReaderFactory;
+import jakarta.json.JsonValue;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
 
 import org.hibernate.demos.hsearchfeatureexamples.dto.PriceRangeDto;
 import org.hibernate.demos.hsearchfeatureexamples.dto.SearchResultDto;
@@ -39,7 +42,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.glassfish.json.JsonUtil;
 
 @Path("/tshirt")
 @Transactional
@@ -54,6 +56,7 @@ public class TShirtService {
 	SearchSession searchSession;
 
 	private final Gson gson = new Gson();
+	private final JsonReaderFactory jsonReaderFactory = Json.createReaderFactory(Map.of());
 
 	@POST
 	public TShirtOutputDto create(TShirtInputDto input) {
@@ -240,7 +243,9 @@ public class TShirtService {
 						"}" ) )
 				.fetch( 0 );
 
-		return JsonUtil.toJson( result.aggregation( priceStats ).toString() );
+		// Resteasy doesn't understand Gson, we have to use jakarta.json
+		return jsonReaderFactory.createReader( new StringReader( result.aggregation( priceStats ).toString() ) )
+				.readValue();
 	}
 
 	@GET
@@ -283,7 +288,10 @@ public class TShirtService {
 		JsonObject responseBody = result.responseBody();
 		JsonArray mySuggestResults = responseBody.getAsJsonObject( "suggest" )
 				.getAsJsonArray( "name-suggest-phrase" );
-		return JsonUtil.toJson( mySuggestResults.toString() );
+
+		// Resteasy doesn't understand Gson, we have to use jakarta.json
+		return jsonReaderFactory.createReader( new StringReader( mySuggestResults.toString() ) )
+				.readValue();
 	}
 
 	private TShirt find(long id) {

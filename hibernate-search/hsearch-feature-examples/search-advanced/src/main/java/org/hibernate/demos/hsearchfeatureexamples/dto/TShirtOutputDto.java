@@ -1,7 +1,7 @@
 package org.hibernate.demos.hsearchfeatureexamples.dto;
 
 import java.util.List;
-import javax.json.bind.annotation.JsonbPropertyOrder;
+import jakarta.json.bind.annotation.JsonbPropertyOrder;
 
 import lombok.Value;
 

@@ -1,40 +1,42 @@
 INSERT INTO fashioncollection(id, "year", season, keywords) VALUES
-    (nextval('hibernate_sequence'), 2018, 'FALL_WINTER', 'rick and morty, cartoon, science fiction'),
-    (nextval('hibernate_sequence'), 2019, 'SPRING_SUMMER', 'bike, sport'),
-    (nextval('hibernate_sequence'), 2019, 'FALL_WINTER', 'mountains, snow, ski, sport'),
-    (nextval('hibernate_sequence'), 2020, 'SPRING_SUMMER', 'portal, video games, science fiction'),
-    (nextval('hibernate_sequence'), 2020, 'FALL_WINTER', 'cosy, cabin'),
-    (nextval('hibernate_sequence'), 2021, 'SPRING_SUMMER', 'cars, races');
+    (1, 2018, 'FALL_WINTER', 'rick and morty, cartoon, science fiction'),
+    (2, 2019, 'SPRING_SUMMER', 'bike, sport'),
+    (3, 2019, 'FALL_WINTER', 'mountains, snow, ski, sport'),
+    (4, 2020, 'SPRING_SUMMER', 'portal, video games, science fiction'),
+    (5, 2020, 'FALL_WINTER', 'cosy, cabin'),
+    (6, 2021, 'SPRING_SUMMER', 'cars, races');
+ALTER SEQUENCE fashioncollection_seq RESTART WITH 7;
 
 INSERT INTO tshirt(id, name, collection_id)
-    SELECT nextval('hibernate_sequence'), raw.name, c.id
+    SELECT raw.id, raw.name, c.id
     FROM
         (VALUES
-            ('Rick and Morty portal', 2018, 'FALL_WINTER'),
-            ('Morty jumping into the abyss', 2018, 'FALL_WINTER'),
-            ('Picard - Make it so', 2018, 'FALL_WINTER'),
-            ('Flying saucer firing lasers', 2018, 'FALL_WINTER'),
-            ('Morty frozen in snow', 2018, 'FALL_WINTER'),
-            ('Bike logo with stripes', 2019, 'SPRING_SUMMER'),
-            ('Handlebars', 2019, 'SPRING_SUMMER'),
-            ('Wheels', 2019, 'SPRING_SUMMER'),
-            ('Jumping over a log', 2019, 'SPRING_SUMMER'),
-            ('Mountain biking', 2019, 'SPRING_SUMMER'),
-            ('Everest eternal snow', 2019, 'FALL_WINTER'),
-            ('Ski jump', 2019, 'FALL_WINTER'),
-            ('Snowboard', 2019, 'FALL_WINTER'),
-            ('Aperture Science logo ', 2020, 'SPRING_SUMMER'),
-            ('GLaDOS in fire', 2020, 'SPRING_SUMMER'),
-            ('Portal 2 logo', 2020, 'SPRING_SUMMER'),
-            ('Still alive', 2020, 'SPRING_SUMMER'),
-            ('Bear rug', 2020, 'FALL_WINTER'),
-            ('Fireplace', 2020, 'FALL_WINTER'),
-            ('Mountains through the window', 2020, 'FALL_WINTER'),
-            ('Car race', 2021, 'SPRING_SUMMER'),
-            ('Cars! Cars! Cars!', 2021, 'SPRING_SUMMER')
-        ) AS raw (name, "year", season)
+            (1, 'Rick and Morty portal', 2018, 'FALL_WINTER'),
+            (2, 'Morty jumping into the abyss', 2018, 'FALL_WINTER'),
+            (3, 'Picard - Make it so', 2018, 'FALL_WINTER'),
+            (4, 'Flying saucer firing lasers', 2018, 'FALL_WINTER'),
+            (5, 'Morty frozen in snow', 2018, 'FALL_WINTER'),
+            (6, 'Bike logo with stripes', 2019, 'SPRING_SUMMER'),
+            (7, 'Handlebars', 2019, 'SPRING_SUMMER'),
+            (8, 'Wheels', 2019, 'SPRING_SUMMER'),
+            (9, 'Jumping over a log', 2019, 'SPRING_SUMMER'),
+            (10, 'Mountain biking', 2019, 'SPRING_SUMMER'),
+            (11, 'Everest eternal snow', 2019, 'FALL_WINTER'),
+            (12, 'Ski jump', 2019, 'FALL_WINTER'),
+            (13, 'Snowboard', 2019, 'FALL_WINTER'),
+            (14, 'Aperture Science logo ', 2020, 'SPRING_SUMMER'),
+            (15, 'GLaDOS in fire', 2020, 'SPRING_SUMMER'),
+            (16, 'Portal 2 logo', 2020, 'SPRING_SUMMER'),
+            (17, 'Still alive', 2020, 'SPRING_SUMMER'),
+            (18, 'Bear rug', 2020, 'FALL_WINTER'),
+            (19, 'Fireplace', 2020, 'FALL_WINTER'),
+            (20, 'Mountains through the window', 2020, 'FALL_WINTER'),
+            (21, 'Car race', 2021, 'SPRING_SUMMER'),
+            (22, 'Cars! Cars! Cars!', 2021, 'SPRING_SUMMER')
+        ) AS raw (id, name, "year", season)
         INNER JOIN fashioncollection c ON raw."year" = c."year" AND raw.season = c.season
         ORDER BY raw."year", raw.season, raw.name;
+ALTER SEQUENCE tshirt_seq RESTART WITH 23;
 
 INSERT INTO tshirt_variants(tshirt_id, "variants_order", "size", color, price)
     SELECT t.id, raw.variants_order, raw."size", raw.color, raw.price
