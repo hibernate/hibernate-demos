@@ -9,24 +9,20 @@ package org.hibernate.demos;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import org.hibernate.demos.hswithes.dto.VideoGameDto;
 import org.hibernate.demos.hswithes.model.Character;
 import org.hibernate.demos.hswithes.model.Publisher;
 import org.hibernate.demos.hswithes.model.VideoGame;
-import org.hibernate.search.elasticsearch.ElasticsearchProjectionConstants;
-import org.hibernate.search.elasticsearch.ElasticsearchQueries;
-import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.jpa.FullTextQuery;
-import org.hibernate.search.jpa.Search;
-import org.hibernate.search.query.dsl.QueryBuilder;
-import org.hibernate.transform.BasicTransformerAdapter;
+import org.hibernate.search.backend.elasticsearch.ElasticsearchExtension;
+import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.session.SearchSession;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -105,18 +101,13 @@ public class HibernateSearchWithElasticsearchIT extends TestBase {
 		EntityManager em = emf.createEntityManager();
 
 		inTransaction( em, tx -> {
-			FullTextEntityManager ftem = Search.getFullTextEntityManager( em );
-			QueryBuilder qb = ftem.getSearchFactory()
-					.buildQueryBuilder()
-					.forEntity( VideoGame.class )
-					.get();
+			SearchSession searchSession = Search.session( em );
 
-			FullTextQuery query = ftem.createFullTextQuery(
-					qb.keyword().onField( "title" ).matching( "samurai" ).createQuery(),
-					VideoGame.class
-			);
+			List<VideoGame> videoGames = searchSession.search( VideoGame.class )
+					.where( f -> f.match().field( "title" )
+							.matching( "samurai" ) )
+					.fetchHits( 20 );
 
-			List<VideoGame> videoGames = query.getResultList();
 			assertThat( videoGames ).onProperty( "title" ).containsExactly( "Revenge of the Samurai" );
 		} );
 
@@ -128,18 +119,13 @@ public class HibernateSearchWithElasticsearchIT extends TestBase {
 		EntityManager em = emf.createEntityManager();
 
 		inTransaction( em, tx -> {
-			FullTextEntityManager ftem = Search.getFullTextEntityManager( em );
-			QueryBuilder qb = ftem.getSearchFactory()
-					.buildQueryBuilder()
-					.forEntity( VideoGame.class )
-					.get();
+			SearchSession searchSession = Search.session( em );
 
-			FullTextQuery query = ftem.createFullTextQuery(
-					qb.keyword().onFields( "title", "description").matching( "samurai" ).createQuery(),
-					VideoGame.class
-			);
+			List<VideoGame> videoGames = searchSession.search( VideoGame.class )
+					.where( f -> f.match().fields( "title", "description" )
+							.matching( "samurai" ) )
+					.fetchHits( 20 );
 
-			List<VideoGame> videoGames = query.getResultList();
 			assertThat( videoGames ).onProperty( "title" ).containsExactly( "Revenge of the Samurai", "Tanaka's return" );
 		} );
 
@@ -151,18 +137,13 @@ public class HibernateSearchWithElasticsearchIT extends TestBase {
 		EntityManager em = emf.createEntityManager();
 
 		inTransaction( em, tx -> {
-			FullTextEntityManager ftem = Search.getFullTextEntityManager( em );
-			QueryBuilder qb = ftem.getSearchFactory()
-					.buildQueryBuilder()
-					.forEntity( VideoGame.class )
-					.get();
+			SearchSession searchSession = Search.session( em );
 
-			FullTextQuery query = ftem.createFullTextQuery(
-					qb.keyword().wildcard().onFields( "title", "description").matching( "sam*" ).createQuery(),
-					VideoGame.class
-			);
+			List<VideoGame> videoGames = searchSession.search( VideoGame.class )
+					.where( f -> f.wildcard().fields( "title", "description" )
+							.matching( "sam*" ) )
+					.fetchHits( 20 );
 
-			List<VideoGame> videoGames = query.getResultList();
 			assertThat( videoGames ).onProperty( "title" ).containsExactly( "Revenge of the Samurai", "Tanaka's return" );
 		} );
 
@@ -174,22 +155,13 @@ public class HibernateSearchWithElasticsearchIT extends TestBase {
 		EntityManager em = emf.createEntityManager();
 
 		inTransaction( em, tx -> {
-			FullTextEntityManager ftem = Search.getFullTextEntityManager( em );
-			QueryBuilder qb = ftem.getSearchFactory()
-					.buildQueryBuilder()
-					.forEntity( VideoGame.class )
-					.get();
+			SearchSession searchSession = Search.session( em );
 
-			FullTextQuery query = ftem.createFullTextQuery(
-					qb.range()
-					.onField( "rating" )
-					.from( 2 )
-					.to( 9 )
-					.createQuery(),
-					VideoGame.class
-			);
+			List<VideoGame> videoGames = searchSession.search( VideoGame.class )
+					.where( f -> f.range().field( "rating" )
+							.between( 2, 9 ) )
+					.fetchHits( 20 );
 
-			List<VideoGame> videoGames = query.getResultList();
 			assertThat( videoGames ).onProperty( "title" ).containsOnly( "Revenge of the Samurai", "Ninja Castle" );
 		} );
 
@@ -201,19 +173,14 @@ public class HibernateSearchWithElasticsearchIT extends TestBase {
 		EntityManager em = emf.createEntityManager();
 
 		inTransaction( em, tx -> {
-			FullTextEntityManager ftem = Search.getFullTextEntityManager( em );
-			QueryBuilder qb = ftem.getSearchFactory()
-					.buildQueryBuilder()
-					.forEntity( VideoGame.class )
-					.get();
+			SearchSession searchSession = Search.session( em );
 
-			FullTextQuery query = ftem.createFullTextQuery(
-					ElasticsearchQueries.fromQueryString( "title:sam* OR description:sam*" ),
-					VideoGame.class
-			);
+			List<VideoGame> videoGames = searchSession.search( VideoGame.class )
+					.where( f -> f.simpleQueryString().fields( "title", "description" )
+							.matching( "Tanaka | Castle" ) )
+					.fetchHits( 20 );
 
-			List<VideoGame> videoGames = query.getResultList();
-			assertThat( videoGames ).onProperty( "title" ).containsExactly( "Revenge of the Samurai", "Tanaka's return" );
+			assertThat( videoGames ).onProperty( "title" ).containsExactly( "Ninja Castle", "Tanaka's return" );
 		} );
 
 		em.close();
@@ -224,74 +191,24 @@ public class HibernateSearchWithElasticsearchIT extends TestBase {
 		EntityManager em = emf.createEntityManager();
 
 		inTransaction( em, tx -> {
-			FullTextEntityManager ftem = Search.getFullTextEntityManager( em );
-			QueryBuilder qb = ftem.getSearchFactory()
-					.buildQueryBuilder()
-					.forEntity( VideoGame.class )
-					.get();
+			SearchSession searchSession = Search.session( em );
 
-			FullTextQuery query = ftem.createFullTextQuery(
-					qb.keyword()
-					.onField( "tags" )
-					.matching( "round-based" )
-					.createQuery(),
-					VideoGame.class
-			)
-			.setProjection( "title", "publisher.name", "release" );
+			VideoGameDto projection = searchSession.search( VideoGame.class )
+					.select( VideoGameDto.class )
+					.where( f -> f.match().field( "tags" ).matching( "round-based" ) )
+					.fetchSingleHit().orElseThrow();
 
-			Object[] projection = (Object[]) query.getSingleResult();
-
-			assertThat( projection[0] ).isEqualTo( "Tanaka's return" );
-			assertThat( projection[1] ).isEqualTo( "Samurai Games, Inc." );
-			assertThat( projection[2] ).isEqualTo( new GregorianCalendar( 2011, 2, 13 ).getTime() );
-
-			query = ftem.createFullTextQuery(
-					qb.keyword()
-					.onField( "tags" )
-					.matching( "round-based" )
-					.createQuery(),
-					VideoGame.class
-			)
-			.setProjection( ElasticsearchProjectionConstants.SCORE, ElasticsearchProjectionConstants.SOURCE );
-
-			projection = (Object[]) query.getSingleResult();
-
-			System.out.println( Arrays.toString( projection ) );
-		} );
-
-		em.close();
-	}
-
-	@Test
-	public void projectionWithTransformer() {
-		EntityManager em = emf.createEntityManager();
-
-		inTransaction( em, tx -> {
-			FullTextEntityManager ftem = Search.getFullTextEntityManager( em );
-			QueryBuilder qb = ftem.getSearchFactory()
-					.buildQueryBuilder()
-					.forEntity( VideoGame.class )
-					.get();
-
-			FullTextQuery query = ftem.createFullTextQuery(
-					qb.keyword()
-					.onField( "tags" )
-					.matching( "round-based" )
-					.createQuery(),
-					VideoGame.class
-			)
-			.setProjection( "title", "publisher.name", "release" )
-			.setResultTransformer( new BasicTransformerAdapter() {
-				@Override
-				public VideoGameDto transformTuple(Object[] tuple, String[] aliases) {
-					return new VideoGameDto( (String) tuple[0], (String) tuple[1], (Date) tuple[2] );
-				}
-			} );
-
-			VideoGameDto projection = (VideoGameDto) query.getSingleResult();
 			assertThat( projection.getTitle() ).isEqualTo( "Tanaka's return" );
 			assertThat( projection.getPublisherName() ).isEqualTo( "Samurai Games, Inc." );
 			assertThat( projection.getRelease() ).isEqualTo( new GregorianCalendar( 2011, 2, 13 ).getTime() );
+
+			Object[] scoreAndSource = searchSession.search( VideoGame.class )
+					.extension( ElasticsearchExtension.get() )
+					.select( f -> f.composite().from( f.score(), f.source() ).asArray() )
+					.where( f -> f.match().field( "tags" ).matching( "round-based" ) )
+					.fetchSingleHit().orElseThrow();
+
+			System.out.println( Arrays.toString( scoreAndSource ) );
 		} );
 
 		em.close();
@@ -302,13 +219,13 @@ public class HibernateSearchWithElasticsearchIT extends TestBase {
 	public void manualIndexing() {
 		EntityManager em = emf.createEntityManager();
 
-		FullTextEntityManager ftem = Search.getFullTextEntityManager( em );
-		ftem.getTransaction().begin();
+		em.getTransaction().begin();
+		SearchSession searchSession = Search.session( em );
 
-		VideoGame game = ftem.find( VideoGame.class, 311 );
-		ftem.index( game );
+		VideoGame game = em.find( VideoGame.class, 311 );
+		searchSession.indexingPlan().addOrUpdate( game );
 
-		ftem.getTransaction().commit();
+		em.getTransaction().commit();
 	}
 
 	@AfterClass
@@ -318,33 +235,4 @@ public class HibernateSearchWithElasticsearchIT extends TestBase {
 		}
 	}
 
-	public static class VideoGameDto {
-
-		private final String title;
-		private final String publisherName;
-		private final Date release;
-
-		public VideoGameDto(String title, String publisherName, Date release) {
-			this.title = title;
-			this.publisherName = publisherName;
-			this.release = release;
-		}
-
-		public String getTitle() {
-			return title;
-		}
-
-		public String getPublisherName() {
-			return publisherName;
-		}
-
-		public Date getRelease() {
-			return release;
-		}
-
-		@Override
-		public String toString() {
-			return "VideoGameDto [title=" + title + ", publisherName=" + publisherName + ", release=" + release + "]";
-		}
-	}
 }

@@ -24,18 +24,13 @@
       <property name="hibernate.show_sql" value="false" />
       <property name="hibernate.hbm2ddl.auto" value="create-drop" />
 
-      <property name="hibernate.search.default.indexmanager" value="elasticsearch" />
-
       <!-- Not needed if using localhost -->
-      <!-- <property name="hibernate.search.default.elasticsearch.host" value="http://127.0.0.1:9200" /> -->
+      <!-- <property name="hibernate.search.backend.uris" value="http://127.0.0.1:9200" /> -->
 
-      <property name="hibernate.search.default.elasticsearch.index_schema_management_strategy" value="CREATE" />
-
-      <!-- Allow start even on a Yellow status of the Elasticsearch cluster. This is common on single-node dev environments -->
-      <property name="hibernate.search.default.elasticsearch.required_index_status" value="yellow" />
+      <property name="hibernate.search.schema_management.strategy" value="create" />
 
       <!-- Ensuring that Elasticsearch always returns up to date results makes testing much easier -->
-      <property name="hibernate.search.default.elasticsearch.refresh_after_write" value="true" />
+      <property name="hibernate.search.indexing.plan.synchronization.strategy" value="sync" />
     </properties>
 
   </persistence-unit>
