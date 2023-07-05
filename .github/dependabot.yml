@@ -67,3 +67,22 @@ updates:
         update-types: [ "version-update:semver-major" ]
       - dependency-name: "org.hibernate.*:*"
         update-types: [ "version-update:semver-major" ]
+  - package-ecosystem: "maven"
+    directory: "/hibernate-search/hsearch-outbox-polling"
+    schedule:
+      interval: "daily"
+    allow:
+      - dependency-name: "io.quarkus:*"
+      - dependency-name: "io.quarkus.*:*"
+      - dependency-name: "org.hibernate:*"
+      - dependency-name: "org.hibernate.*:*"
+    ignore:
+      - dependency-name: "io.quarkus:*"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "io.quarkus.*:*"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "org.hibernate:*"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "org.hibernate.*:*"
+        update-types: [ "version-update:semver-major" ]
+
