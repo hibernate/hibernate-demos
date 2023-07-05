@@ -3,8 +3,8 @@ pipeline {
         label 'Worker&&Containers'
     }
     tools {
-        jdk 'OpenJDK 11 Latest'
-        maven 'Apache Maven 3.8'
+        jdk 'OpenJDK 17 Latest'
+        maven 'Apache Maven 3.9'
     }
     options {
         disableConcurrentBuilds()
