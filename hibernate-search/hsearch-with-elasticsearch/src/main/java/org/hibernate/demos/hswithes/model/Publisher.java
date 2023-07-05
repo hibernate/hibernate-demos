@@ -8,15 +8,15 @@ package org.hibernate.demos.hswithes.model;
 
 import javax.persistence.Embeddable;
 
-import org.hibernate.search.annotations.Field;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 
 @Embeddable
 public class Publisher {
 
-	@Field
+	@FullTextField
 	public String name;
 
-	@Field
+	@FullTextField
 	public String address;
 
 	Publisher() {

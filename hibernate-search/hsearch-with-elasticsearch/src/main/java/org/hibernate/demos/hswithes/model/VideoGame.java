@@ -17,9 +17,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
 @Entity
 @Indexed(index = "videogame")
@@ -29,24 +30,23 @@ public class VideoGame {
 	@GeneratedValue
 	public long id;
 
-	@Field()
+	@FullTextField
 	public String title;
 
-	@Field
+	@FullTextField
 	public String description;
 
-	@Field
+	@GenericField
 	public int rating;
 
-	@Field(name="release")
+	@GenericField(name="release")
 	public Date publishingDate;
 
 	@IndexedEmbedded
 	public Publisher publisher;
 
 	@ElementCollection
-	@Field
-	@IndexedEmbedded
+	@FullTextField
 	public List<String> tags = new ArrayList<>();
 
 	@ManyToMany

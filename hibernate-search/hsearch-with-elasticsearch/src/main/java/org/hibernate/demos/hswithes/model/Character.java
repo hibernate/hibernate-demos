@@ -14,8 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
-import org.hibernate.search.annotations.ContainedIn;
-import org.hibernate.search.annotations.Field;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 
 @Entity
 public class Character {
@@ -24,14 +23,13 @@ public class Character {
 	@GeneratedValue
 	public long id;
 
-	@Field
+	@FullTextField
 	public String nickName;
 
-	@Field
+	@FullTextField
 	public String specialPower;
 
 	@ManyToMany(mappedBy="characters")
-	@ContainedIn
 	public List<VideoGame> appearsIn = new ArrayList<>();
 
 	Character() {
