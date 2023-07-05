@@ -2,8 +2,8 @@ package org.hibernate.demos.quarkus.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 

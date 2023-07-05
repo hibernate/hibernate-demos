@@ -1,7 +1,7 @@
 package org.hibernate.demos.hsearchfeatureexamples.dto;
 
 import java.math.BigDecimal;
-import javax.json.bind.annotation.JsonbPropertyOrder;
+import jakarta.json.bind.annotation.JsonbPropertyOrder;
 
 import org.hibernate.demos.hsearchfeatureexamples.model.TShirtSize;
 
