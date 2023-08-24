@@ -1,13 +1,15 @@
 package org.hibernate.search.demos.wikipedia.data;
 
-import javax.persistence.Basic;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 
+import org.hibernate.Length;
 import org.hibernate.annotations.Type;
 import org.hibernate.search.engine.backend.types.Sortable;
 import org.hibernate.search.mapper.pojo.automaticindexing.ReindexOnUpdate;
@@ -32,7 +34,7 @@ public class Page {
 	private String title;
 
 	@Basic(optional = false)
-	@Type(type = "text")
+	@Column(length = Length.LONG32)
 	@FullTextField(analyzer = "cleaned_text")
 	private String content;
 

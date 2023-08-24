@@ -6,7 +6,7 @@
  */
 package org.hibernate.search.demos.wikipedia.endpoint.error;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 public class ErrorEntity {
 	private Response.Status status;

@@ -45,9 +45,6 @@ Initialize the database using the provided script:
 
 # Running the project
 
-You must have [Maven (`mvn`)](https://maven.apache.org/) in your path, version 3.2 or later.
-You must use Java 8.
-
 Execute the following command:
 
 ```
