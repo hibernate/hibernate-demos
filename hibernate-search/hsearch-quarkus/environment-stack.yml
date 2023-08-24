@@ -1,6 +1,6 @@
 services:
   pg01:
-    image: postgres:12.0
+    image: postgres:15.2
     environment:
       - POSTGRES_USER=hsearch_demo
       - POSTGRES_PASSWORD=hsearch_demo
