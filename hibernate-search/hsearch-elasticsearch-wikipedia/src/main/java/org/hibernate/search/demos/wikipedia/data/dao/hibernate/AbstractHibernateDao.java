@@ -1,7 +1,7 @@
 package org.hibernate.search.demos.wikipedia.data.dao.hibernate;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import com.querydsl.jpa.impl.JPAQuery;
 

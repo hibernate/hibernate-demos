@@ -14,8 +14,6 @@ spring.datasource:
     maximumPoolSize: 30
 
 spring.jpa.properties:
-  hibernate:
-    dialect: org.hibernate.dialect.PostgreSQL95Dialect
   hibernate.search:
     schema_management.strategy: create-or-validate
     backend:
@@ -23,7 +21,13 @@ spring.jpa.properties:
       protocol: http
       discovery.enabled: true
       analysis.configurer: analysisConfigurerSpringBean
-      indexing.max_bulk_size: 250
+      # This fixes mass indexing by reducing the amount of parallel indexing requests:
+      # our cluster is not large enough to handle high parallel traffic.
+      # Of course this also means mass indexing gets quite slow,
+      # so one might want to bump the numbers to get more throughput
+      # (but risk failures if the cluster gets overloaded).
+      indexing.queue_count: 2
+      indexing.max_bulk_size: 100
 
 spring.jackson:
   serialization:
