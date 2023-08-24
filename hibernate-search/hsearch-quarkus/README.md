@@ -22,8 +22,6 @@ docker-compose -f environment-stack.yml -p hsearch-quarkus-env down -v
 
 ### Starting the application in development mode
 
-You must use Java 8.
-
 Execute the following command:
 
 ```
