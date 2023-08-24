@@ -13,7 +13,7 @@ services:
     networks:
       - pgnet
   es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.0
+    image: elastic/elasticsearch:8.9.0
     environment:
       - node.name=es01
       - discovery.seed_hosts=es02
@@ -21,6 +21,13 @@ services:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      # Self-signed certificates really aren't practical to work with, so we disable that.
+      - xpack.security.enabled=false
+      # Disable disk-based shard allocation thresholds: on large, relatively full disks (>90% used),
+      # it will lead to index creation to get stuck waiting for other nodes to join the cluster,
+      # which will never happen since we only have one node.
+      # See https://www.elastic.co/guide/en/elasticsearch/reference/8.9/modules-cluster.html#disk-based-shard-allocation
+      - cluster.routing.allocation.disk.threshold_enabled=false
     ulimits:
       memlock:
         soft: -1
@@ -35,7 +42,7 @@ services:
     networks:
       - esnet
   es02:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.0
+    image: elastic/elasticsearch:8.9.0
     environment:
       - node.name=es02
       - discovery.seed_hosts=es01
@@ -43,6 +50,13 @@ services:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      # Self-signed certificates really aren't practical to work with, so we disable that.
+      - xpack.security.enabled=false
+      # Disable disk-based shard allocation thresholds: on large, relatively full disks (>90% used),
+      # it will lead to index creation to get stuck waiting for other nodes to join the cluster,
+      # which will never happen since we only have one node.
+      # See https://www.elastic.co/guide/en/elasticsearch/reference/8.9/modules-cluster.html#disk-based-shard-allocation
+      - cluster.routing.allocation.disk.threshold_enabled=false
     ulimits:
       memlock:
         soft: -1
