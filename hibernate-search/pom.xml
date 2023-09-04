@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.hibernate.demos</groupId>
+  <artifactId>hsearch-demo-aggregator</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Hibernate Search Demos - Aggregator POM</name>
+  <description>An aggregator POM to build all demos in one command, or to simplify configuration of dependabot</description>
+  <modules>
+    <module>hsearch-with-elasticsearch</module>
+    <module>hsearch-elasticsearch-wikipedia</module>
+    <module>hsearch-quarkus</module>
+    <module>hsearch-outbox-polling</module>
+    <module>hsearch-feature-examples</module>
+  </modules>
+</project>
