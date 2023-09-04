@@ -15,7 +15,12 @@ pipeline {
     stages {
         stage('Build Hibernate Search Demos') {
             steps {
-                sh "./ci/build-hibernate-search.sh"
+                sh "mvn -f hibernate-search -B -q clean package -DskipTests=true -Dtest.containers.run.skip=true"
+            }
+        }
+        stage('Test Hibernate Search Demos') {
+            steps {
+                sh "mvn -f hibernate-search -B verify -Dstart-containers"
             }
         }
     }
