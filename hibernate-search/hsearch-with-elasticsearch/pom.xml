@@ -18,7 +18,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.release>17</maven.compiler.release>
 
-		<version.org.hibernate.search>6.2.1.Final</version.org.hibernate.search>
+		<version.org.hibernate.search>6.2.2.Final</version.org.hibernate.search>
 		<version.org.hibernate.orm>5.6.15.Final</version.org.hibernate.orm>
 
 		<docker-maven-plugin.version>0.34.1</docker-maven-plugin.version>
