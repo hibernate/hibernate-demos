@@ -1,18 +1,14 @@
 package org.hibernate.demos.hsearchfeatureexamples.dto;
 
-import jakarta.json.bind.annotation.JsonbPropertyOrder;
-
 import org.hibernate.demos.hsearchfeatureexamples.model.FashionSeason;
 
-import lombok.Value;
+import jakarta.json.bind.annotation.JsonbPropertyOrder;
 
-@Value
 @JsonbPropertyOrder({ "id", "year", "season" })
-public class FashionCollectionOutputDto {
-
-	long id;
-	Integer year;
-	FashionSeason season;
-	String keywords;
-
+public record FashionCollectionOutputDto(
+		long id,
+		Integer year,
+		FashionSeason season,
+		String keywords
+) {
 }

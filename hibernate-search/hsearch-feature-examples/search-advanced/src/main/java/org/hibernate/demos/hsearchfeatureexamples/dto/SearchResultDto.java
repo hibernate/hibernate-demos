@@ -6,22 +6,18 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+
 import jakarta.json.bind.adapter.JsonbAdapter;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 
-import lombok.AllArgsConstructor;
-import lombok.Value;
-
-@Value
-@AllArgsConstructor
 @JsonbPropertyOrder({ "totalHitCount", "hits" })
-public class SearchResultDto<T> {
-
-	long totalHitCount;
-	List<T> hits;
-	@JsonbTypeAdapter(FacetsAdapter.class)
-	Map<String, Map<?, Long>> facets;
+public record SearchResultDto<T>(
+		long totalHitCount,
+		List<T> hits,
+		@JsonbTypeAdapter(FacetsAdapter.class)
+		Map<String, Map<?, Long>> facets
+) {
 
 	public SearchResultDto(long totalHitCount, List<T> hits) {
 		this( totalHitCount, hits, null );
