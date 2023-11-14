@@ -113,7 +113,7 @@
             <compilerArg>-parameters</compilerArg>
             <compilerArg>-Amapstruct.suppressGeneratorTimestamp=true</compilerArg>
             <compilerArg>-Amapstruct.suppressGeneratorVersionInfoComment=true</compilerArg>
-            <compilerArg>-Amapstruct.defaultComponentModel=cdi</compilerArg>
+            <compilerArg>-Amapstruct.defaultComponentModel=jakarta</compilerArg>
             <compilerArg>-Amapstruct.defaultInjectionStrategy=constructor</compilerArg>
           </compilerArgs>
         </configuration>
