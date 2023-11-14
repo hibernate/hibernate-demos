@@ -158,7 +158,7 @@ public class TShirtService {
 					if ( q != null && !q.isBlank() ) {
 						b.must( f.simpleQueryString()
 								.fields( "name", "collection.keywords",
-										"variants_nested.color", "variants_nested.size" )
+										"variants.color", "variants.size" )
 								.matching( q ) );
 					}
 
