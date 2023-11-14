@@ -1,11 +1,10 @@
 package org.hibernate.demos.hsearchfeatureexamples.dto.mapper;
 
+import io.quarkus.hibernate.orm.panache.Panache;
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-
-import io.quarkus.hibernate.orm.panache.Panache;
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import org.mapstruct.TargetType;
 
 @ApplicationScoped
