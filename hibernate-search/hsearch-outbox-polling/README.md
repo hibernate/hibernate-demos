@@ -11,7 +11,13 @@ You can run your application in dev mode that enables live coding using:
 ./mvnw compile quarkus:dev
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+You can then see the indexed entity types there, and trigger mass indexing:
+
+http://localhost:8080/q/dev-ui/io.quarkus.quarkus-hibernate-search-orm-elasticsearch/indexed-entity-types
+
+And you can trigger the various endpoints (CRUD, search, ...) through Swagger UI:
+
+http://0.0.0.0:9000/q/swagger-ui/
 
 ## Running the application in prod mode
 
@@ -19,8 +25,31 @@ This will build a container and run it, along with all the necessary services (P
 
 ```shell script
 ./mvnw clean package
-docker-compose up
+podman compose up
+# OR
+docker compose up
 ```
+
+As in dev mode, you can trigger the various endpoints (CRUD, search, ...) through Swagger UI:
+
+http://0.0.0.0:9000/q/swagger-ui/
+
+You can also easily add additional instances of the application to the "cluster":
+
+```shell script
+podman run --rm -it \
+    --net hsearch-outbox-polling_pgnet,hsearch-outbox-polling_esnet \
+    -e QUARKUS_DATASOURCE_JDBC_URL=jdbc:postgresql://pg01:5432/hibernate_demo \
+    -e QUARKUS_DATASOURCE_USERNAME=hibernate_demo \
+    -e QUARKUS_DATASOURCE_PASSWORD=hibernate_demo \
+    -e QUARKUS_HIBERNATE_SEARCH_ORM_ELASTICSEARCH_HOSTS=es01:9200,es02:9200 \
+    hibernate-demo/hsearch-outbox-polling:1.0.0-SNAPSHOT
+```
+
+After adding an instance,
+watch the logs of each application for hints of rebalancing,
+and see when you  how listener
+and observe rebalancing, as well as distribution of the next listener-triggered indexing, in logs:
 
 ## Examples
 
