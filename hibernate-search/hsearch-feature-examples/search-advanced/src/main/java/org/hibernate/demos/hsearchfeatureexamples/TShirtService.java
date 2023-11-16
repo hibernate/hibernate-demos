@@ -127,10 +127,9 @@ public class TShirtService {
 	@Path("autocomplete_nodb")
 	public List<TShirtOutputDto> autocompleteNoDatabase(@QueryParam String terms) {
 		return searchSession.search( TShirt.class )
-				.select( f -> f.composite(
-						(ref, field) -> TShirtOutputDto.of( (long) ref.id(), field ),
-						f.entityReference(), f.field( "name", String.class )
-				) )
+				.select( f -> f.composite()
+						.from( f.entityReference(), f.field( "name", String.class ) )
+						.as( (ref, field) -> TShirtOutputDto.of( (long) ref.id(), field ) ) )
 				.where( f -> f.simpleQueryString()
 						.fields( "name_autocomplete" )
 						.matching( terms )
@@ -152,21 +151,21 @@ public class TShirtService {
 				AggregationKey.of( "count-by-price-range" );
 
 		SearchResult<TShirt> result = searchSession.search( TShirt.class )
-				.where( f -> f.bool( b -> {
-					b.must( f.matchAll() ); // Match all by default
+				.where( (f, root) -> {
+					root.add( f.matchAll() ); // Match all by default
 
 					if ( q != null && !q.isBlank() ) {
-						b.must( f.simpleQueryString()
+						root.add( f.simpleQueryString()
 								.fields( "name", "collection.keywords",
 										"variants.color", "variants.size" )
 								.matching( q ) );
 					}
 
 					if ( color != null || size != null || priceRange != null ) {
-						b.must( f.nested().objectField( "variants_nested" )
-								.nest( variantFilter( f, size, color, priceRange ) ) );
+						root.add( f.nested( "variants_nested" )
+								.add( variantFilter( f, size, color, priceRange ) ) );
 					}
-				} ) )
+				} )
 				.aggregation( countByColor, f -> f.terms()
 						.field( "variants_nested.color_keyword", String.class )
 						.filter( f2 -> variantFilter( f2, size, color, priceRange ) )
@@ -198,19 +197,19 @@ public class TShirtService {
 		if ( size == null && color == null && priceRange == null ) {
 			return f.matchAll();
 		}
-		return f.bool( variantsBool -> {
+		return f.and().with( and -> {
 			if ( color != null ) {
-				variantsBool.must( f.match()
+				and.add( f.match()
 						.field( "variants_nested.color" )
 						.matching( color ) );
 			}
 			if ( size != null ) {
-				variantsBool.must( f.match()
+				and.add( f.match()
 						.field( "variants_nested.size" )
 						.matching( size ) );
 			}
 			if ( priceRange != null ) {
-				variantsBool.must( f.range()
+				and.add( f.range()
 						.field( "variants_nested.price" )
 						.range( priceRange.value ) );
 			}
