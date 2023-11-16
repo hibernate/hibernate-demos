@@ -31,11 +31,13 @@ public class FashionCollectionServiceTest {
 	public void create_retrieve_update() {
 		ExtractableResponse<Response> createResponse = given()
 				.contentType( ContentType.JSON )
-				.body( "{"
-						+ "  \"season\": \"SPRING_SUMMER\","
-						+ "  \"year\": 2021,"
-						+ "  \"keywords\": \"my keywords\""
-						+ "}" )
+				.body( """
+						{
+						  "season": "SPRING_SUMMER",
+						  "year": 2021,
+						  "keywords": "my keywords"
+						}
+						""" )
 				.when().post( "/collection/" )
 				.then()
 				.statusCode( 200 )
@@ -47,40 +49,48 @@ public class FashionCollectionServiceTest {
 				.when().get( "/collection/" + id )
 				.then()
 				.statusCode( 200 )
-				.body( jsonEquals( "{"
-						+ "  \"id\": " + id + ","
-						+ "  \"season\": \"SPRING_SUMMER\","
-						+ "  \"year\": 2021,"
-						+ "  \"keywords\": \"my keywords\""
-						+ "}" ) );
+				.body( jsonEquals( """
+						{
+						  "id": %d,
+						  "season": "SPRING_SUMMER",
+						  "year": 2021,
+						  "keywords": "my keywords"
+						}
+						""".formatted( id ) ) );
 
 		given()
 				.contentType( ContentType.JSON )
-				.body( "{"
-						+ "  \"season\": \"SPRING_SUMMER\","
-						+ "  \"year\": 2021,"
-						+ "  \"keywords\": \"my keywords and some more\""
-						+ "}" )
+				.body( """
+						{
+						  "season": "SPRING_SUMMER",
+						  "year": 2021,
+						  "keywords": "my keywords and some more"
+						}
+						""" )
 				.when().put( "/collection/" + id )
 				.then()
 				.statusCode( 200 )
-				.body( jsonEquals( "{"
-						+ "  \"id\": " + id + ","
-						+ "  \"season\": \"SPRING_SUMMER\","
-						+ "  \"year\": 2021,"
-						+ "  \"keywords\": \"my keywords and some more\""
-						+ "}" ) );
+				.body( jsonEquals( """
+						{
+						  "id": %d,
+						  "season": "SPRING_SUMMER",
+						  "year": 2021,
+						  "keywords": "my keywords and some more"
+						}
+						""".formatted( id ) ) );
 
 		given()
 				.when().get( "/collection/" + id )
 				.then()
 				.statusCode( 200 )
-				.body( jsonEquals( "{"
-						+ "  \"id\": " + id + ","
-						+ "  \"season\": \"SPRING_SUMMER\","
-						+ "  \"year\": 2021,"
-						+ "  \"keywords\": \"my keywords and some more\""
-						+ "}" ) );
+				.body( jsonEquals( """
+						{
+						  "id": %d,
+						  "season": "SPRING_SUMMER",
+						  "year": 2021,
+						  "keywords": "my keywords and some more"
+						}
+						""".formatted( id ) ) );
 	}
 
 }
