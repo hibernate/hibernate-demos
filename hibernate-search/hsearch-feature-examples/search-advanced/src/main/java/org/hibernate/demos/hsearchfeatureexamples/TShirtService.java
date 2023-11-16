@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
 import jakarta.inject.Inject;
 import jakarta.json.Json;
 import jakarta.json.JsonReaderFactory;
@@ -24,7 +25,7 @@ import org.hibernate.demos.hsearchfeatureexamples.dto.SearchResultDto;
 import org.hibernate.demos.hsearchfeatureexamples.dto.TShirtAutocompleteDto;
 import org.hibernate.demos.hsearchfeatureexamples.dto.TShirtInputDto;
 import org.hibernate.demos.hsearchfeatureexamples.dto.TShirtOutputDto;
-import org.hibernate.demos.hsearchfeatureexamples.dto.TShirtSearchProjectionDto;
+import org.hibernate.demos.hsearchfeatureexamples.dto.TShirtHighlightsProjectionDto;
 import org.hibernate.demos.hsearchfeatureexamples.dto.mapper.TShirtMapper;
 import org.hibernate.demos.hsearchfeatureexamples.model.TShirt;
 import org.hibernate.demos.hsearchfeatureexamples.model.TShirtSize;
@@ -59,7 +60,7 @@ public class TShirtService {
 	SearchSession searchSession;
 
 	private final Gson gson = new Gson();
-	private final JsonReaderFactory jsonReaderFactory = Json.createReaderFactory(Map.of());
+	private final JsonReaderFactory jsonReaderFactory = Json.createReaderFactory( Map.of() );
 
 	@POST
 	public TShirtOutputDto create(TShirtInputDto input) {
@@ -114,22 +115,18 @@ public class TShirtService {
 	}
 
 	@GET
-	@Path("search_projection")
-	public SearchResultDto<TShirtSearchProjectionDto> searchWithProjection(@QueryParam String q,
+	@Path("highlight")
+	public SearchResultDto<TShirtHighlightsProjectionDto> searchWithHighlights(@NotBlank @QueryParam String q,
 			@QueryParam int page) {
-		SearchResult<TShirtSearchProjectionDto> result = searchSession.search( TShirt.class )
-				.select( TShirtSearchProjectionDto.class )
-				.where( f -> {
-					if ( q == null || q.isBlank() ) {
-						return f.matchAll();
-					}
-					else {
-						return f.simpleQueryString()
-								.fields( "name", "collection.keywords",
-										"variants.color", "variants.size" )
-								.matching( q );
-					}
-				} )
+		SearchResult<TShirtHighlightsProjectionDto> result = searchSession.search( TShirt.class )
+				.select( TShirtHighlightsProjectionDto.class )
+				.where( f -> f.simpleQueryString()
+						.fields( "name", "collection.keywords",
+								"variants.color", "variants.size" )
+						.matching( q ) )
+				.highlighter( f -> f.unified()
+						.numberOfFragments( 1 )
+						.fragmentSize( 256 ).noMatchSize( 256 ) )
 				.fetch( page * PAGE_SIZE, PAGE_SIZE );
 
 		return new SearchResultDto<>( result.total().hitCount(), result.hits() );
