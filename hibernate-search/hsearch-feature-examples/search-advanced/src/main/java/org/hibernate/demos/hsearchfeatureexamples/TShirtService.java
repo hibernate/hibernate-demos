@@ -12,6 +12,7 @@ import jakarta.json.Json;
 import jakarta.json.JsonReaderFactory;
 import jakarta.json.JsonValue;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
@@ -136,7 +137,7 @@ public class TShirtService {
 
 	@GET
 	@Path("autocomplete")
-	public List<TShirtOutputDto> autocomplete(@QueryParam String terms) {
+	public List<TShirtOutputDto> autocomplete(@NotBlank @QueryParam String terms) {
 		List<TShirt> hits = searchSession.search( TShirt.class )
 				.where( f -> f.simpleQueryString()
 						.fields( "name_autocomplete" )
@@ -149,7 +150,7 @@ public class TShirtService {
 
 	@GET
 	@Path("autocomplete_nodb")
-	public List<TShirtAutocompleteDto> autocompleteNoDatabase(@QueryParam String terms) {
+	public List<TShirtAutocompleteDto> autocompleteNoDatabase(@NotBlank @QueryParam String terms) {
 		return searchSession.search( TShirt.class )
 				.select( TShirtAutocompleteDto.class )
 				.where( f -> f.simpleQueryString()
@@ -272,7 +273,7 @@ public class TShirtService {
 
 	@GET
 	@Path("suggest")
-	public JsonValue suggest(@QueryParam String terms) {
+	public JsonValue suggest(@NotBlank @QueryParam String terms) {
 		ElasticsearchSearchResult<TShirt> result = searchSession.search( TShirt.class )
 				.extension( ElasticsearchExtension.get() )
 				.where( f -> f.matchAll() )
