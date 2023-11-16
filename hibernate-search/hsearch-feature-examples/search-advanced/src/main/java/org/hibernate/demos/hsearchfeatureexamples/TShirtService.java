@@ -20,8 +20,10 @@ import jakarta.ws.rs.Path;
 
 import org.hibernate.demos.hsearchfeatureexamples.dto.PriceRangeDto;
 import org.hibernate.demos.hsearchfeatureexamples.dto.SearchResultDto;
+import org.hibernate.demos.hsearchfeatureexamples.dto.TShirtAutocompleteDto;
 import org.hibernate.demos.hsearchfeatureexamples.dto.TShirtInputDto;
 import org.hibernate.demos.hsearchfeatureexamples.dto.TShirtOutputDto;
+import org.hibernate.demos.hsearchfeatureexamples.dto.TShirtSearchProjectionDto;
 import org.hibernate.demos.hsearchfeatureexamples.dto.mapper.TShirtMapper;
 import org.hibernate.demos.hsearchfeatureexamples.model.TShirt;
 import org.hibernate.demos.hsearchfeatureexamples.model.TShirtSize;
@@ -111,6 +113,28 @@ public class TShirtService {
 	}
 
 	@GET
+	@Path("search_projection")
+	public SearchResultDto<TShirtSearchProjectionDto> searchWithProjection(@QueryParam String q,
+			@QueryParam int page) {
+		SearchResult<TShirtSearchProjectionDto> result = searchSession.search( TShirt.class )
+				.select( TShirtSearchProjectionDto.class )
+				.where( f -> {
+					if ( q == null || q.isBlank() ) {
+						return f.matchAll();
+					}
+					else {
+						return f.simpleQueryString()
+								.fields( "name", "collection.keywords",
+										"variants.color", "variants.size" )
+								.matching( q );
+					}
+				} )
+				.fetch( page * PAGE_SIZE, PAGE_SIZE );
+
+		return new SearchResultDto<>( result.total().hitCount(), result.hits() );
+	}
+
+	@GET
 	@Path("autocomplete")
 	public List<TShirtOutputDto> autocomplete(@QueryParam String terms) {
 		List<TShirt> hits = searchSession.search( TShirt.class )
@@ -125,11 +149,9 @@ public class TShirtService {
 
 	@GET
 	@Path("autocomplete_nodb")
-	public List<TShirtOutputDto> autocompleteNoDatabase(@QueryParam String terms) {
+	public List<TShirtAutocompleteDto> autocompleteNoDatabase(@QueryParam String terms) {
 		return searchSession.search( TShirt.class )
-				.select( f -> f.composite()
-						.from( f.entityReference(), f.field( "name", String.class ) )
-						.as( (ref, field) -> TShirtOutputDto.of( (long) ref.id(), field ) ) )
+				.select( TShirtAutocompleteDto.class )
 				.where( f -> f.simpleQueryString()
 						.fields( "name_autocomplete" )
 						.matching( terms )
