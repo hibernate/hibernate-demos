@@ -74,6 +74,18 @@ curl -s -XPOST -H 'Content-Type: application/json' 'localhost:8080/collection/2'
 curl -s -XGET -H 'Content-Type: application/json' 'localhost:8080/tshirt/search?brief=true&q=bicycle' | jq
 ```
 
+### Highlighting
+
+See `TShirtService.java`.
+
+```shell script
+while read TEXT; do curl -s -XGET -H 'Content-Type: application/json' 'localhost:8080/tshirt/highlight' -G --data-urlencode "q=$TEXT" | jq ; done
+# Then type whatever you want, followed by <ENTER>
+jump
+```
+
+(It will not hit the database)
+
 ### Advanced analysis (autocomplete)
 
 See `TShirtService.java`.
