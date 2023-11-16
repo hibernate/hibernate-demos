@@ -22,7 +22,7 @@ public class TShirtServiceTest {
 	static {
 		RestAssured.config = RestAssuredConfig.config()
 				.objectMapperConfig( ObjectMapperConfig.objectMapperConfig()
-						.defaultObjectMapperType( ObjectMapperType.GSON) )
+						.defaultObjectMapperType( ObjectMapperType.GSON ) )
 				.logConfig( LogConfig.logConfig()
 						.enableLoggingOfRequestAndResponseIfValidationFails() );
 	}
@@ -31,22 +31,23 @@ public class TShirtServiceTest {
 	public void create_retrieve_update() {
 		Response createResponse = given()
 				.contentType( ContentType.JSON )
-				.body( "{"
-						+ "  \"name\":\"My T-Shirt\","
-						+ "  \"collection\": 1,"
-						+ "  \"variants\": ["
-						+ "    {"
-						+ "      \"color\": \"Red\","
-						+ "      \"size\": \"S\","
-						+ "      \"price\": 29.99"
-						+ "    },"
-						+ "    {"
-						+ "      \"color\": \"Blue\","
-						+ "      \"size\": \"L\","
-						+ "      \"price\": 19.99"
-						+ "    }"
-						+ "  ]"
-						+ "}" )
+				.body( """
+						{
+						  "name":"My T-Shirt",
+						  "collection": 1,
+						  "variants": [
+						    {      "color": "Red",
+						      "size": "S",
+						      "price": 29.99
+						    },
+						    {
+						      "color": "Blue",
+						      "size": "L",
+						      "price": 19.99
+						    }
+						  ]
+						}
+						""" )
 				.when().post( "/tshirt/" )
 				.then()
 				.statusCode( 200 )
@@ -58,86 +59,95 @@ public class TShirtServiceTest {
 				.when().get( "/tshirt/" + id )
 				.then()
 				.statusCode( 200 )
-				.body( jsonEquals( "{"
-						+ "  \"id\": " + id + ","
-						+ "  \"name\":\"My T-Shirt\","
-						+ "  \"collection\": { \"id\": 1 },"
-						+ "  \"variants\": ["
-						+ "    {"
-						+ "      \"color\": \"Red\","
-						+ "      \"size\": \"S\","
-						+ "      \"price\": 29.99"
-						+ "    },"
-						+ "    {"
-						+ "      \"color\": \"Blue\","
-						+ "      \"size\": \"L\","
-						+ "      \"price\": 19.99"
-						+ "    }"
-						+ "  ]"
-						+ "}" )
+				.body( jsonEquals( """
+						{
+						  "id": %d,
+						  "name":"My T-Shirt",
+						  "collection": { "id": 1 },
+						  "variants": [
+							{
+							  "color": "Red",
+							  "size": "S",
+							  "price": 29.99
+							},
+							{
+							  "color": "Blue",
+							  "size": "L",
+							  "price": 19.99
+							}
+						  ]
+						}
+						"""
+						.formatted(
+								id ) )
 						.when( Option.IGNORING_EXTRA_FIELDS ) );
 
 		given()
 				.contentType( ContentType.JSON )
-				.body( "{"
-						+ "  \"name\":\"My T-Shirt\","
-						+ "  \"collection\": 1,"
-						+ "  \"variants\": ["
-						+ "    {"
-						+ "      \"color\": \"Red\","
-						+ "      \"size\": \"S\","
-						+ "      \"price\": 24.99"
-						+ "    },"
-						+ "    {"
-						+ "      \"color\": \"Blue\","
-						+ "      \"size\": \"L\","
-						+ "      \"price\": 19.99"
-						+ "    }"
-						+ "  ]"
-						+ "}" )
+				.body( """
+						{
+						  "name":"My T-Shirt",
+						  "collection": 1,
+						  "variants": [
+						    {
+						      "color": "Red",
+						      "size": "S",
+						      "price": 24.99
+						    },
+						    {
+						      "color": "Blue",
+						      "size": "L",
+						      "price": 19.99
+						    }
+						  ]
+						}
+						""" )
 				.when().put( "/tshirt/" + id )
 				.then()
 				.statusCode( 200 )
-				.body( jsonEquals( "{"
-						+ "  \"id\": " + id + ","
-						+ "  \"name\":\"My T-Shirt\","
-						+ "  \"collection\": { \"id\": 1 },"
-						+ "  \"variants\": ["
-						+ "    {"
-						+ "      \"color\": \"Red\","
-						+ "      \"size\": \"S\","
-						+ "      \"price\": 24.99"
-						+ "    },"
-						+ "    {"
-						+ "      \"color\": \"Blue\","
-						+ "      \"size\": \"L\","
-						+ "      \"price\": 19.99"
-						+ "    }"
-						+ "  ]"
-						+ "}" )
+				.body( jsonEquals( """
+						{
+						  "id": %d,
+						  "name":"My T-Shirt",
+						  "collection": { "id": 1 },
+						  "variants": [
+							{
+							  "color": "Red",
+							  "size": "S",
+							  "price": 24.99
+							},
+							{
+							  "color": "Blue",
+							  "size": "L",
+							  "price": 19.99
+							}
+						  ]
+						}
+						""".formatted( id ) )
 						.when( Option.IGNORING_EXTRA_FIELDS ) );
 
 		given()
 				.when().get( "/tshirt/" + id )
 				.then()
 				.statusCode( 200 )
-				.body( jsonEquals( "{"
-						+ "  \"id\": " + id + ","
-						+ "  \"name\":\"My T-Shirt\","
-						+ "  \"collection\": { \"id\": 1 },"
-						+ "  \"variants\": ["
-						+ "    {"
-						+ "      \"color\": \"Red\","
-						+ "      \"size\": \"S\","
-						+ "      \"price\": 24.99"
-						+ "    },"
-						+ "    {"
-						+ "      \"color\": \"Blue\","
-						+ "      \"size\": \"L\","
-						+ "      \"price\": 19.99"
-						+ "    }"
-						+ "  ]"
-						+ "}" )
+				.body( jsonEquals( """
+						{
+						  "id": %d,
+						  "name":"My T-Shirt",
+						  "collection": { "id": 1 },
+						  "variants": [
+						    {
+						  	"color": "Red",
+						  	"size": "S",
+						  	"price": 24.99
+						    },
+						    {
+						  	"color": "Blue",
+						  	"size": "L",
+						  	"price": 19.99
+						    }
+						  ]
+						}""".formatted( id ) )
 						.when( Option.IGNORING_EXTRA_FIELDS ) );
 	}
 

@@ -236,11 +236,12 @@ public class TShirtService {
 								.matching( q );
 					}
 				} )
-				.aggregation( priceStats, f -> f.fromJson( "{\n" +
-						"  \"stats\": {\n" +
-						"    \"field\": \"variants.price\"\n" +
-						"  }\n" +
-						"}" ) )
+				.aggregation( priceStats, f -> f.fromJson( """
+						{
+						  "stats": {
+						    "field": "variants.price"
+						  }
+						}""" ) )
 				.fetch( 0 );
 
 		// Resteasy doesn't understand Gson, we have to use jakarta.json
@@ -259,26 +260,27 @@ public class TShirtService {
 					body.add( "suggest", jsonObject( suggest -> {
 						suggest.addProperty( "text", terms );
 						suggest.add( "name-suggest-phrase", gson.fromJson(
-								"{\n" +
-										"  \"phrase\": {\n" +
-										"    \"field\": \"name_suggest\",\n" +
-										"    \"size\": 2,\n" +
-										"    \"gram_size\": 3,\n" +
-										"    \"direct_generator\": [ {\n" +
-										"      \"field\": \"name_suggest\",\n" +
-										"      \"suggest_mode\": \"always\"\n" +
-										"    }, {\n" +
-										"      \"field\" : \"name_suggest_reverse\",\n" +
-										"      \"suggest_mode\" : \"always\",\n" +
-										"      \"pre_filter\" : \"suggest_reverse\",\n" +
-										"      \"post_filter\" : \"suggest_reverse\"\n" +
-										"    } ],\n" +
-										"    \"highlight\": {\n" +
-										"      \"pre_tag\": \"<em>\",\n" +
-										"      \"post_tag\": \"</em>\"\n" +
-										"    }\n" +
-										"  }\n" +
-										"}",
+								"""
+										{
+										  "phrase": {
+										    "field": "name_suggest",
+										    "size": 2,
+										    "gram_size": 3,
+										    "direct_generator": [ {
+										      "field": "name_suggest",
+										      "suggest_mode": "always"
+										    }, {
+										      "field" : "name_suggest_reverse",
+										      "suggest_mode" : "always",
+										      "pre_filter" : "suggest_reverse",
+										      "post_filter" : "suggest_reverse"
+										    } ],
+										    "highlight": {
+										      "pre_tag": "<em>",
+										      "post_tag": "</em>"
+										    }
+										  }
+										}""",
 								JsonObject.class
 						) );
 					} ) );
