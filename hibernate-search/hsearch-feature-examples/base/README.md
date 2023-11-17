@@ -32,9 +32,11 @@ curl -s -XGET -H 'Content-Type: application/json' 'localhost:8080/tshirt/' | jq
 See `TShirtService.java`.
 
 ```shell script
-curl -s -XGET -H 'Content-Type: application/json' 'localhost:8080/tshirt/search?brief=true&q=car' | jq
-curl -s -XGET -H 'Content-Type: application/json' 'localhost:8080/tshirt/search?brief=true&q=bike' | jq
-curl -s -XGET -H 'Content-Type: application/json' 'localhost:8080/tshirt/search?brief=false&q=bike' | jq
+while read TEXT; do curl -s -XGET -H 'Content-Type: application/json' 'localhost:8080/tshirt/search?brief=true' -G --data-urlencode "terms=$TEXT" | jq ; done
+# Then type whatever you want, followed by <ENTER>
+car
+bike
+biking
 ```
 
 ## Packaging and running the application
