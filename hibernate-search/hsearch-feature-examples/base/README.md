@@ -32,7 +32,7 @@ curl -s -XGET -H 'Content-Type: application/json' 'localhost:8080/tshirt/' | jq
 See `TShirtService.java`.
 
 ```shell script
-while read TEXT; do curl -s -XGET -H 'Content-Type: application/json' 'localhost:8080/tshirt/search?brief=true' -G --data-urlencode "terms=$TEXT" | jq ; done
+while read TEXT; do curl -s -XGET -H 'Content-Type: application/json' 'localhost:8080/tshirt/search?brief=true' -G --data-urlencode "q=$TEXT" | jq ; done
 # Then type whatever you want, followed by <ENTER>
 car
 bike
