@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: "maven"
     directory: "/hibernate-search/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     allow:
       - dependency-name: "io.quarkus:*"
       - dependency-name: "io.quarkus.*:*"
