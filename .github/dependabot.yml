@@ -5,20 +5,48 @@ updates:
     schedule:
       interval: "weekly"
     allow:
-      - dependency-name: "io.quarkus:*"
-      - dependency-name: "io.quarkus.*:*"
+      - dependency-name: "io.quarkus*:*"
+      - dependency-name: "io.quarkiverse*:*"
       - dependency-name: "org.springframework*:*"
       - dependency-name: "org.hibernate:*"
       - dependency-name: "org.hibernate.*:*"
+    groups:
+      quarkus:
+        patterns:
+          - "io.quarkus*:*"
+          - "io.quarkiverse*:*"
+      spring:
+        patterns:
+          - "org.springframework*:*"
+      orm:
+        patterns:
+          - "org.hibernate.orm*:*"
+      search:
+        patterns:
+          - "org.hibernate.search:*"
+      validator:
+        patterns:
+          - "org.hibernate.validator:*"
+      reactive:
+        patterns:
+          - "org.hibernate.reactive:*"
+      maven-plugins:
+        patterns:
+          - "*maven*plugin*"
+          - "org.apache.maven*:*"
+        exclude-patterns:
+          - "io.quarkus*"
+          - "org.hibernate*"
+      test:
+        patterns:
+          - "org.junit*"
+          - "org.apache.logging*"
+          - "com.h2database:*"
+          - "org.assertj:*"
     ignore:
-      - dependency-name: "io.quarkus:*"
-        update-types: [ "version-update:semver-major" ]
-      - dependency-name: "io.quarkus.*:*"
+      - dependency-name: "io.quarkus*:*"
         update-types: [ "version-update:semver-major" ]
       - dependency-name: "org.springframework*:*"
         update-types: [ "version-update:semver-major" ]
-      - dependency-name: "org.hibernate:*"
+      - dependency-name: "org.hibernate*:*"
         update-types: [ "version-update:semver-major" ]
-      - dependency-name: "org.hibernate.*:*"
-        update-types: [ "version-update:semver-major" ]
-
