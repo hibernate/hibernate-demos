@@ -1,6 +1,7 @@
 version: '3.1'
 services:
   pg01:
+    container_name: hsearch-elasticsearch-wikipedia_pg01
     image: postgres:15.2
     environment:
       - POSTGRES_USER=hibernate_demo
@@ -13,6 +14,7 @@ services:
     networks:
       - pgnet
   es01:
+    container_name: hsearch-elasticsearch-wikipedia_es01
     image: elastic/elasticsearch:8.9.0
     environment:
       - node.name=es01
@@ -42,6 +44,7 @@ services:
     networks:
       - esnet
   es02:
+    container_name: hsearch-elasticsearch-wikipedia_es02
     image: elastic/elasticsearch:8.9.0
     environment:
       - node.name=es02
