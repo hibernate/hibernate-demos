@@ -21,7 +21,8 @@ services:
       - discovery.seed_hosts=es02
       - cluster.initial_master_nodes=es01,es02
       - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
+      # Memory locking requires OS config, let's ignore that for the demo
+      - bootstrap.memory_lock=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       # Self-signed certificates really aren't practical to work with, so we disable that.
       - xpack.security.enabled=false
@@ -51,7 +52,8 @@ services:
       - discovery.seed_hosts=es01
       - cluster.initial_master_nodes=es01,es02
       - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
+      # Memory locking requires OS config, let's ignore that for the demo
+      - bootstrap.memory_lock=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       # Self-signed certificates really aren't practical to work with, so we disable that.
       - xpack.security.enabled=false
