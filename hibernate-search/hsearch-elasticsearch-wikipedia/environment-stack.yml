@@ -2,7 +2,7 @@ version: '3.1'
 services:
   pg01:
     container_name: hsearch-elasticsearch-wikipedia_pg01
-    image: postgres:15.2
+    image: postgres:16.2
     environment:
       - POSTGRES_USER=hibernate_demo
       - POSTGRES_PASSWORD=hibernate_demo
@@ -15,7 +15,7 @@ services:
       - pgnet
   es01:
     container_name: hsearch-elasticsearch-wikipedia_es01
-    image: elastic/elasticsearch:8.9.0
+    image: elastic/elasticsearch:8.12.2
     environment:
       - node.name=es01
       - discovery.seed_hosts=es02
@@ -46,7 +46,7 @@ services:
       - esnet
   es02:
     container_name: hsearch-elasticsearch-wikipedia_es02
-    image: elastic/elasticsearch:8.9.0
+    image: elastic/elasticsearch:8.12.2
     environment:
       - node.name=es02
       - discovery.seed_hosts=es01
