@@ -27,7 +27,7 @@ function do_psql() {
 
 which xsltproc 1>/dev/null 2>&1 || abort "Command 'xsltproc' isn't in the \$PATH; please install the command or add it to the \$PATH."
 
-DOCKER_CONTAINER_NAME="hsearch-elasticsearch-wikipedia_pg01_1"
+DOCKER_CONTAINER_NAME="hsearch-elasticsearch-wikipedia_pg01"
 LOCAL_DUMP_FILE=
 while getopts 'c:n:f:' opt
 do
