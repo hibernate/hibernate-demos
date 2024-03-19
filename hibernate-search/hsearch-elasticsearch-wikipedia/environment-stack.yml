@@ -21,6 +21,9 @@ services:
       - discovery.seed_hosts=es02
       - cluster.initial_master_nodes=es01,es02
       - cluster.name=docker-cluster
+      # https://www.elastic.co/blog/elasticsearch-sniffing-best-practices-what-when-why-how
+      - http.publish_host=localhost
+      - http.publish_port=9200
       # Memory locking requires OS config, let's ignore that for the demo
       - bootstrap.memory_lock=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
@@ -52,6 +55,9 @@ services:
       - discovery.seed_hosts=es01
       - cluster.initial_master_nodes=es01,es02
       - cluster.name=docker-cluster
+      # https://www.elastic.co/blog/elasticsearch-sniffing-best-practices-what-when-why-how
+      - http.publish_host=localhost
+      - http.publish_port=9201
       # Memory locking requires OS config, let's ignore that for the demo
       - bootstrap.memory_lock=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
@@ -71,6 +77,8 @@ services:
         hard: 65535
     volumes:
       - esdata02:/usr/share/elasticsearch/data
+    ports:
+      - 9201:9200
     networks:
       - esnet
 
