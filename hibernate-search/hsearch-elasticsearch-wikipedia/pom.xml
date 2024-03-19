@@ -28,7 +28,7 @@
 		<!-- Override the version of Hibernate ORM in Spring Boot -->
 		<hibernate.version>6.2.7.Final</hibernate.version>
 		<!-- Override the version of Elasticsearch Rest Client in Spring Boot -->
-		<elasticsearch.version>8.9.0</elasticsearch.version>
+		<elasticsearch.version>8.12.2</elasticsearch.version>
 		<hibernate.search.version>6.2.3.Final</hibernate.search.version>
 
 		<docker-maven-plugin.version>0.43.4</docker-maven-plugin.version>
