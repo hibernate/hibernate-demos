@@ -2,6 +2,20 @@ package org.hibernate.demos.quarkus;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.hibernate.demos.quarkus.domain.BusinessManager;
+import org.hibernate.demos.quarkus.domain.Client;
+import org.hibernate.demos.quarkus.dto.BusinessManagerCreateUpdateDto;
+import org.hibernate.demos.quarkus.dto.BusinessManagerRetrieveDto;
+import org.hibernate.demos.quarkus.dto.ClientCreateUpdateDto;
+import org.hibernate.demos.quarkus.dto.ClientMapper;
+import org.hibernate.demos.quarkus.dto.ClientRetrieveDto;
+import org.hibernate.search.engine.search.common.BooleanOperator;
+import org.hibernate.search.mapper.orm.mapping.SearchMapping;
+import org.hibernate.search.mapper.orm.session.SearchSession;
+
+import io.quarkus.runtime.LaunchMode;
+import io.quarkus.runtime.StartupEvent;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -17,20 +31,6 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
-
-import org.hibernate.demos.quarkus.domain.Client;
-import org.hibernate.demos.quarkus.domain.BusinessManager;
-import org.hibernate.demos.quarkus.dto.BusinessManagerCreateUpdateDto;
-import org.hibernate.demos.quarkus.dto.ClientCreateUpdateDto;
-import org.hibernate.demos.quarkus.dto.ClientMapper;
-import org.hibernate.demos.quarkus.dto.ClientRetrieveDto;
-import org.hibernate.demos.quarkus.dto.BusinessManagerRetrieveDto;
-import org.hibernate.search.engine.search.common.BooleanOperator;
-import org.hibernate.search.mapper.orm.mapping.SearchMapping;
-import org.hibernate.search.mapper.orm.session.SearchSession;
-
-import io.quarkus.runtime.StartupEvent;
-import io.quarkus.runtime.configuration.ProfileManager;
 
 @Path("/")
 @Transactional
@@ -130,7 +130,7 @@ public class ClientResource {
 
 	@Transactional(TxType.NEVER)
 	void reindexOnStart(@Observes StartupEvent event) throws InterruptedException {
-		if ( "dev".equals( ProfileManager.getActiveProfile() ) ) {
+		if ( LaunchMode.current().equals( LaunchMode.DEVELOPMENT ) ) {
 			reindex();
 		}
 	}
