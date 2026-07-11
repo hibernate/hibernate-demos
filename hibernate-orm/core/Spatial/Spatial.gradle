@@ -1,5 +1,3 @@
-// Dead hosts (boundlessgeo, old OSGeo webdav, hibernatespatial) no longer serve artifacts.
-// Use OSGeo's current Maven repo + Central. geodb 0.8 is unpublished; 0.9 is the replacement.
 repositories {
     mavenCentral()
     maven {
@@ -12,6 +10,4 @@ dependencies {
     compile( 'org.geolatte:geolatte-geom:1.3.0' )
     // GeoDB is an H2 spatial extension
     compile( 'org.opengeo:geodb:0.9' )
-    // Needed by GeoDB (also pulled transitively; listed explicitly for clarity)
-    compile( 'net.sourceforge.hatbox:hatbox:1.0.b10' )
 }
