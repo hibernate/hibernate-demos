@@ -58,12 +58,6 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.mapstruct</groupId>
-      <artifactId>mapstruct-processor</artifactId>
-      <version>${org.mapstruct.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-hibernate-search-orm-elasticsearch</artifactId>
     </dependency>
@@ -103,6 +97,13 @@
             <compilerArg>-Amapstruct.suppressGeneratorTimestamp=true</compilerArg>
             <compilerArg>-Amapstruct.suppressGeneratorVersionInfoComment=true</compilerArg>
           </compilerArgs>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.mapstruct</groupId>
+              <artifactId>mapstruct-processor</artifactId>
+              <version>${org.mapstruct.version}</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
       <plugin>
