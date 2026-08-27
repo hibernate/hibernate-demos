@@ -11,9 +11,9 @@ import static org.fest.assertions.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 
 import org.hibernate.demos.hswithes.dto.VideoGameDto;
 import org.hibernate.demos.hswithes.model.Character;

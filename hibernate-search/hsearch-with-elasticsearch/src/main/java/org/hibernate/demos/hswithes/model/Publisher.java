@@ -6,7 +6,7 @@
  */
 package org.hibernate.demos.hswithes.model;
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 
