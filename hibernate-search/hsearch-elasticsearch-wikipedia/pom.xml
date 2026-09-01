@@ -28,7 +28,7 @@
 		<hibernate.version>6.4.4.Final</hibernate.version>
 		<!-- Override the version of Elasticsearch Rest Client in Spring Boot -->
 		<elasticsearch.version>8.12.2</elasticsearch.version>
-		<hibernate.search.version>7.1.0.Final</hibernate.search.version>
+		<hibernate.search.version>7.2.6.Final</hibernate.search.version>
 
 		<docker-maven-plugin.version>0.48.1</docker-maven-plugin.version>
 		<test.postgres.run.skip>true</test.postgres.run.skip>
